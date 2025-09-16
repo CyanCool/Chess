@@ -1,5 +1,6 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -22,7 +23,8 @@ public class ChessPiece
     /**
      * The various different chess piece options
      */
-    public enum PieceType {
+    public enum PieceType
+    {
         KING,
         QUEEN,
         BISHOP,
@@ -54,7 +56,22 @@ public class ChessPiece
      *
      * @return Collection of valid moves
      */
-    public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        throw new RuntimeException("Not implemented");
+    public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition)
+    {
+        if (type == ChessPiece.PieceType.KING)
+        {
+            ArrayList<ChessMove> possibleMoves = new ArrayList<ChessMove>();
+
+            for (int i = -1; i < 2; i++)
+            {
+                for(int j = -1; j < 2; j++)
+                {
+                    ChessPosition newPosition = new ChessPosition(myPosition.getRow() + i, myPosition.getColumn() + j);
+                    ChessMove move = new ChessMove(myPosition, newPosition, ChessPiece.PieceType.KING);
+                    possibleMoves.add(move);
+                }
+            }
+            return possibleMoves;
+        }
     }
 }
