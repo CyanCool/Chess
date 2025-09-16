@@ -8,17 +8,21 @@ import java.util.Collection;
  * Note: You can add to this class, but you may not alter
  * signature of the existing methods.
  */
-public class ChessGame {
+public class ChessGame
+{
+    private TeamColor teamColor;
 
-    public ChessGame() {
+    public ChessGame()
+    {
 
     }
 
     /**
      * @return Which team's turn it is
      */
-    public TeamColor getTeamTurn() {
-        throw new RuntimeException("Not implemented");
+    public TeamColor getTeamTurn()
+    {
+        return teamColor;
     }
 
     /**
@@ -26,8 +30,9 @@ public class ChessGame {
      *
      * @param team the team whose turn it is
      */
-    public void setTeamTurn(TeamColor team) {
-        throw new RuntimeException("Not implemented");
+    public void setTeamTurn(TeamColor team)
+    {
+        teamColor = team;
     }
 
     /**
