@@ -71,6 +71,28 @@ public class ChessPiece
 
         }
     }
+
+    public ArrayList<ChessMove> bishopMoves(ChessPosition myPosition, ChessPosition firstPosition, ArrayList<ChessMove> possibleMoves)
+    {
+        if(myPosition.getRow() < 0 || myPosition.getColumn() < 0)
+        {
+            return possibleMoves;
+        }
+        else
+        {
+            for (int i = -1; i < 2; i+=2)
+            {
+                for(int j = -1; j < 2; j+=2)
+                {
+                    ChessPosition newPosition = new ChessPosition(myPosition.getRow() -1  + i, myPosition.getColumn() -1 + j);
+                    ChessMove move = new ChessMove(firstPosition, newPosition, ChessPiece.PieceType.BISHOP);
+                    possibleMoves.add(move);
+                    return bishopMoves(newPosition, firstPosition, possibleMoves);
+                }
+            }
+            return possibleMoves;
+        }
+    }
     /**
      * Calculates all the positions a chess piece can move to
      * Does not take into account moves that are illegal due to leaving the king in
@@ -97,6 +119,11 @@ public class ChessPiece
         else if(type == ChessPiece.PieceType.QUEEN)
         {
             possibleMoves = queenMoves(myPosition, myPosition, possibleMoves); //is this redundant, I think the object remembers its contents already
+            return possibleMoves;
+        }
+        else if(type == ChessPiece.PieceType.BISHOP)
+        {
+            possibleMoves = bishopMoves(myPosition, myPosition, possibleMoves);
             return possibleMoves;
         }
     }
