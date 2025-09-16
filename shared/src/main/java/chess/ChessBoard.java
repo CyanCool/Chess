@@ -6,10 +6,13 @@ package chess;
  * Note: You can add to this class, but you may not alter
  * signature of the existing methods.
  */
-public class ChessBoard {
+public class ChessBoard
+{
+    private ChessPiece[][] squares;
 
-    public ChessBoard() {
-        
+    public ChessBoard()
+    {
+        squares = new ChessPiece[8][8];
     }
 
     /**
@@ -18,8 +21,9 @@ public class ChessBoard {
      * @param position where to add the piece to
      * @param piece    the piece to add
      */
-    public void addPiece(ChessPosition position, ChessPiece piece) {
-        throw new RuntimeException("Not implemented");
+    public void addPiece(ChessPosition position, ChessPiece piece)
+    {
+        squares[position.getRow()-1][position.getColumn()-1] = piece;
     }
 
     /**
@@ -29,15 +33,23 @@ public class ChessBoard {
      * @return Either the piece at the position, or null if no piece is at that
      * position
      */
-    public ChessPiece getPiece(ChessPosition position) {
-        throw new RuntimeException("Not implemented");
+    public ChessPiece getPiece(ChessPosition position)
+    {
+        int row = position.getRow()-1;
+        int column = position.getColumn()-1;
+        if(row != -1 && column != -1)
+        {
+            return squares[row][column];
+        }
+        return null;
     }
 
     /**
      * Sets the board to the default starting board
      * (How the game of chess normally starts)
      */
-    public void resetBoard() {
-        throw new RuntimeException("Not implemented");
+    public void resetBoard()
+    {
+        squares = new ChessPiece[8][8]; // in C++ I think I would have to get rid of the old array because it would be stuck in memory but I think Java has garbage collection
     }
 }
