@@ -15,6 +15,8 @@ public class ChessMove {
     /**
      * @return ChessPosition of starting location
      */
+    //how am i able to implement a method from ChessPosition within the Chess Move class
+
     public ChessPosition getStartPosition() {
         throw new RuntimeException("Not implemented");
     }
