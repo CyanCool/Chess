@@ -6,26 +6,34 @@ package chess;
  * Note: You can add to this class, but you may not alter
  * signature of the existing methods.
  */
-public class ChessMove {
+public class ChessMove
+{
+    private ChessPosition startPosition;
+    private ChessPosition endPosition;
+    private ChessPiece.PieceType promotionPiece;
 
-    public ChessMove(ChessPosition startPosition, ChessPosition endPosition,
-                     ChessPiece.PieceType promotionPiece) {
+    public ChessMove(ChessPosition startPosition, ChessPosition endPosition, ChessPiece.PieceType promotionPiece)
+    {
+        this.startPosition = startPosition;
+        this.endPosition = endPosition;
+        this.promotionPiece = promotionPiece;
     }
 
     /**
      * @return ChessPosition of starting location
      */
-    //how am i able to implement a method from ChessPosition within the Chess Move class
 
-    public ChessPosition getStartPosition() {
-        throw new RuntimeException("Not implemented");
+    public ChessPosition getStartPosition()
+    {
+        return startPosition;
     }
 
     /**
      * @return ChessPosition of ending location
      */
-    public ChessPosition getEndPosition() {
-        throw new RuntimeException("Not implemented");
+    public ChessPosition getEndPosition()
+    {
+        return endPosition;
     }
 
     /**
@@ -34,7 +42,8 @@ public class ChessMove {
      *
      * @return Type of piece to promote a pawn to, or null if no promotion
      */
-    public ChessPiece.PieceType getPromotionPiece() {
-        throw new RuntimeException("Not implemented");
+    public ChessPiece.PieceType getPromotionPiece()
+    {
+
     }
 }
