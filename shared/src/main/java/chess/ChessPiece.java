@@ -153,12 +153,24 @@ public class ChessPiece
         }
         else if(type == ChessPiece.PieceType.QUEEN)
         {
-            possibleMoves = queenMoves(myPosition, myPosition, possibleMoves); //is this redundant, I think the object remembers its contents already
+            possibleMoves = customMove(PieceType.QUEEN, myPosition, myPosition, 1, 0, possibleMoves);
+            possibleMoves.addAll(customMove(PieceType.QUEEN, myPosition, myPosition, -1, 0, possibleMoves));
+            possibleMoves.addAll(customMove(PieceType.QUEEN, myPosition, myPosition, 0, 1, possibleMoves));
+            possibleMoves.addAll(customMove(PieceType.QUEEN, myPosition, myPosition, 0, -1, possibleMoves));
+            possibleMoves.addAll(customMove(PieceType.QUEEN, myPosition, myPosition, -1, -1, possibleMoves));
+            possibleMoves.addAll(customMove(PieceType.QUEEN, myPosition, myPosition, -1, 1, possibleMoves));
+            possibleMoves.addAll(customMove(PieceType.QUEEN, myPosition, myPosition, 1, -1, possibleMoves));
+            possibleMoves.addAll(customMove(PieceType.QUEEN, myPosition, myPosition, 1, 1, possibleMoves));
+
             return possibleMoves;
         }
         else if(type == ChessPiece.PieceType.BISHOP)
         {
-            possibleMoves = bishopMoves(myPosition, myPosition, possibleMoves);
+            possibleMoves.addAll(customMove(PieceType.BISHOP, myPosition, myPosition, -1, -1, possibleMoves));
+            possibleMoves.addAll(customMove(PieceType.BISHOP, myPosition, myPosition, -1, 1, possibleMoves));
+            possibleMoves.addAll(customMove(PieceType.BISHOP, myPosition, myPosition, 1, -1, possibleMoves));
+            possibleMoves.addAll(customMove(PieceType.BISHOP, myPosition, myPosition, 1, 1, possibleMoves));
+
             return possibleMoves;
         }
         else if(type == ChessPiece.PieceType.KNIGHT)
@@ -166,9 +178,12 @@ public class ChessPiece
             int[][] moveBy = {{-2,1},{2,1},{1,2},{-1,2},{-2,-1},{2,-1},{-1,-2},{1,-2}};
             for(int x = 0; x<8; x++)
             {
-                ChessPosition newPosition = new ChessPosition(moveBy[x][0], moveBy[x][1]);
-                ChessMove move = new ChessMove(myPosition, newPosition, ChessPiece.PieceType.KNIGHT);
-                possibleMoves.add(move);
+                ChessPosition newPosition = new ChessPosition(myPosition.getRow() + moveBy[x][0], myPosition.getColumn() + moveBy[x][1]);
+                if(newPosition.getRow() >= 0 && newPosition.getColumn() >= 0)
+                {
+                    ChessMove move = new ChessMove(myPosition, newPosition, ChessPiece.PieceType.KNIGHT);
+                    possibleMoves.add(move);
+                }
             }
             return possibleMoves;
         }
