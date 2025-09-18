@@ -126,5 +126,16 @@ public class ChessPiece
             possibleMoves = bishopMoves(myPosition, myPosition, possibleMoves);
             return possibleMoves;
         }
+        else if(type == ChessPiece.PieceType.KNIGHT)
+        {
+            int[][] moveBy = {{-2,1},{2,1},{1,2},{-1,2},{-2,-1},{2,-1},{-1,-2},{1,-2}};
+            for(int x = 0; x<8; x++)
+            {
+                ChessPosition newPosition = new ChessPosition(moveBy[x][0], moveBy[x][1]);
+                ChessMove move = new ChessMove(myPosition, newPosition, ChessPiece.PieceType.KNIGHT);
+                possibleMoves.add(move);
+            }
+            return possibleMoves;
+        }
     }
 }
