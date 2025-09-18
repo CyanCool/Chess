@@ -49,69 +49,6 @@ public class ChessPiece
         return type;
     }
 
-    public ArrayList<ChessMove> queenMoves(ChessPosition myPosition, ChessPosition firstPosition, ArrayList<ChessMove> possibleMoves)
-    {
-        if(myPosition.getRow() < 0 || myPosition.getColumn() < 0)
-        {
-            return possibleMoves;
-        }
-        else
-        {
-            for (int i = -1; i < 2; i++)
-            {
-                for(int j = -1; j < 2; j++)
-                {
-                    ChessPosition newPosition = new ChessPosition(myPosition.getRow() -1  + i, myPosition.getColumn() -1 + j);
-                    ChessMove move = new ChessMove(firstPosition, newPosition, ChessPiece.PieceType.QUEEN);
-                    possibleMoves.add(move);
-                    return queenMoves(newPosition, firstPosition, possibleMoves);
-                }
-            }
-            return possibleMoves; //remove if not working
-
-        }
-    }
-
-    public ArrayList<ChessMove> bishopMoves(ChessPosition myPosition, ChessPosition firstPosition, ArrayList<ChessMove> possibleMoves)
-    {
-        if(myPosition.getRow() < 0 || myPosition.getColumn() < 0)
-        {
-            return possibleMoves;
-        }
-        else
-        {
-            for (int i = -1; i < 2; i+=2)
-            {
-                for(int j = -1; j < 2; j+=2)
-                {
-                    ChessPosition newPosition = new ChessPosition(myPosition.getRow() -1  + i, myPosition.getColumn() -1 + j);
-                    ChessMove move = new ChessMove(firstPosition, newPosition, ChessPiece.PieceType.BISHOP);
-                    possibleMoves.add(move);
-                    return bishopMoves(newPosition, firstPosition, possibleMoves);
-                }
-            }
-            return possibleMoves;
-        }
-    }
-
-    public ArrayList<ChessMove> rookMoves(ChessPosition myPosition, ChessPosition firstPosition, ArrayList<ChessMove> possibleMoves)
-    {
-        if(myPosition.getRow() < 0 || myPosition.getColumn() < 0)
-        {
-            return possibleMoves;
-        }
-        else
-        {
-            ChessPosition up = new ChessPosition(myPosition.getRow(), myPosition.getColumn()+1);
-            ChessPosition down = new ChessPosition(myPosition.getRow(), myPosition.getColumn()-1);
-            ChessPosition left = new ChessPosition(myPosition.getRow()-1, myPosition.getColumn());
-            ChessPosition right = new ChessPosition(myPosition.getRow()+1, myPosition.getColumn());
-
-            return rookMoves(up,firstPosition,possibleMoves) + rookMoves(down,firstPosition,possibleMoves) + rookMoves(left,firstPosition,possibleMoves) + rookMoves(right,firstPosition,possibleMoves);
-        }
-
-    }
-
     public ArrayList<ChessMove> customMove(ChessPiece.PieceType type, ChessPosition firstPosition, ChessPosition currentPosition, int row, int col, ArrayList<ChessMove> newPositions)
     {
         if(currentPosition.getRow() < 0 || currentPosition.getColumn() < 0)
@@ -189,8 +126,13 @@ public class ChessPiece
         }
         else if(type == ChessPiece.PieceType.ROOK)
         {
-            possibleMoves = rookMoves(myPosition, myPosition, possibleMoves);
+            possibleMoves = customMove(PieceType.ROOK, myPosition, myPosition, 1, 0, possibleMoves);
+            possibleMoves.addAll(customMove(PieceType.ROOK, myPosition, myPosition, -1, 0, possibleMoves));
+            possibleMoves.addAll(customMove(PieceType.ROOK, myPosition, myPosition, 0, 1, possibleMoves));
+            possibleMoves.addAll(customMove(PieceType.ROOK, myPosition, myPosition, 0, -1, possibleMoves));
+
             return possibleMoves;
         }
+        return null;
     }
 }
