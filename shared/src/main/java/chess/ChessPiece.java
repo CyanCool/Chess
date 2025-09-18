@@ -93,6 +93,41 @@ public class ChessPiece
             return possibleMoves;
         }
     }
+
+    public ArrayList<ChessMove> rookMoves(ChessPosition myPosition, ChessPosition firstPosition, ArrayList<ChessMove> possibleMoves)
+    {
+        if(myPosition.getRow() < 0 || myPosition.getColumn() < 0)
+        {
+            return possibleMoves;
+        }
+        else
+        {
+            ChessPosition up = new ChessPosition(myPosition.getRow(), myPosition.getColumn()+1);
+            ChessPosition down = new ChessPosition(myPosition.getRow(), myPosition.getColumn()-1);
+            ChessPosition left = new ChessPosition(myPosition.getRow()-1, myPosition.getColumn());
+            ChessPosition right = new ChessPosition(myPosition.getRow()+1, myPosition.getColumn());
+
+            return rookMoves(up,firstPosition,possibleMoves) + rookMoves(down,firstPosition,possibleMoves) + rookMoves(left,firstPosition,possibleMoves) + rookMoves(right,firstPosition,possibleMoves);
+        }
+
+    }
+
+    public ArrayList<ChessMove> customMove(ChessPiece.PieceType type, ChessPosition firstPosition, ChessPosition currentPosition, int row, int col, ArrayList<ChessMove> newPositions)
+    {
+        if(currentPosition.getRow() < 0 || currentPosition.getColumn() < 0)
+        {
+            return newPositions;
+        }
+        else
+        {
+            ChessPosition updatedPosition = new ChessPosition(currentPosition.getRow() -1  + row, currentPosition.getColumn() -1 + col);
+            ChessMove move = new ChessMove(firstPosition, updatedPosition, type);
+            newPositions.add(move);
+
+            return customMove(type, firstPosition, updatedPosition, row, col, newPositions);
+        }
+
+    }
     /**
      * Calculates all the positions a chess piece can move to
      * Does not take into account moves that are illegal due to leaving the king in
@@ -135,6 +170,11 @@ public class ChessPiece
                 ChessMove move = new ChessMove(myPosition, newPosition, ChessPiece.PieceType.KNIGHT);
                 possibleMoves.add(move);
             }
+            return possibleMoves;
+        }
+        else if(type == ChessPiece.PieceType.ROOK)
+        {
+            possibleMoves = rookMoves(myPosition, myPosition, possibleMoves);
             return possibleMoves;
         }
     }
