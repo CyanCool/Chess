@@ -42,12 +42,22 @@ public class ChessPiece
         return pieceColor;
     }
 
+    public void setTeamColor(ChessGame.TeamColor color)
+    {
+        pieceColor = color;
+    }
+
     /**
      * @return which type of chess piece this piece is
      */
     public PieceType getPieceType()
     {
         return type;
+    }
+
+    public void setPieceType(PieceType type)
+    {
+        this.type = type;
     }
 
     public ArrayList<ChessMove> customMove(ChessPosition firstPosition, ChessPosition currentPosition, int row, int col, ArrayList<ChessMove> newPositions, ChessBoard board)
@@ -256,5 +266,11 @@ public class ChessPiece
     public int hashCode()
     {
         return Objects.hash(pieceColor, type);
+    }
+
+    @Override
+    public String toString()
+    {
+        return type.toString() + " " + pieceColor.toString();
     }
 }
