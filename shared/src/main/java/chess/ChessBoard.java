@@ -1,5 +1,8 @@
 package chess;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 /**
  * A chessboard that can hold and rearrange chess pieces.
  * <p>
@@ -23,7 +26,10 @@ public class ChessBoard
      */
     public void addPiece(ChessPosition position, ChessPiece piece)
     {
-        squares[position.getRow()-1][position.getColumn()-1] = piece;
+        if(piece != null)
+        {
+            squares[position.getRow()-1][position.getColumn()-1] = piece;
+        }
     }
 
     /**
@@ -42,6 +48,41 @@ public class ChessBoard
             return squares[row][column];
         }
         return null;
+    }
+
+    //checks to see if the board has a piece in x, y position
+    public int hasPiece(int x, int y, ChessGame.TeamColor homeTeam)
+    {
+        if((x > -1 && x < squares.length) && (y > -1 && y < squares[x].length) && squares[x][y] != null)
+        {
+            if(((squares[x][y].getTeamColor() == ChessGame.TeamColor.WHITE) && (homeTeam == ChessGame.TeamColor.WHITE)) || ((squares[x][y].getTeamColor() == ChessGame.TeamColor.BLACK) && (homeTeam == ChessGame.TeamColor.BLACK))) //checks to see if the piece is present and on the same team
+            {
+                return 0; //same color in position
+            }
+            else if(((squares[x][y].getTeamColor() == ChessGame.TeamColor.WHITE) && (homeTeam == ChessGame.TeamColor.BLACK)) || ((squares[x][y].getTeamColor() == ChessGame.TeamColor.BLACK) && (homeTeam == ChessGame.TeamColor.WHITE)))//checks to see if the piece is present and on the opposite team
+            {
+                return 1; //different color in position
+            }
+
+        }
+        return -1;
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (o == null || getClass() != o.getClass())
+        {
+            return false;
+        }
+        ChessBoard that = (ChessBoard) o;
+        return Objects.deepEquals(squares, that.squares);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Arrays.deepHashCode(squares);
     }
 
     /**
