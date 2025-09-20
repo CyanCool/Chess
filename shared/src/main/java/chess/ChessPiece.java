@@ -128,14 +128,14 @@ public class ChessPiece
         return possibleMoves;
     }
 
-    private Collection<ChessMove> getChessMoves(ChessBoard board, ChessPosition myPosition, ArrayList<ChessMove> possibleMoves, int[][] moveBy)
+    private ArrayList<ChessMove> getChessMoves(ChessBoard board, ChessPosition myPosition, ArrayList<ChessMove> possibleMoves, int[][] moveBy)
     {
         for(int x = 0; x<8; x++)
         {
             ChessPosition newPosition = new ChessPosition(myPosition.getRow() + moveBy[x][0], myPosition.getColumn() + moveBy[x][1]);
-            int pieceType = board.hasPiece(newPosition.getRow(), newPosition.getColumn(), pieceColor);
+            int pieceType = board.hasPiece(newPosition.getRow()-1, newPosition.getColumn()-1, pieceColor);
 
-            if(newPosition.getRow() >= 0 && newPosition.getColumn() >= 0 && pieceType != 0)
+            if(newPosition.getRow() > 0 && newPosition.getColumn() > 0 && newPosition.getRow() < 9 && newPosition.getColumn() < 9 && pieceType != 0 && myPosition != newPosition)
             {
                 ChessMove move = new ChessMove(myPosition, newPosition, null);
                 possibleMoves.add(move);
