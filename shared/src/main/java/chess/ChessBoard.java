@@ -43,7 +43,7 @@ public class ChessBoard
     {
         int row = position.getRow()-1;
         int column = position.getColumn()-1;
-        if(row != -1 && column != -1)
+        if(row != -1 && column != -1 && row < 8 && column < 8)
         {
             return squares[row][column];
         }

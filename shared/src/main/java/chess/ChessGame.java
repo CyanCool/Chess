@@ -1,5 +1,6 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -13,12 +14,16 @@ public class ChessGame
 {
     private TeamColor teamColor;
     private ChessBoard board;
+    private ChessPosition whiteKingPosition;
+    private ChessPosition blackKingPosition;
 
     public ChessGame()
     {
         teamColor = TeamColor.WHITE;
         board = new ChessBoard();
         board.resetBoard();
+        whiteKingPosition = new ChessPosition(0,4);
+        blackKingPosition = new ChessPosition(7,4);
 
     }
 
@@ -67,6 +72,8 @@ public class ChessGame
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
         throw new RuntimeException("Not implemented");
+
+        //if the piece is a king, update the kings position based on its color when its finished
     }
 
     /**
@@ -75,8 +82,82 @@ public class ChessGame
      * @param teamColor which team to check for check
      * @return True if the specified team is in check
      */
-    public boolean isInCheck(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+    public boolean isInCheck(TeamColor teamColor)
+    {
+        ArrayList<ChessMove> pieceMoveOptions = new ArrayList<>();
+        if(teamColor == TeamColor.BLACK)
+        {
+            for(int x = 0; x < 8; x++)
+            {
+                for(int y = 0; y < 8; y++)
+                {
+                    ChessPosition myPosition = new ChessPosition(x,y);
+                    ChessPiece myPiece = board.getPiece(myPosition);
+
+                    ChessPosition currentKing = findKing(teamColor);
+
+                    if(myPiece != null && currentKing != null && (myPiece.getTeamColor() == TeamColor.WHITE))
+                    {
+                        pieceMoveOptions = (ArrayList<ChessMove>) myPiece.pieceMoves(board, myPosition);
+
+                        for(int i = 0; i < pieceMoveOptions.size(); i++)
+                        {
+                            if(pieceMoveOptions.get(i).getEndPosition().equals(currentKing))
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+        else if(teamColor == TeamColor.WHITE)
+        {
+            for(int x = 0; x < 8; x++)
+            {
+                for(int y = 0; y < 8; y++)
+                {
+                    ChessPosition myPosition = new ChessPosition(x,y);
+                    ChessPiece myPiece = board.getPiece(myPosition);
+
+                    ChessPosition currentKing = findKing(teamColor);
+
+                    if(myPiece != null && currentKing != null && (myPiece.getTeamColor() == TeamColor.BLACK))
+                    {
+                        pieceMoveOptions = (ArrayList<ChessMove>) myPiece.pieceMoves(board, myPosition);
+
+                        for(int i = 0; i < pieceMoveOptions.size(); i++)
+                        {
+                            if(pieceMoveOptions.get(i).getEndPosition().equals(currentKing))
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+        return false;
+    }
+
+    public ChessPosition findKing(TeamColor teamColor)
+    {
+        for(int x = 0; x< 8; x++)
+        {
+            for(int y = 0; y < 8; y++)
+            {
+                ChessPosition myPosition = new ChessPosition(x,y);
+                ChessPiece myPiece = board.getPiece(myPosition);
+
+                if(myPiece != null && myPiece.getPieceType() == ChessPiece.PieceType.KING && myPiece.getTeamColor() == teamColor)
+                {
+                    return myPosition;
+                }
+            }
+        }
+        return null;
     }
 
     /**
