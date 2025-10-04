@@ -18,20 +18,11 @@ public class ChessGame
 
     public ChessGame()
     {
-        try
-        {
-            teamColor = TeamColor.WHITE;
-            board = new ChessBoard();
-            board.resetBoard();
+        teamColor = TeamColor.WHITE;
+        board = new ChessBoard();
+        board.resetBoard();
 
-            hboard = (ChessBoard) board.clone();
-        }
-        catch(CloneNotSupportedException e)
-        {
-            System.out.println("Clone is not supported I guess");
-        }
-
-
+        hboard = (ChessBoard) board.cloneBoard();
     }
 
     /**
@@ -67,7 +58,7 @@ public class ChessGame
      * @return Set of valid moves for requested piece, or null if no piece at
      * startPosition
      */
-    public Collection<ChessMove> validMoves(ChessPosition startPosition) throws CloneNotSupportedException
+    public Collection<ChessMove> validMoves(ChessPosition startPosition)
     {
         ChessPiece myPiece = board.getPiece(startPosition);
         ArrayList<ChessMove> possibleMoves = (ArrayList<ChessMove>) myPiece.pieceMoves(board, startPosition);
@@ -86,9 +77,9 @@ public class ChessGame
         return possibleMoves;
     }
 
-    public ChessBoard tryMove(ChessPiece piece, ChessMove move) throws CloneNotSupportedException
+    public ChessBoard tryMove(ChessPiece piece, ChessMove move)
     {
-        ChessBoard currentBoard = (ChessBoard) board.clone();
+        ChessBoard currentBoard = board.cloneBoard();
         currentBoard.addPiece(move.getEndPosition(), piece);
         currentBoard.removePiece(move.getStartPosition());
 
@@ -200,22 +191,26 @@ public class ChessGame
      * @param teamColor which team to check for checkmate
      * @return True if the specified team is in checkmate
      */
-//    public boolean isInCheckmate(TeamColor teamColor)
-//    {
-//        ChessPosition kingPos = findKing(teamColor);
-//        ChessPiece myKing = board.getPiece(kingPos);
-//        ArrayList<ChessMove> kingMoves = (ArrayList<ChessMove>) myKing.pieceMoves(board, kingPos);
-//        boolean isCheck = true;
-//
-//        for(int x = 0; x<kingMoves.size(); x++)
-//        {
-//            ChessMove myMove = kingMoves.get(x);
-//            currentBoard = board
-//            //iterate through possible king moves
-//            //if king moves there then is it in check
-//            //if its not in check it ischeck will be false
-//        }
-//    }
+    public boolean isInCheckmate(TeamColor teamColor)
+    {
+        ChessPosition kingPos = findKing(teamColor);
+        ChessPiece myKing = board.getPiece(kingPos);
+        ArrayList<ChessMove> kingMoves = (ArrayList<ChessMove>) myKing.pieceMoves(board, kingPos);
+        boolean isCheck = true;
+
+        for(int x = 0; x<kingMoves.size(); x++)
+        {
+            ChessMove myMove = kingMoves.get(x);
+            hboard = tryMove(myKing, myMove);
+            boolean check = isInCheck(myKing.getTeamColor());
+            if(!check)
+            {
+                isCheck = false;
+            }
+        }
+
+        return isCheck;
+    }
 
     /**
      * Determines if the given team is in stalemate, which here is defined as having
