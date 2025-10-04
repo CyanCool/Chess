@@ -60,13 +60,18 @@ public class ChessGame
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition)
     {
-        ChessPiece myPiece = board.getPiece(startPosition);
-        ArrayList<ChessMove> possibleMoves = (ArrayList<ChessMove>) myPiece.pieceMoves(board, startPosition);
+        ChessPiece myPiece = board.getPiece(startPosition); //get the piece to check its moves
+        ArrayList<ChessMove> possibleMoves = (ArrayList<ChessMove>) myPiece.pieceMoves(board, startPosition);//get all of the piece's possible moves
+
+        if(myPiece == null)
+        {
+            return null;
+        }
 
         for(int x = 0; x < possibleMoves.size(); x++)
         {
             ChessMove newMove = possibleMoves.get(x);
-            hboard = tryMove(myPiece, newMove);
+            hboard = tryMove(myPiece, newMove); //make that move hypothetically and see if it puts the king in check
 
             if(isInCheck(myPiece.getTeamColor()))
             {
@@ -74,7 +79,7 @@ public class ChessGame
                 x--;
             }
         }
-        hboard = board;
+        hboard = (ChessBoard) board.cloneBoard();
         return possibleMoves;
     }
 
@@ -138,13 +143,15 @@ public class ChessGame
         ArrayList<ChessMove> myMoves = new ArrayList<ChessMove>();
 
         ChessPiece myPiece = hboard.getPiece(myPosition);
+        ChessPiece kingPiece = hboard.getPiece(kingPosition);
 
-        if(myPiece != null)
+        if(myPiece != null && kingPiece != null)
         {
             myMoves = (ArrayList<ChessMove>) myPiece.pieceMoves(hboard, myPosition);
             for(int x = 0; x < myMoves.size(); x++)
             {
-                if(myMoves.get(x).getEndPosition().equals(kingPosition))
+
+                if(myMoves.get(x).getEndPosition().equals(kingPosition) && (myPiece.getTeamColor() != kingPiece.getTeamColor()))
                 {
                     return true;
                 }
@@ -173,10 +180,6 @@ public class ChessGame
                     {
                         ChessPosition currentPosition = new ChessPosition(x,y);
                         check = checkCurrent(currentPosition, kingPosition);//check current piece in the board to see if it can eat the king now
-                        if(check)
-                        {
-                            check2 = true;
-                        }
                     }
                 }
                 if(check)
@@ -185,7 +188,7 @@ public class ChessGame
                 }
             }
         }
-        return check2;
+        return check;
     }
 
     public boolean isInCheck(TeamColor teamColor)
@@ -205,12 +208,13 @@ public class ChessGame
 
                 if(myPiece != null)
                 {
-                    cc = checkCurrent(myPosition, currentKing);//check if current piece can move to eat the king
+                    cc = checkCurrent(myPosition, currentKing);
+                    //check if current piece can move to eat the king
 
-                    ArrayList<ChessMove> currentMoves = (ArrayList<ChessMove>) myPiece.pieceMoves(hboard, myPosition);
-
-                    co = checkOthers(currentMoves, myPosition, currentKing); //check if the current piece moves, other pieces can eat the king
-                    if(cc || co)
+//                    ArrayList<ChessMove> currentMoves = (ArrayList<ChessMove>) myPiece.pieceMoves(hboard, myPosition);
+//
+//                    co = checkOthers(currentMoves, myPosition, currentKing); //check if the current piece moves, other pieces can eat the king
+                    if(cc)
                     {
                         return true;
                     }
@@ -287,10 +291,25 @@ public class ChessGame
     }
     public boolean isInCheckmate(TeamColor teamColor)
     {
-        boolean checkCurrent = isInCheck(teamColor);
-        if(checkCurrent)
+        //boolean check = isInCheck(teamColor);
+        if(!isInCheck(teamColor))
         {
-            return true;
+            return false;
+        }
+        else
+        {
+            for(int x = 1; x<9; x++)
+            {
+                for(int y = 1; y<9; y++)
+                {
+                    ChessPosition mypos = new ChessPosition(x,y);
+                    ArrayList<ChessMove> possibleMoves = (ArrayList<ChessMove>) validMoves(mypos);
+                    if(!possibleMoves.isEmpty())
+                    {
+                        return true;
+                    }
+                }
+            }
         }
         return false;
     }
@@ -321,7 +340,7 @@ public class ChessGame
     public void setBoard(ChessBoard board)
     {
         this.board = board;
-        hboard = board;
+        hboard = (ChessBoard) board.cloneBoard();
     }
 
     /**

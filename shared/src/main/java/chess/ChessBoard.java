@@ -30,10 +30,7 @@ public class ChessBoard
      */
     public void addPiece(ChessPosition position, ChessPiece piece)
     {
-        if(piece != null)
-        {
-            squares[position.getRow()-1][position.getColumn()-1] = piece;
-        }
+        squares[position.getRow()-1][position.getColumn()-1] = piece;
     }
 
     /**
@@ -74,7 +71,7 @@ public class ChessBoard
 
     public void removePiece(ChessPosition position)
     {
-        if(position.getRow() > 0 && position.getRow() < 8 && position.getColumn() > 0 && position.getColumn() < 8)
+        if(position.getRow() > 0 && position.getRow() < 9 && position.getColumn() > 0 && position.getColumn() < 9)
         {
             squares[position.getRow()-1][position.getColumn()-1] = null;
         }
