@@ -133,68 +133,80 @@ public class ChessGame
     public boolean isInCheck(TeamColor teamColor)
     {
         ArrayList<ChessMove> pieceMoveOptions = new ArrayList<>();
-        if(teamColor == TeamColor.BLACK)
+        ChessPosition currentKing = findKing(teamColor);
+
+        for(int x = 1; x < 9; x++)
         {
-            for(int x = 0; x < 8; x++)
+            for(int y = 1; y < 9; y++)
             {
-                for(int y = 0; y < 8; y++)
+                ChessPosition myPosition = new ChessPosition(x,y);
+                ChessPiece myPiece = hboard.getPiece(myPosition); //gets my current piece in the current position
+
+
+                if(myPiece != null && currentKing != null) //makes sure there is a piece
                 {
-                    ChessPosition myPosition = new ChessPosition(x,y);
-                    ChessPiece myPiece = hboard.getPiece(myPosition);
-
-                    ChessPosition currentKing = findKing(teamColor);
-
-                    if(myPiece != null && currentKing != null && (myPiece.getTeamColor() == TeamColor.WHITE))
+                    if(myPiece.getTeamColor() != teamColor) //is the current piece on the opposite team, therefore capable of eating the king?
                     {
-                        pieceMoveOptions = (ArrayList<ChessMove>) myPiece.pieceMoves(hboard, myPosition);
+                        return seeIfEatsKing(myPosition, currentKing); //checks current piece if eats king
+                    }
+                    //check to see if moving the current piece will cause another piece to eat the king
+                    pieceMoveOptions = (ArrayList<ChessMove>) myPiece.pieceMoves(hboard, myPosition); //gets all the positions it can move to
 
-                        for(int i = 0; i < pieceMoveOptions.size(); i++)
+                    for(int i = 0; i < pieceMoveOptions.size(); i++)
+                    {
+                        //move the piece
+                        hboard = tryMove(myPiece, pieceMoveOptions.get(i));
+
+                        for(int k = 1; k < 9; k++)
                         {
-                            if(pieceMoveOptions.get(i).getEndPosition().equals(currentKing))
+                            for(int p = 1; p < 9; p++)
                             {
-                                return true;
+                                ChessPosition hypPosition = new ChessPosition(k,p);
+                                ChessPiece hypePiece = hboard.getPiece(myPosition); //gets my current piece in the current position
+
+                                if(hypePiece != null && currentKing != null)
+                                {
+                                    if(hypePiece.getTeamColor() != teamColor) //is the current piece on the opposite team, therefore capable of eating the king?
+                                    {
+                                        return seeIfEatsKing(hypPosition, currentKing); //checks current piece if eats king
+                                    }
+                                }
                             }
                         }
+
                     }
                 }
             }
-            return false;
         }
-        else if(teamColor == TeamColor.WHITE)
+        hboard = board;
+        return false;
+    }
+
+    public boolean seeIfEatsKing(ChessPosition myPosition, ChessPosition kingPosition) //gets my current piece and sees if any future positions will eat the king
+    {
+        ArrayList<ChessMove> myMoves = new ArrayList<>();
+
+        ChessPiece myPiece = hboard.getPiece(myPosition);
+
+        if(myPiece != null)
         {
-            for(int x = 0; x < 8; x++)
+            myMoves = (ArrayList<ChessMove>) myPiece.pieceMoves(hboard, myPosition);
+            for(int x = 0; x < myMoves.size(); x++)
             {
-                for(int y = 0; y < 8; y++)
+                if(myMoves.get(x).getEndPosition().equals(kingPosition))
                 {
-                    ChessPosition myPosition = new ChessPosition(x,y);
-                    ChessPiece myPiece = hboard.getPiece(myPosition);
-
-                    ChessPosition currentKing = findKing(teamColor);
-
-                    if(myPiece != null && currentKing != null && (myPiece.getTeamColor() == TeamColor.BLACK))
-                    {
-                        pieceMoveOptions = (ArrayList<ChessMove>) myPiece.pieceMoves(hboard, myPosition);
-
-                        for(int i = 0; i < pieceMoveOptions.size(); i++)
-                        {
-                            if(pieceMoveOptions.get(i).getEndPosition().equals(currentKing))
-                            {
-                                return true;
-                            }
-                        }
-                    }
+                    return true;
                 }
             }
-            return false;
         }
         return false;
     }
 
     public ChessPosition findKing(TeamColor teamColor)
     {
-        for(int x = 0; x< 8; x++)
+        for(int x = 1; x< 9; x++)
         {
-            for(int y = 0; y < 8; y++)
+            for(int y = 1; y < 9; y++)
             {
                 ChessPosition myPosition = new ChessPosition(x,y);
                 ChessPiece myPiece = hboard.getPiece(myPosition);
@@ -272,6 +284,7 @@ public class ChessGame
     public void setBoard(ChessBoard board)
     {
         this.board = board;
+        hboard = board;
     }
 
     /**
