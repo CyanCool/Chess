@@ -103,16 +103,27 @@ public class ChessGame
     {
         ArrayList<ChessMove> validMoves = (ArrayList<ChessMove>) validMoves(move.getStartPosition());
         boolean check = false;
+        if(validMoves == null)
+        {
+            throw new InvalidMoveException("That move is not allowed!");
+        }
         for(int i = 0; i < validMoves.size(); i++)
         {
-            if(validMoves.get(i).equals(move))
+            if(validMoves.get(i).equals(move)) //checks to see if the move we are making is a valid move
             {
                 check = true;
             }
         }
         ChessPiece myPiece = board.getPiece(move.getStartPosition());
+        TeamColor myTeam = myPiece.getTeamColor();
+
         if(check && (myPiece.getTeamColor() == getTeamTurn()))
         {
+            ChessPiece.PieceType toPromote = move.getPromotionPiece();
+            if(toPromote != null)
+            {
+                myPiece = new ChessPiece(myTeam, toPromote);
+            }
             board = tryMove(myPiece, move);
             if(getTeamTurn() == TeamColor.WHITE)
             {
