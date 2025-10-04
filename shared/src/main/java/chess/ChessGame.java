@@ -14,16 +14,23 @@ public class ChessGame
 {
     private TeamColor teamColor;
     private ChessBoard board;
-    private ChessPosition whiteKingPosition;
-    private ChessPosition blackKingPosition;
+    private ChessBoard hboard;
 
     public ChessGame()
     {
-        teamColor = TeamColor.WHITE;
-        board = new ChessBoard();
-        board.resetBoard();
-        whiteKingPosition = new ChessPosition(0,4);
-        blackKingPosition = new ChessPosition(7,4);
+        try
+        {
+            teamColor = TeamColor.WHITE;
+            board = new ChessBoard();
+            board.resetBoard();
+
+            hboard = (ChessBoard) board.clone();
+        }
+        catch(CloneNotSupportedException e)
+        {
+            System.out.println("Clone is not supported I guess");
+        }
+
 
     }
 
@@ -60,8 +67,33 @@ public class ChessGame
      * @return Set of valid moves for requested piece, or null if no piece at
      * startPosition
      */
-    public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        throw new RuntimeException("Not implemented");
+    public Collection<ChessMove> validMoves(ChessPosition startPosition) throws CloneNotSupportedException
+    {
+        ChessPiece myPiece = board.getPiece(startPosition);
+        ArrayList<ChessMove> possibleMoves = (ArrayList<ChessMove>) myPiece.pieceMoves(board, startPosition);
+
+        for(int x = 0; x < possibleMoves.size(); x++)
+        {
+            ChessMove newMove = possibleMoves.get(x);
+            hboard = tryMove(myPiece, newMove);
+
+            if(isInCheck(myPiece.getTeamColor()))
+            {
+                possibleMoves.remove(x); //idk why suspicious
+            }
+        }
+        hboard = board;
+        return possibleMoves;
+    }
+
+    public ChessBoard tryMove(ChessPiece piece, ChessMove move) throws CloneNotSupportedException
+    {
+        ChessBoard currentBoard = (ChessBoard) board.clone();
+        currentBoard.addPiece(move.getEndPosition(), piece);
+        currentBoard.removePiece(move.getStartPosition());
+
+        return currentBoard;
+
     }
 
     /**
@@ -74,6 +106,8 @@ public class ChessGame
         throw new RuntimeException("Not implemented");
 
         //if the piece is a king, update the kings position based on its color when its finished
+
+        //if the move doesnt put the king in check
     }
 
     /**
@@ -92,13 +126,13 @@ public class ChessGame
                 for(int y = 0; y < 8; y++)
                 {
                     ChessPosition myPosition = new ChessPosition(x,y);
-                    ChessPiece myPiece = board.getPiece(myPosition);
+                    ChessPiece myPiece = hboard.getPiece(myPosition);
 
                     ChessPosition currentKing = findKing(teamColor);
 
                     if(myPiece != null && currentKing != null && (myPiece.getTeamColor() == TeamColor.WHITE))
                     {
-                        pieceMoveOptions = (ArrayList<ChessMove>) myPiece.pieceMoves(board, myPosition);
+                        pieceMoveOptions = (ArrayList<ChessMove>) myPiece.pieceMoves(hboard, myPosition);
 
                         for(int i = 0; i < pieceMoveOptions.size(); i++)
                         {
@@ -119,13 +153,13 @@ public class ChessGame
                 for(int y = 0; y < 8; y++)
                 {
                     ChessPosition myPosition = new ChessPosition(x,y);
-                    ChessPiece myPiece = board.getPiece(myPosition);
+                    ChessPiece myPiece = hboard.getPiece(myPosition);
 
                     ChessPosition currentKing = findKing(teamColor);
 
                     if(myPiece != null && currentKing != null && (myPiece.getTeamColor() == TeamColor.BLACK))
                     {
-                        pieceMoveOptions = (ArrayList<ChessMove>) myPiece.pieceMoves(board, myPosition);
+                        pieceMoveOptions = (ArrayList<ChessMove>) myPiece.pieceMoves(hboard, myPosition);
 
                         for(int i = 0; i < pieceMoveOptions.size(); i++)
                         {
@@ -149,7 +183,7 @@ public class ChessGame
             for(int y = 0; y < 8; y++)
             {
                 ChessPosition myPosition = new ChessPosition(x,y);
-                ChessPiece myPiece = board.getPiece(myPosition);
+                ChessPiece myPiece = hboard.getPiece(myPosition);
 
                 if(myPiece != null && myPiece.getPieceType() == ChessPiece.PieceType.KING && myPiece.getTeamColor() == teamColor)
                 {
@@ -166,9 +200,22 @@ public class ChessGame
      * @param teamColor which team to check for checkmate
      * @return True if the specified team is in checkmate
      */
-    public boolean isInCheckmate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
-    }
+//    public boolean isInCheckmate(TeamColor teamColor)
+//    {
+//        ChessPosition kingPos = findKing(teamColor);
+//        ChessPiece myKing = board.getPiece(kingPos);
+//        ArrayList<ChessMove> kingMoves = (ArrayList<ChessMove>) myKing.pieceMoves(board, kingPos);
+//        boolean isCheck = true;
+//
+//        for(int x = 0; x<kingMoves.size(); x++)
+//        {
+//            ChessMove myMove = kingMoves.get(x);
+//            currentBoard = board
+//            //iterate through possible king moves
+//            //if king moves there then is it in check
+//            //if its not in check it ischeck will be false
+//        }
+//    }
 
     /**
      * Determines if the given team is in stalemate, which here is defined as having
