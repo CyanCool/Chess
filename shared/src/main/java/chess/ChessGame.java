@@ -93,12 +93,35 @@ public class ChessGame
      * @param move chess move to perform
      * @throws InvalidMoveException if move is invalid
      */
-    public void makeMove(ChessMove move) throws InvalidMoveException {
-        throw new RuntimeException("Not implemented");
+    public void makeMove(ChessMove move) throws InvalidMoveException
+    {
+        ArrayList<ChessMove> validMoves = (ArrayList<ChessMove>) validMoves(move.getStartPosition());
+        boolean check = false;
+        for(int i = 0; i < validMoves.size(); i++)
+        {
+            if(validMoves.get(i).equals(move))
+            {
+                check = true;
+            }
+        }
+        ChessPiece myPiece = board.getPiece(move.getStartPosition());
+        if(check && (myPiece.getTeamColor() == getTeamTurn()))
+        {
+            board = tryMove(myPiece, move);
+            if(getTeamTurn() == TeamColor.WHITE)
+            {
+                setTeamTurn(TeamColor.BLACK);
+            }
+            else if(getTeamTurn() == TeamColor.BLACK)
+            {
+                setTeamTurn(TeamColor.WHITE);
+            }
+        }
+        else
+        {
+            throw new InvalidMoveException("That move is not allowed!");
+        }
 
-        //if the piece is a king, update the kings position based on its color when its finished
-
-        //if the move doesnt put the king in check
     }
 
     /**
