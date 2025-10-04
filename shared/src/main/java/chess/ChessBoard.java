@@ -74,7 +74,10 @@ public class ChessBoard
 
     public void removePiece(ChessPosition position)
     {
-        squares[position.getRow()][position.getColumn()] = null;
+        if(position.getRow() > 0 && position.getRow() < 8 && position.getColumn() > 0 && position.getColumn() < 8)
+        {
+            squares[position.getRow()-1][position.getColumn()-1] = null;
+        }
     }
 
     public ChessBoard cloneBoard()
