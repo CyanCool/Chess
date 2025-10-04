@@ -73,7 +73,7 @@ public class ChessGame
             ChessMove newMove = possibleMoves.get(x);
             hboard = tryMove(myPiece, newMove); //make that move hypothetically and see if it puts the king in check
 
-            if(isInCheck(myPiece.getTeamColor()))
+            if(isInCheck(myPiece.getTeamColor()) || isInCheckmate(myPiece.getTeamColor()))
             {
                 possibleMoves.remove(x);
                 x--;
@@ -314,14 +314,14 @@ public class ChessGame
                 for(int y = 1; y<9; y++)
                 {
                     ChessPosition mypos = new ChessPosition(x,y);
-                    ArrayList<ChessMove> possibleMoves = (ArrayList<ChessMove>) validMoves(mypos);
-                    if(possibleMoves == null)
+                    ChessPiece myPiece = hboard.getPiece(mypos);
+                    if (myPiece != null && myPiece.getTeamColor() == teamColor)
                     {
-                        return true;
-                    }
-                    else if(!possibleMoves.isEmpty())
-                    {
-                        return false;
+                        ArrayList<ChessMove> possibleMoves = (ArrayList<ChessMove>) validMoves(mypos);
+                        if(possibleMoves != null && !possibleMoves.isEmpty())
+                        {
+                            return false;
+                        }
                     }
                 }
             }
@@ -362,7 +362,7 @@ public class ChessGame
                 }
             }
         }
-        return false;
+        return true;
     }
 
     /**
