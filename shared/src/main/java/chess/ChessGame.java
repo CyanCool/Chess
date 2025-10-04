@@ -61,12 +61,12 @@ public class ChessGame
     public Collection<ChessMove> validMoves(ChessPosition startPosition)
     {
         ChessPiece myPiece = board.getPiece(startPosition); //get the piece to check its moves
-        ArrayList<ChessMove> possibleMoves = (ArrayList<ChessMove>) myPiece.pieceMoves(board, startPosition);//get all of the piece's possible moves
-
         if(myPiece == null)
         {
             return null;
         }
+        ArrayList<ChessMove> possibleMoves = (ArrayList<ChessMove>) myPiece.pieceMoves(board, startPosition);//get all of the piece's possible moves
+
 
         for(int x = 0; x < possibleMoves.size(); x++)
         {
@@ -304,14 +304,18 @@ public class ChessGame
                 {
                     ChessPosition mypos = new ChessPosition(x,y);
                     ArrayList<ChessMove> possibleMoves = (ArrayList<ChessMove>) validMoves(mypos);
-                    if(!possibleMoves.isEmpty())
+                    if(possibleMoves == null)
                     {
                         return true;
+                    }
+                    else if(!possibleMoves.isEmpty())
+                    {
+                        return false;
                     }
                 }
             }
         }
-        return false;
+        return true;
     }
 
     /**
@@ -324,10 +328,28 @@ public class ChessGame
     public boolean isInStalemate(TeamColor teamColor)
     {
         boolean checkCurrent = isInCheck(teamColor);
-        boolean checkElse = checkAround(teamColor);
-        if(!checkCurrent && checkElse)
+        if(checkCurrent)
         {
-            return true;
+            return false;
+        }
+        else
+        {
+            for(int x = 1; x<9; x++)
+            {
+                for(int y = 1; y<9; y++)
+                {
+                    ChessPosition mypos = new ChessPosition(x, y);
+                    ArrayList<ChessMove> possibleMoves = (ArrayList<ChessMove>) validMoves(mypos);
+                    ChessPiece myPiece = board.getPiece(mypos);
+                    if (myPiece != null && myPiece.getTeamColor() == teamColor)
+                    {
+                        if (!possibleMoves.isEmpty())
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
         }
         return false;
     }
