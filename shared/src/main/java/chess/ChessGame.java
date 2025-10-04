@@ -214,7 +214,8 @@ public class ChessGame
      * @param teamColor which team to check for checkmate
      * @return True if the specified team is in checkmate
      */
-    public boolean isInCheckmate(TeamColor teamColor)
+
+    public boolean checkAround(TeamColor teamColor)
     {
         ChessPosition kingPos = findKing(teamColor);
         ChessPiece myKing = board.getPiece(kingPos);
@@ -234,6 +235,16 @@ public class ChessGame
 
         return isCheck;
     }
+    public boolean isInCheckmate(TeamColor teamColor)
+    {
+        boolean checkCurrent = isInCheck(teamColor);
+        boolean checkElse = checkAround(teamColor);
+        if(checkCurrent && checkElse)
+        {
+            return true;
+        }
+        return false;
+    }
 
     /**
      * Determines if the given team is in stalemate, which here is defined as having
@@ -242,8 +253,15 @@ public class ChessGame
      * @param teamColor which team to check for stalemate
      * @return True if the specified team is in stalemate, otherwise false
      */
-    public boolean isInStalemate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+    public boolean isInStalemate(TeamColor teamColor)
+    {
+        boolean checkCurrent = isInCheck(teamColor);
+        boolean checkElse = checkAround(teamColor);
+        if(!checkCurrent && checkElse)
+        {
+            return true;
+        }
+        return false;
     }
 
     /**
