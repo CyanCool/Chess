@@ -1,6 +1,10 @@
 package server;
 
 import io.javalin.*;
+import com.google.gson.Gson;
+import io.javalin.http.Context;
+
+import java.util.Map;
 
 public class Server {
 
@@ -11,8 +15,20 @@ public class Server {
 
         server.delete("db", ctx -> ctx.result("{}"));
 
+        server.post("user", this::register);
+        //{\"username\":\joe\", \"authToken\":\"xyz\"}"
+
         // Register your endpoints and exception handlers here.
 
+    }
+
+    private void register(Context ctx)
+    {
+        var serializer = new Gson();
+        var request = serializer.fromJson(ctx.body(), Map.class);
+        request.put("authToken", "cow");
+        var response = serializer.toJson(request);
+        ctx.result("{\"username\":\"joe\", \"authToken\":\"xyz\"}");
     }
 
     public int run(int desiredPort) {
