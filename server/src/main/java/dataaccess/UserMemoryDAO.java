@@ -1,0 +1,32 @@
+package dataaccess;
+
+import model.RegisterRequest;
+import model.UserData;
+import java.util.HashMap;
+
+public class UserMemoryDAO implements UserDAO
+{
+    //has the username as the key and the UserData as the value
+    private HashMap<String, UserData> userInfo;
+
+    public UserMemoryDAO()
+    {
+        userInfo = new HashMap<>();
+    }
+
+    public UserData getUser(String username)
+    {
+        return userInfo.get(username);
+    }
+
+    public void createUser(RegisterRequest userData)
+    {
+        UserData currentUser = new UserData(userData.username(), userData.password(), userData.email());
+        userInfo.put(currentUser.username(), currentUser);
+    }
+
+    public void removeUser(String username)
+    {
+        userInfo.remove(username);
+    }
+}

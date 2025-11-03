@@ -7,7 +7,8 @@ import io.javalin.http.Context;
 
 import java.util.Map;
 
-public class Server {
+public class Server
+{
 
     private final Javalin server;
     private final RegisterHandler registerHandler;
@@ -18,29 +19,16 @@ public class Server {
 
         server.delete("db", ctx -> ctx.result("{}"));
 
-        server.post("user", this::register);
-
         registerHandler = new RegisterHandler();
+
+        server.post("user", registerHandler::register);
+
 
 
         //{\"username\":\joe\", \"authToken\":\"xyz\"}"
 
         // Register your endpoints and exception handlers here.
 
-    }
-
-    private void register(Context ctx)
-    {
-        var serializer = new Gson();
-        var request = serializer.fromJson(ctx.body(), Map.class);
-        //UserData userData = ..... UserData.class)
-
-        request.put("authToken", "cow");
-        var response = serializer.toJson(request);
-        ctx.result("{\"username\":\"joe\", \"authToken\":\"xyz\"}");
-        //deserialize info
-        //call the appropriate method on the service (which you'll have to initialize)
-        //whatever is returned from the service, serialize it, and add to context
     }
 
     public int run(int desiredPort) {
@@ -51,4 +39,8 @@ public class Server {
     public void stop() {
         server.stop();
     }
+
+
 }
+
+
