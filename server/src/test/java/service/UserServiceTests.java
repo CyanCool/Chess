@@ -14,7 +14,9 @@ public class UserServiceTests
     private UserService userService;
     public UserServiceTests()
     {
-        userService = new UserService(); //maybe populate the database beforehand
+        userService = new UserService();
+        RegisterRequest myRequest = new RegisterRequest("Steven", "password", "steven@gmail.com");
+        userService.register(myRequest);
     }
 
     @Test
