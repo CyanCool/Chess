@@ -66,6 +66,6 @@ public class UserServiceTests
         //make sure the username of the request matches the response
         Assertions.assertEquals(myRequest.username(), myResponse.username());
         //make sure the authtoken in the response isn't null
-        Assertions.assertNotNull(myResponse.authtoken());
+        Assertions.assertNotNull(myResponse.authToken());
     }
 }
