@@ -23,7 +23,7 @@ public class UserServiceTests
     public void tryUserTaken()
     {
         RegisterRequest myRequest = new RegisterRequest("Steven", "password", "steven@gmail.com");
-        Assertions.assertDoesNotThrow(() -> {userService.register(myRequest); }); //check to see if it returns the exception
+        Assertions.assertThrowsExactly(AlreadyTakenException.class, () -> {userService.register(myRequest); }); //check to see if it returns the exception
     }
 
     @Test
@@ -32,7 +32,7 @@ public class UserServiceTests
     public void tryBadPassword()
     {
         RegisterRequest myRequest = new RegisterRequest("Rose", null, "rose@gmail.com");
-        Assertions.assertDoesNotThrow(() -> {userService.register(myRequest); });
+        Assertions.assertThrowsExactly(BadRequestException.class, () -> {userService.register(myRequest); });
     }
 
     @Test
@@ -41,7 +41,7 @@ public class UserServiceTests
     public void tryBadEmail()
     {
         RegisterRequest myRequest = new RegisterRequest("Rose", "password", null);
-        Assertions.assertDoesNotThrow(() -> {userService.register(myRequest); });
+        Assertions.assertThrowsExactly(BadRequestException.class, () -> {userService.register(myRequest); });
     }
 
     @Test
@@ -50,7 +50,7 @@ public class UserServiceTests
     public void tryBadUsername()
     {
         RegisterRequest myRequest = new RegisterRequest(null, "password", "rose@gmail.com");
-        Assertions.assertDoesNotThrow(() -> {userService.register(myRequest); });
+        Assertions.assertThrowsExactly(BadRequestException.class, () -> {userService.register(myRequest); });
     }
 
     @Test
