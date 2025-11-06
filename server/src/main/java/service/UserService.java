@@ -3,6 +3,8 @@ package service;
 import dataaccess.MemoryAuthDAO;
 import dataaccess.UserMemoryDAO;
 import exception.BadRequestException;
+import exception.DoesNotExistException;
+import exception.PasswordIncorrectException;
 import model.LoginRequest;
 import model.LoginResponse;
 import model.RegisterResponse;
@@ -44,8 +46,31 @@ public class UserService
     public LoginResponse login(LoginRequest loginRequest)
     {
         //success case for login
-
+        //the username and password are both strings and none of them are null
         //exceptions that I will throw
+            //user with the username does not exist
+            //password is incorrect
+            //one or more of the something are null
+        if(myData.getUser(loginRequest.username()) == null)
+        {
+            throw new DoesNotExistException("This user does not exist");
+        }
+        else if(!myData.getUser(loginRequest.username()).password().equals(loginRequest.password()))
+        {
+            throw new PasswordIncorrectException("This password is incorrect");
+        }
+        else if(loginRequest.username() == null || loginRequest.password() == null)
+        {
+            throw new BadRequestException("One of the fields are missing");
+        }
+        //maybe verify the fields are both strings before confirming true
+        else
+        {
+            String token = myAuth.createAuth();
+            LoginResponse loginResponse = new LoginResponse(loginRequest.username(), token);
+
+            return loginResponse;
+        }
     }
 
 }
