@@ -47,6 +47,14 @@ public class LoginHandler
             ctx.result(new Gson().toJson(passwordWrong));
             ctx.status(401);
         }
+        catch(BadRequestException b) //not really sure what error code to put in, matches the register exception but ended up being different
+        {
+            //make a new ErrorResponse
+            ErrorResponse badRequest = new ErrorResponse("Error: one of the fields are blank");
+            //update the context status and result
+            ctx.result(new Gson().toJson(badRequest));
+            ctx.status(500);
+        }
 
     }
 }
