@@ -16,7 +16,7 @@ public class RegisterHandler
     private final UserService userService;
     public RegisterHandler()
     {
-        userService = new UserService(); //implement later
+        userService = new UserService();
     }
 
     public void register(Context ctx) throws AlreadyTakenException, BadRequestException

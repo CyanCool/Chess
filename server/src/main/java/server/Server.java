@@ -23,6 +23,8 @@ public class Server
 
         server.post("user", registerHandler::register);
 
+        server.post("session", loginHandler::login);
+
 
 
         //{\"username\":\joe\", \"authToken\":\"xyz\"}"
