@@ -16,10 +16,10 @@ public class UserService
     private UserMemoryDAO myData; //where do i put this idk
     private MemoryAuthDAO myAuth;
 
-    public UserService()
+    public UserService(UserMemoryDAO myData, MemoryAuthDAO myAuth)
     {
-        myData = new UserMemoryDAO();
-        myAuth = new MemoryAuthDAO();
+        this.myData = myData;
+        this.myAuth = myAuth;
     }
 
     public RegisterResponse register(RegisterRequest registerRequest)

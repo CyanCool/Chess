@@ -2,6 +2,8 @@ package handler;
 
 import com.google.gson.Gson;
 //import exception.AlreadyTakenException; //need to implement
+import dataaccess.MemoryAuthDAO;
+import dataaccess.UserMemoryDAO;
 import exception.*;
 import model.ErrorResponse;
 import model.RegisterRequest;
@@ -14,9 +16,9 @@ import service.UserService;
 public class RegisterHandler
 {
     private final UserService userService;
-    public RegisterHandler(UserService userService)
+    public RegisterHandler(UserMemoryDAO myData, MemoryAuthDAO myAuth)
     {
-        this.userService = userService;
+        userService = new UserService(myData, myAuth);
     }
 
     public void register(Context ctx) throws AlreadyTakenException, BadRequestException

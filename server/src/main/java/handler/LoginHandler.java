@@ -1,6 +1,8 @@
 package handler;
 
 import com.google.gson.Gson;
+import dataaccess.MemoryAuthDAO;
+import dataaccess.UserMemoryDAO;
 import exception.*;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
@@ -14,9 +16,9 @@ public class LoginHandler
 {
     private final UserService userService;
 
-    public LoginHandler(UserService userService)
+    public LoginHandler(UserMemoryDAO myData, MemoryAuthDAO myAuth)
     {
-        this.userService = userService;
+        userService = new UserService(myData, myAuth);
     }
 
     public void login(Context ctx) throws DoesNotExistException, PasswordIncorrectException

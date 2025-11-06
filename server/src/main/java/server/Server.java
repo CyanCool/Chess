@@ -1,5 +1,7 @@
 package server;
 
+import dataaccess.MemoryAuthDAO;
+import dataaccess.UserMemoryDAO;
 import handler.LoginHandler;
 import handler.RegisterHandler;
 import io.javalin.*;
@@ -18,17 +20,19 @@ public class Server
     private final Javalin server;
     private final RegisterHandler registerHandler;
     private final LoginHandler loginHandler;
-    private final UserService userService;
+    private final UserMemoryDAO userMemory;
+    private final MemoryAuthDAO authMemory;
 
     public Server()
     {
         server = Javalin.create(config -> config.staticFiles.add("web"));
         server.delete("db", ctx -> ctx.result("{}"));
 
-        userService = new UserService();
+        userMemory = new UserMemoryDAO();
+        authMemory = new MemoryAuthDAO(); //makes the memory global
 
-        registerHandler = new RegisterHandler(userService);
-        loginHandler = new LoginHandler(userService);
+        registerHandler = new RegisterHandler(userMemory, authMemory);
+        loginHandler = new LoginHandler(userMemory, authMemory);
 
         server.post("user", registerHandler::register);
         server.post("session", loginHandler::login);
