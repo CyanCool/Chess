@@ -3,6 +3,8 @@ package service;
 import dataaccess.MemoryAuthDAO;
 import dataaccess.UserMemoryDAO;
 import exception.BadRequestException;
+import model.LoginRequest;
+import model.LoginResponse;
 import model.RegisterResponse;
 import model.RegisterRequest;
 import exception.AlreadyTakenException;
@@ -38,14 +40,12 @@ public class UserService
             throw new AlreadyTakenException("This Username is already taken");
         }
     }
-    //unpack the register request into its components instead of passing it in
-    //will have the JSON info for the username and Password passed into Register as parameters
-    //will call DataAccess Method of getUser with the username
-    //if getUser returns null, then service will call
-    //Create User and Create Auth from Data Access
-    //return the new User Data to the Handler so it can
-    //translate it back into the weird script which will
-    //then be sent back to the computer
-    //if getUser returns something, then the service will
-    //throw an already taken exception
+
+    public LoginResponse login(LoginRequest loginRequest)
+    {
+        //success case for login
+
+        //exceptions that I will throw
+    }
+
 }
