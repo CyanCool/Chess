@@ -12,11 +12,11 @@ import service.UserService;
 
 public class LoginHandler
 {
-    private UserService userService;
+    private final UserService userService;
 
-    public LoginHandler()
+    public LoginHandler(UserService userService)
     {
-        userService = new UserService();
+        this.userService = userService;
     }
 
     public void login(Context ctx) throws DoesNotExistException, PasswordIncorrectException

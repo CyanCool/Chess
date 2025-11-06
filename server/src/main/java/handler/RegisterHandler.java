@@ -14,9 +14,9 @@ import service.UserService;
 public class RegisterHandler
 {
     private final UserService userService;
-    public RegisterHandler()
+    public RegisterHandler(UserService userService)
     {
-        userService = new UserService();
+        this.userService = userService;
     }
 
     public void register(Context ctx) throws AlreadyTakenException, BadRequestException
