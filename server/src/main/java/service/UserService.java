@@ -21,17 +21,17 @@ public class UserService
     public RegisterResponse register(RegisterRequest registerRequest)
     {
         String token;
-        if(registerRequest.username() == null || registerRequest.password() == null || registerRequest.email() == null)
-        {
-            throw new BadRequestException("One of the required fields (username, password, or email) are missing");
-        }
-        else if(myData.getUser(registerRequest.username()) == null)
+        if(myData.getUser(registerRequest.username()) == null)
         {
             myData.createUser(registerRequest);
             token = myAuth.createAuth();
 
             RegisterResponse registerResponse = new RegisterResponse(registerRequest.username(), token);
             return registerResponse;
+        }
+        else if((registerRequest.username() != null && (registerRequest.password() == null || registerRequest.email() == null)) || (registerRequest.password() != null && (registerRequest.username() == null || registerRequest.email() == null)) || (registerRequest.email() != null && (registerRequest.username() == null || registerRequest.password() == null)))
+        {
+            throw new BadRequestException("One of the required fields (username, password, or email) are missing");
         }
         else
         {

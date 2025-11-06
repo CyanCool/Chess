@@ -3,6 +3,7 @@ package handler;
 import com.google.gson.Gson;
 //import exception.AlreadyTakenException; //need to implement
 import exception.*;
+import model.ErrorResponse;
 import model.RegisterRequest;
 import model.RegisterResponse;
 import io.javalin.Javalin;
@@ -29,12 +30,17 @@ public class RegisterHandler
         }
         catch(BadRequestException b)
         {
-            System.err.println("One of the required fields to register are blank.");
+            ErrorResponse badRequest = new ErrorResponse("Error: bad request");
+            ctx.result(new Gson().toJson(badRequest));
+            System.err.println("Error: One of the required fields to register are blank.");
             ctx.status(400);
         }
         catch(AlreadyTakenException e)
         {
-            System.err.println("This Username is Already Taken.");
+            ErrorResponse alreadyTaken = new ErrorResponse("Error: already taken");
+            ctx.result(new Gson().toJson(alreadyTaken));
+            //System.out.println(ctx.result());
+            System.err.println("Error: This Username is Already Taken.");
             ctx.status(403);
         }
     }
