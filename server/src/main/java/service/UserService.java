@@ -3,10 +3,7 @@ package service;
 import dataaccess.MemoryAuthDAO;
 import dataaccess.UserMemoryDAO;
 import exception.*;
-import model.LoginRequest;
-import model.LoginResponse;
-import model.RegisterResponse;
-import model.RegisterRequest;
+import model.*;
 
 public class UserService
 {
@@ -64,9 +61,23 @@ public class UserService
         {
             String token = myAuth.createAuth();
             LoginResponse loginResponse = new LoginResponse(loginRequest.username(), token);
-
             return loginResponse;
         }
+    }
+
+    public LogoutResponse logout(LogoutRequest logoutRequest)
+    {
+        if(myAuth.getAuth(logoutRequest.authToken()) == null)
+        {
+            throw new InvalidAuthDataException("Your session is unauthorized");
+        }
+        else
+        {
+            LogoutResponse logoutResponse = new LogoutResponse(logoutRequest.authToken());
+            myAuth.remove(myAuth.getAuth(logoutRequest.authToken()));
+            return logoutResponse;
+        }
+
     }
 
 }

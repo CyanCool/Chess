@@ -3,6 +3,7 @@ package server;
 import dataaccess.MemoryAuthDAO;
 import dataaccess.UserMemoryDAO;
 import handler.LoginHandler;
+import handler.LogoutHandler;
 import handler.RegisterHandler;
 import io.javalin.*;
 import com.google.gson.Gson;
@@ -20,6 +21,7 @@ public class Server
     private final Javalin server;
     private final RegisterHandler registerHandler;
     private final LoginHandler loginHandler;
+    private final LogoutHandler logoutHandler;
     private final UserMemoryDAO userMemory;
     private final MemoryAuthDAO authMemory;
 
@@ -33,9 +35,11 @@ public class Server
 
         registerHandler = new RegisterHandler(userMemory, authMemory);
         loginHandler = new LoginHandler(userMemory, authMemory);
+        logoutHandler = new LogoutHandler(userMemory, authMemory);
 
         server.post("user", registerHandler::register);
         server.post("session", loginHandler::login);
+        server.delete("session", logoutHandler::logout);
 
 
 
