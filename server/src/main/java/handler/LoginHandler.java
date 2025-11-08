@@ -33,15 +33,14 @@ public class LoginHandler
             ctx.result(new Gson().toJson(loginResponse));
             ctx.status(200);
         }
-        catch(DoesNotExistException d)
+        catch(BlankFieldException b)
         {
-            //make a new ErrorResponse
             ErrorResponse notExist = new ErrorResponse("Error: bad request");
-            //update the context status and result
             ctx.result(new Gson().toJson(notExist));
             ctx.status(400);
+            System.out.println(ctx.status());
         }
-        catch(PasswordIncorrectException p)
+        catch(PasswordIncorrectException|DoesNotExistException p)
         {
             //make a new ErrorResponse
             ErrorResponse passwordWrong = new ErrorResponse("Error: unauthorized");
@@ -49,14 +48,5 @@ public class LoginHandler
             ctx.result(new Gson().toJson(passwordWrong));
             ctx.status(401);
         }
-        catch(BadRequestException b) //not really sure what error code to put in, matches the register exception but ended up being different
-        {
-            //make a new ErrorResponse
-            ErrorResponse badRequest = new ErrorResponse("Error: one of the fields are blank");
-            //update the context status and result
-            ctx.result(new Gson().toJson(badRequest));
-            ctx.status(500);
-        }
-
     }
 }

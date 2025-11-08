@@ -2,18 +2,15 @@ package service;
 
 import dataaccess.MemoryAuthDAO;
 import dataaccess.UserMemoryDAO;
-import exception.BadRequestException;
-import exception.DoesNotExistException;
-import exception.PasswordIncorrectException;
+import exception.*;
 import model.LoginRequest;
 import model.LoginResponse;
 import model.RegisterResponse;
 import model.RegisterRequest;
-import exception.AlreadyTakenException;
 
 public class UserService
 {
-    private UserMemoryDAO myData; //where do i put this idk
+    private UserMemoryDAO myData;
     private MemoryAuthDAO myAuth;
 
     public UserService(UserMemoryDAO myData, MemoryAuthDAO myAuth)
@@ -51,7 +48,11 @@ public class UserService
             //user with the username does not exist
             //password is incorrect
             //one or more of the something are null
-        if(myData.getUser(loginRequest.username()) == null)
+        if(loginRequest.username() == null || loginRequest.password() == null)
+        {
+            throw new BlankFieldException("One of the fields are missing");
+        }
+        else if(myData.getUser(loginRequest.username()) == null)
         {
             throw new DoesNotExistException("This user does not exist");
         }
@@ -59,11 +60,6 @@ public class UserService
         {
             throw new PasswordIncorrectException("This password is incorrect");
         }
-        else if(loginRequest.username() == null || loginRequest.password() == null)
-        {
-            throw new BadRequestException("One of the fields are missing");
-        }
-        //maybe verify the fields are both strings before confirming true
         else
         {
             String token = myAuth.createAuth();
