@@ -31,10 +31,15 @@ public class MemoryAuthDAO implements AuthDAO
         return null;
     }
 
-    public String createAuth()
+    public ArrayList<AuthData> getAllAuthData()
+    {
+        return authDataList;
+    }
+
+    public String createAuth(String username)
     {
         String myToken = UUID.randomUUID().toString();
-        AuthData myData = new AuthData(myToken);
+        AuthData myData = new AuthData(myToken,username);
         authDataList.add(myData);
 
         return myToken;

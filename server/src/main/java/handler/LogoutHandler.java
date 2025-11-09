@@ -16,20 +16,30 @@ import exception.*;
 public class LogoutHandler
 {
     private final UserService userService;
+    private final ArrayList<AuthData> validTokens;
 
     public LogoutHandler(UserMemoryDAO myData, MemoryAuthDAO myAuth)
     {
         userService = new UserService(myData, myAuth);
+        validTokens = myAuth.getAllAuthData(); //does this make a copy or reference the original?
     }
 
-    public void logout(Context ctx)throws InvalidAuthDataException
+    public void logout(Context ctx) throws InvalidAuthDataException, BadRequestException
     {
-        LogoutRequest logoutRequest = new Gson().fromJson(ctx.body(), LogoutRequest.class);
+        //System.out.println(ctx.header("authorization"));
+        if(userService.)
+        LogoutRequest logoutRequest = new LogoutRequest(ctx.header("authorization"));
         try
         {
             LogoutResponse logoutResponse = userService.logout(logoutRequest);
             ctx.result(new Gson().toJson(logoutResponse));
             ctx.status(200);
+        }
+        catch(BadRequestException b)
+        {
+            ErrorResponse badReq = new ErrorResponse("Error: bad request");
+            ctx.result(new Gson().toJson(badReq));
+            ctx.status(400);
         }
         catch(InvalidAuthDataException i)
         {
@@ -37,7 +47,12 @@ public class LogoutHandler
             ctx.result(new Gson().toJson(authWrong));
             ctx.status(401);
         }
-
     }
+    //System.out.println(ctx.header("authorization"));
+    //authorization stores the authtoken
+    //use it to get the authtoken
+    //use the authtoken to search through the usernames and see if one matches
+    //if it matches, then clear the auth data for them
+    //if none of them do, throw an invalid authorization exception
 
 }

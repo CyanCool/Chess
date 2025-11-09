@@ -1,9 +1,13 @@
 package service;
 
+import com.google.gson.Gson;
 import dataaccess.MemoryAuthDAO;
 import dataaccess.UserMemoryDAO;
 import exception.*;
+import io.javalin.http.Context;
 import model.*;
+
+import java.util.Map;
 
 public class UserService
 {
@@ -22,7 +26,7 @@ public class UserService
         if(myData.getUser(registerRequest.username()) == null)
         {
             myData.createUser(registerRequest);
-            token = myAuth.createAuth();
+            token = myAuth.createAuth(registerRequest.username());
 
             RegisterResponse registerResponse = new RegisterResponse(registerRequest.username(), token);
             return registerResponse;
@@ -59,15 +63,19 @@ public class UserService
         }
         else
         {
-            String token = myAuth.createAuth();
+            String token = myAuth.createAuth(loginRequest.username());
             LoginResponse loginResponse = new LoginResponse(loginRequest.username(), token);
             return loginResponse;
         }
     }
 
-    public LogoutResponse logout(LogoutRequest logoutRequest)
+    public LogoutResponse logout(LogoutRequest logoutRequest) throws BadRequestException, InvalidAuthDataException
     {
-        if(myAuth.getAuth(logoutRequest.authToken()) == null)
+        if(logoutRequest == null)
+        {
+            throw new BadRequestException("The server cannot authenticate properly");
+        }
+        else if(myAuth.getAuth(logoutRequest.authToken()) == null)
         {
             throw new InvalidAuthDataException("Your session is unauthorized");
         }
@@ -78,6 +86,26 @@ public class UserService
             return logoutResponse;
         }
 
+    }
+    public void removeAuthData(AuthData authData)
+    {
+        myAuth.remove(authData);
+    }
+
+    private boolean authorized(Context ctx)
+    {
+        boolean check = false;
+        String authTokenHeader = ctx.header("authorization");
+
+        for(AuthData authData : myAuth.getAllAuthData())
+        {
+            if(authData.authToken().equals(authTokenHeader))
+            {
+                check = true;
+                myAuth.remove(authData);
+            }
+        }
+        return check;
     }
 
 }
