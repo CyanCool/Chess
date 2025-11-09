@@ -16,22 +16,19 @@ import exception.*;
 public class LogoutHandler
 {
     private final UserService userService;
-    private final ArrayList<AuthData> validTokens;
 
     public LogoutHandler(UserMemoryDAO myData, MemoryAuthDAO myAuth)
     {
         userService = new UserService(myData, myAuth);
-        validTokens = myAuth.getAllAuthData(); //does this make a copy or reference the original?
     }
 
     public void logout(Context ctx) throws InvalidAuthDataException, BadRequestException
     {
-        //System.out.println(ctx.header("authorization"));
-        if(userService.)
         LogoutRequest logoutRequest = new LogoutRequest(ctx.header("authorization"));
         try
         {
             LogoutResponse logoutResponse = userService.logout(logoutRequest);
+            userService.authorized(ctx); //take out if broken
             ctx.result(new Gson().toJson(logoutResponse));
             ctx.status(200);
         }

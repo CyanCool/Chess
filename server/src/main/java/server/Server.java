@@ -40,6 +40,7 @@ public class Server
         server.post("user", registerHandler::register);
         server.post("session", loginHandler::login);
         server.delete("session", logoutHandler::logout);
+        server.get("game", listgamesHandler::listgames);
 
 
 

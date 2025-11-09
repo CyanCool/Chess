@@ -92,7 +92,7 @@ public class UserService
         myAuth.remove(authData);
     }
 
-    private boolean authorized(Context ctx)
+    public boolean authorized(Context ctx)throws InvalidAuthDataException
     {
         boolean check = false;
         String authTokenHeader = ctx.header("authorization");
@@ -104,6 +104,10 @@ public class UserService
                 check = true;
                 myAuth.remove(authData);
             }
+        }
+        if(!check)
+        {
+            throw new InvalidAuthDataException("You suck");
         }
         return check;
     }
