@@ -4,12 +4,12 @@ import model.RegisterRequest;
 import model.UserData;
 import java.util.HashMap;
 
-public class UserMemoryDAO implements UserDAO
+public class MemoryUserDAO implements UserDAO
 {
     //has the username as the key and the UserData as the value
     private HashMap<String, UserData> userInfo;
 
-    public UserMemoryDAO()
+    public MemoryUserDAO()
     {
         userInfo = new HashMap<>();
     }
@@ -29,4 +29,5 @@ public class UserMemoryDAO implements UserDAO
     {
         userInfo.remove(username);
     }
+    //method called listgames that returns a list of games
 }

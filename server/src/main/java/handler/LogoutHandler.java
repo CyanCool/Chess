@@ -1,23 +1,18 @@
 package handler;
 
-import chess.ChessGame;
 import com.google.gson.Gson;
 import dataaccess.MemoryAuthDAO;
-import dataaccess.UserMemoryDAO;
+import dataaccess.MemoryUserDAO;
 import io.javalin.http.Context;
 import model.*;
-import org.junit.jupiter.api.*;
-import passoff.model.TestAuthResult;
 import service.UserService;
-import java.net.HttpURLConnection;
-import java.util.*;
 import exception.*;
 
 public class LogoutHandler
 {
     private final UserService userService;
 
-    public LogoutHandler(UserMemoryDAO myData, MemoryAuthDAO myAuth)
+    public LogoutHandler(MemoryUserDAO myData, MemoryAuthDAO myAuth)
     {
         userService = new UserService(myData, myAuth);
     }

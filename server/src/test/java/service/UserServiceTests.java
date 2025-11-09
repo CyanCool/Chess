@@ -1,20 +1,15 @@
 package service;
 
-import chess.ChessGame;
 import dataaccess.MemoryAuthDAO;
-import dataaccess.UserMemoryDAO;
+import dataaccess.MemoryUserDAO;
 import model.*;
 import org.junit.jupiter.api.*;
-import passoff.model.TestAuthResult;
-import service.UserService;
-import java.net.HttpURLConnection;
-import java.util.*;
 import exception.*;
 
 public class UserServiceTests
 {
     private UserService userService;
-    public UserServiceTests(UserMemoryDAO myData, MemoryAuthDAO myAuth)
+    public UserServiceTests(MemoryUserDAO myData, MemoryAuthDAO myAuth)
     {
         userService = new UserService(myData, myAuth);
         RegisterRequest myRequest = new RegisterRequest("Steven", "password", "steven@gmail.com");

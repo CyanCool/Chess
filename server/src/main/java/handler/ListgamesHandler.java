@@ -1,25 +1,20 @@
 package handler;
 
-import chess.ChessGame;
 import com.google.gson.Gson;
 import dataaccess.MemoryAuthDAO;
-import dataaccess.UserMemoryDAO;
+import dataaccess.MemoryUserDAO;
 import io.javalin.http.Context;
 import model.*;
-import org.junit.jupiter.api.*;
-import passoff.model.TestAuthResult;
-import service.UserService;
-import java.net.HttpURLConnection;
-import java.util.*;
+import service.GameService;
 import exception.*;
 
 public class ListgamesHandler
 {
-    private final UserService userService;
+    private final GameService gameService;
 
-    public ListgamesHandler(UserMemoryDAO myData, MemoryAuthDAO myAuth)
+    public ListgamesHandler(MemoryUserDAO myData, MemoryAuthDAO myAuth)
     {
-        userService = new UserService(myData, myAuth);
+        gameService = new GameService(myData, myAuth);
     }
 
     public void listgames(Context ctx) throws InvalidAuthDataException
@@ -27,7 +22,10 @@ public class ListgamesHandler
         ListgamesRequest listgamesRequest = new ListgamesRequest(ctx.header("authorization"));
         try
         {
-
+            ListgamesResponse listgamesResponse = gameService.list(listgamesRequest);
+            gameService.authorized(ctx); //take out if broken
+            ctx.result(new Gson().toJson(listgamesResponse));
+            ctx.status(200);
         }
         catch(InvalidAuthDataException i)
         {

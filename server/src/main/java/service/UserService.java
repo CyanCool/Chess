@@ -1,20 +1,17 @@
 package service;
 
-import com.google.gson.Gson;
 import dataaccess.MemoryAuthDAO;
-import dataaccess.UserMemoryDAO;
+import dataaccess.MemoryUserDAO;
 import exception.*;
 import io.javalin.http.Context;
 import model.*;
 
-import java.util.Map;
-
 public class UserService
 {
-    private UserMemoryDAO myData;
+    private MemoryUserDAO myData;
     private MemoryAuthDAO myAuth;
 
-    public UserService(UserMemoryDAO myData, MemoryAuthDAO myAuth)
+    public UserService(MemoryUserDAO myData, MemoryAuthDAO myAuth)
     {
         this.myData = myData;
         this.myAuth = myAuth;
@@ -87,10 +84,6 @@ public class UserService
         }
 
     }
-    public void removeAuthData(AuthData authData)
-    {
-        myAuth.remove(authData);
-    }
 
     public boolean authorized(Context ctx)throws InvalidAuthDataException
     {
@@ -107,9 +100,9 @@ public class UserService
         }
         if(!check)
         {
-            throw new InvalidAuthDataException("You suck");
+            throw new InvalidAuthDataException("Not authorized");
         }
-        return check;
+        return check; //maybe make a service interface, or parent class?
     }
 
 }

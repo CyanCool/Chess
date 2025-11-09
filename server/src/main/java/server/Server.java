@@ -1,18 +1,13 @@
 package server;
 
 import dataaccess.MemoryAuthDAO;
-import dataaccess.UserMemoryDAO;
+import dataaccess.MemoryUserDAO;
 import handler.LoginHandler;
 import handler.LogoutHandler;
 import handler.RegisterHandler;
 import io.javalin.*;
-import com.google.gson.Gson;
-import io.javalin.http.Context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import service.UserService;
-
-import java.util.Map;
 
 public class Server
 {
@@ -22,7 +17,7 @@ public class Server
     private final RegisterHandler registerHandler;
     private final LoginHandler loginHandler;
     private final LogoutHandler logoutHandler;
-    private final UserMemoryDAO userMemory;
+    private final MemoryUserDAO userMemory;
     private final MemoryAuthDAO authMemory;
 
     public Server()
@@ -30,7 +25,7 @@ public class Server
         server = Javalin.create(config -> config.staticFiles.add("web"));
         server.delete("db", ctx -> ctx.result("{}"));
 
-        userMemory = new UserMemoryDAO();
+        userMemory = new MemoryUserDAO();
         authMemory = new MemoryAuthDAO(); //makes the memory global
 
         registerHandler = new RegisterHandler(userMemory, authMemory);
