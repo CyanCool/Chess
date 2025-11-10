@@ -49,7 +49,7 @@ public class GameService
         }
         if(!check)
         {
-            throw new InvalidAuthDataException("You suck");
+            throw new InvalidAuthDataException("InvalidAuthData");
         }
         return check;
     } //keep here, if works, make more efficient

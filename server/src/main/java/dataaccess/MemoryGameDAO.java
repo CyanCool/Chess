@@ -1,25 +1,48 @@
 package dataaccess;
 
+import chess.ChessGame;
+import model.GameData;
+import java.util.HashMap;
+import java.util.UUID;
+
 public class MemoryGameDAO implements GameDAO
 {
-    private ArrayList<>
-    public void createGame()
-    {
+    //authToken stored as string, leads to the game data
+    private int nextID;
+    private HashMap<Integer, GameData> gameInfo;
 
+    public MemoryGameDAO()
+    {
+        gameInfo = new HashMap<>();
     }
 
-    public void getGame()
+    public void createGame(String whiteUsername, String blackUsername, String gameName, String authToken)
     {
+        int gameID = Integer.parseInt(UUID.randomUUID().toString());
+        ChessGame myGame = new ChessGame();
+        GameData myData = new GameData(gameID, whiteUsername, blackUsername, gameName, myGame);
 
+        gameInfo.put(nextID, myData); //i think i need to put it in the list?
     }
 
-    public String listGames()
+    public GameData getGame(String authToken)
     {
+        return gameInfo.get(authToken);
+    }
 
+    public String listGames(String authToken)
+    {
+        String concat = "";
+        for(GameData g : gameInfo)
+        {
+            concat += g.toString();
+        }
+        return concat;
     }
 
     public void updateGame()
     {
+
 
     }
 
