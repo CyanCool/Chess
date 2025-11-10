@@ -9,15 +9,15 @@ import model.ErrorResponse;
 import model.RegisterRequest;
 import model.RegisterResponse;
 import io.javalin.http.Context;
-import service.UserService;
+import service.RegisterService;
 
 
 public class RegisterHandler
 {
-    private final UserService userService;
+    private final RegisterService registerService;
     public RegisterHandler(MemoryUserDAO myData, MemoryAuthDAO myAuth)
     {
-        userService = new UserService(myData, myAuth);
+        registerService = new RegisterService(myData, myAuth);
     }
 
     public void register(Context ctx) throws AlreadyTakenException, BadRequestException
@@ -25,7 +25,7 @@ public class RegisterHandler
         RegisterRequest registerRequest = new Gson().fromJson(ctx.body(), RegisterRequest.class);
         try
         {
-            RegisterResponse registerResponse = userService.register(registerRequest);
+            RegisterResponse registerResponse = registerService.register(registerRequest);
             ctx.result(new Gson().toJson(registerResponse));
             ctx.status(200);
         }

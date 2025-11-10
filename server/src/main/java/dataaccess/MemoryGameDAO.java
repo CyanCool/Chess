@@ -15,32 +15,32 @@ public class MemoryGameDAO implements GameDAO
     public MemoryGameDAO()
     {
         gameInfo = new ArrayList<>();
+        nextID = 1;
     }
 
-//    public void createGame(String whiteUsername, String blackUsername, String gameName, String authToken)
-//    {
-//        int gameID = Integer.parseInt(UUID.randomUUID().toString());
-//        ChessGame myGame = new ChessGame();
-//        GameData myData = new GameData(gameID, whiteUsername, blackUsername, gameName, myGame);
-//
-//        gameInfo.put(nextID, myData); //i think i need to put it in the list?
-//    }
+    public void createGame(String gameName, String authToken)
+    {
+        //verify authToken
+        ChessGame myGame = new ChessGame();
+        GameData myData = new GameData(nextID++, null, null, gameName, myGame);
+        gameInfo.add(myData);
+    }
 //
 //    public GameData getGame(String authToken)
 //    {
 //        return gameInfo.get(authToken);
 //    }
 
-    public String listGames(String authToken)
-    {
-        //verify the authToken
-        String concat = "";
-        for(GameData g : gameInfo)
-        {
-            concat += g.toString();
-        }
-        return concat;
-    }
+//    public String listGames(String authToken)
+//    {
+//        //verify the authToken
+//        String concat = "";
+//        for(GameData g : gameInfo)
+//        {
+//            concat += g.toString();
+//        }
+//        return concat;
+//    }
 //
 //    public void updateGame()
 //    {

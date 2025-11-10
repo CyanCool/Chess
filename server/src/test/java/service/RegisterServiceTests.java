@@ -6,14 +6,14 @@ import model.*;
 import org.junit.jupiter.api.*;
 import exception.*;
 
-public class UserServiceTests
+public class RegisterServiceTests
 {
-    private UserService userService;
-    public UserServiceTests(MemoryUserDAO myData, MemoryAuthDAO myAuth)
+    private RegisterService registerService;
+    public RegisterServiceTests(MemoryUserDAO myData, MemoryAuthDAO myAuth)
     {
-        userService = new UserService(myData, myAuth);
+        registerService = new RegisterService(myData, myAuth);
         RegisterRequest myRequest = new RegisterRequest("Steven", "password", "steven@gmail.com");
-        userService.register(myRequest);
+        registerService.register(myRequest);
     }
 
     @Test
@@ -22,7 +22,7 @@ public class UserServiceTests
     public void tryUserTaken()
     {
         RegisterRequest myRequest = new RegisterRequest("Steven", "password", "steven@gmail.com");
-        Assertions.assertThrowsExactly(AlreadyTakenException.class, () -> {userService.register(myRequest); }); //check to see if it returns the exception
+        Assertions.assertThrowsExactly(AlreadyTakenException.class, () -> {registerService.register(myRequest); }); //check to see if it returns the exception
     }
 
     @Test
@@ -31,7 +31,7 @@ public class UserServiceTests
     public void tryBadPassword()
     {
         RegisterRequest myRequest = new RegisterRequest("Rose", null, "rose@gmail.com");
-        Assertions.assertThrowsExactly(BadRequestException.class, () -> {userService.register(myRequest); });
+        Assertions.assertThrowsExactly(BadRequestException.class, () -> {registerService.register(myRequest); });
     }
 
     @Test
@@ -40,7 +40,7 @@ public class UserServiceTests
     public void tryBadEmail()
     {
         RegisterRequest myRequest = new RegisterRequest("Rose", "password", null);
-        Assertions.assertThrowsExactly(BadRequestException.class, () -> {userService.register(myRequest); });
+        Assertions.assertThrowsExactly(BadRequestException.class, () -> {registerService.register(myRequest); });
     }
 
     @Test
@@ -49,7 +49,7 @@ public class UserServiceTests
     public void tryBadUsername()
     {
         RegisterRequest myRequest = new RegisterRequest(null, "password", "rose@gmail.com");
-        Assertions.assertThrowsExactly(BadRequestException.class, () -> {userService.register(myRequest); });
+        Assertions.assertThrowsExactly(BadRequestException.class, () -> {registerService.register(myRequest); });
     }
 
     @Test
@@ -58,7 +58,7 @@ public class UserServiceTests
     public void registerSuccess()
     {
         RegisterRequest myRequest = new RegisterRequest("Bartholemue", "Imanerd", "bartholemue@gmail.com");
-        RegisterResponse myResponse = userService.register(myRequest);
+        RegisterResponse myResponse = registerService.register(myRequest);
 
         //make sure the username of the request matches the response
         Assertions.assertEquals(myRequest.username(), myResponse.username());

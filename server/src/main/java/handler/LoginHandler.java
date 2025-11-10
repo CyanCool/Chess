@@ -8,15 +8,15 @@ import io.javalin.http.Context;
 import model.ErrorResponse;
 import model.LoginRequest;
 import model.LoginResponse;
-import service.UserService;
+import service.LoginService;
 
 public class LoginHandler
 {
-    private final UserService userService;
+    private final LoginService loginService;
 
     public LoginHandler(MemoryUserDAO myData, MemoryAuthDAO myAuth)
     {
-        userService = new UserService(myData, myAuth);
+        loginService = new LoginService(myData, myAuth);
     }
 
     public void login(Context ctx) throws DoesNotExistException, PasswordIncorrectException
@@ -26,7 +26,7 @@ public class LoginHandler
         try
         {
             //make a new loginResponse
-            LoginResponse loginResponse = userService.login(loginRequest);
+            LoginResponse loginResponse = loginService.login(loginRequest);
             //update the context status and result
             ctx.result(new Gson().toJson(loginResponse));
             ctx.status(200);

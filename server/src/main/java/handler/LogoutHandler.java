@@ -5,19 +5,16 @@ import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryUserDAO;
 import io.javalin.http.Context;
 import model.*;
-import service.AuthService;
-import service.UserService;
 import exception.*;
+import service.LogoutService;
 
 public class LogoutHandler
 {
-    private final UserService userService;
-    private final AuthService authService;
+    private final LogoutService logoutService;
 
     public LogoutHandler(MemoryUserDAO myData, MemoryAuthDAO myAuth)
     {
-        userService = new UserService(myData, myAuth);
-        authService = new AuthService(myAuth)
+        logoutService = new LogoutService(myData, myAuth);
     }
 
     public void logout(Context ctx) throws InvalidAuthDataException, BadRequestException
@@ -25,8 +22,8 @@ public class LogoutHandler
         LogoutRequest logoutRequest = new LogoutRequest(ctx.header("authorization"));
         try
         {
-            LogoutResponse logoutResponse = userService.logout(logoutRequest);
-            userService.authorized(ctx); //take out if broken
+            LogoutResponse logoutResponse = logoutService.logout(logoutRequest);
+            //userService.authorized(ctx); //figure out where to put this method
             ctx.result(new Gson().toJson(logoutResponse));
             ctx.status(200);
         }

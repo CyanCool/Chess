@@ -6,16 +6,16 @@ import dataaccess.MemoryGameDAO;
 import dataaccess.MemoryUserDAO;
 import io.javalin.http.Context;
 import model.*;
-import service.GameService;
 import exception.*;
+import service.ListGamesService;
 
 public class ListgamesHandler
 {
-    private final GameService gameService;
+    //private final ListGamesService listGamesService;
 
     public ListgamesHandler(MemoryUserDAO myData, MemoryAuthDAO myAuth, MemoryGameDAO myGame)
     {
-        gameService = new GameService(myData, myAuth, myGame);
+       // listGamesService = new ListGamesService(myData, myAuth, myGame);
     }
 
     public void listgames(Context ctx) throws InvalidAuthDataException
@@ -23,9 +23,9 @@ public class ListgamesHandler
         ListgamesRequest listgamesRequest = new ListgamesRequest(ctx.header("authorization"));
         try
         {
-            ListgamesResponse listgamesResponse = gameService.list(listgamesRequest);
-            gameService.authorized(ctx); //take out if broken
-            ctx.result(new Gson().toJson(listgamesResponse));
+            //ListgamesResponse listgamesResponse = listGamesService.list(listgamesRequest);
+            //listGamesService.authorized(ctx); //figure out where to put this method
+          //  ctx.result(new Gson().toJson(listgamesResponse));
             ctx.status(200);
         }
         catch(InvalidAuthDataException i)

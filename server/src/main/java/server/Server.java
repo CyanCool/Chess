@@ -19,7 +19,7 @@ public class Server
     private final RegisterHandler registerHandler;
     private final LoginHandler loginHandler;
     private final LogoutHandler logoutHandler;
-    private final ListgamesHandler listgamesHandler;
+    //private final ListgamesHandler listgamesHandler;
 
     private final MemoryUserDAO userMemory;
     private final MemoryAuthDAO authMemory;
@@ -37,12 +37,12 @@ public class Server
         registerHandler = new RegisterHandler(userMemory, authMemory);
         loginHandler = new LoginHandler(userMemory, authMemory);
         logoutHandler = new LogoutHandler(userMemory, authMemory);
-        listgamesHandler = new ListgamesHandler(gameMemory);
+        //listgamesHandler = new ListgamesHandler(gameMemory);
 
         server.post("user", registerHandler::register);
         server.post("session", loginHandler::login);
         server.delete("session", logoutHandler::logout);
-        server.get("game", listgamesHandler::listgames);
+        //server.get("game", listgamesHandler::listgames);
 
 
 
