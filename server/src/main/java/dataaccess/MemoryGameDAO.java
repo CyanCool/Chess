@@ -1,6 +1,7 @@
 package dataaccess;
 
 import chess.ChessGame;
+import exception.BadRequestException;
 import model.GameData;
 
 import java.util.ArrayList;
@@ -35,6 +36,36 @@ public class MemoryGameDAO implements GameDAO
             }
         }
         return null;
+    }
+
+    public GameData getGame(int gameID)
+    {
+        for(GameData g: gameInfo)
+        {
+            if(g.gameID() == gameID)
+            {
+                return g;
+            }
+        }
+        return null;
+    }
+
+    public void updateGame(int gameID, String playerColor, String username)
+    {
+        GameData oldGame = gameInfo.get(gameID);
+        GameData newGame;
+        if(playerColor.equals("WHITE"))
+        {
+            newGame = new GameData(gameID, username, oldGame.blackUsername(), oldGame.gameName(), oldGame.game());
+        }
+        else if(playerColor.equals("BLACK"))
+        {
+            newGame = new GameData(gameID, oldGame.whiteUsername(), username, oldGame.gameName(), oldGame.game());
+        }
+        else
+        {
+            throw new BadRequestException("This is not a valid player color");
+        }
     }
 
     public void clearData()
