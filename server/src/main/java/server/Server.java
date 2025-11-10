@@ -18,6 +18,8 @@ public class Server
     private final LogoutHandler logoutHandler;
     //private final ListgamesHandler listgamesHandler;
     private final CreateGameHandler createGameHandler;
+    private final ClearHandler clearHandler;
+    private final JoinGameHandler joinGameHandler;
 
     private final MemoryUserDAO userMemory;
     private final MemoryAuthDAO authMemory;
@@ -25,9 +27,6 @@ public class Server
 
     public Server()
     {
-        server = Javalin.create(config -> config.staticFiles.add("web"));
-        server.delete("db", ctx -> ctx.result("{}"));
-
         userMemory = new MemoryUserDAO();
         authMemory = new MemoryAuthDAO(); //makes the memory global
         gameMemory = new MemoryGameDAO();
@@ -36,12 +35,20 @@ public class Server
         loginHandler = new LoginHandler(userMemory, authMemory);
         logoutHandler = new LogoutHandler(userMemory, authMemory);
         createGameHandler = new CreateGameHandler(authMemory, gameMemory);
+        clearHandler = new ClearHandler(userMemory, authMemory, gameMemory);
+        joinGameHandler = new JoinGameHandler(gameMemory);
         //listgamesHandler = new ListgamesHandler(gameMemory);
+
+        //server.delete("db", ctx -> ctx.result("{}")); //old clear method
+        server = Javalin.create(config -> config.staticFiles.add("web"));
+        server.delete("db", clearHandler::clear);
+
 
         server.post("user", registerHandler::register);
         server.post("session", loginHandler::login);
         server.delete("session", logoutHandler::logout);
         server.post("game", createGameHandler::create);
+        server.put("game", joinGameHandler::join);
         //server.get("game", listgamesHandler::listgames);
 
 

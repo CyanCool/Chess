@@ -36,6 +36,11 @@ public class MemoryGameDAO implements GameDAO
         }
         return null;
     }
+
+    public void clearData()
+    {
+        gameInfo.clear();
+    }
 //
 //    public GameData getGame(String authToken)
 //    {

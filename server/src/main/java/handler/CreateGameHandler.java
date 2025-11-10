@@ -29,7 +29,12 @@ public class CreateGameHandler
         String authToken = ctx.header("authorization");
         System.out.println(ctx.body());
         HashMap<String, String> getJSONBody = new Gson().fromJson(ctx.body(), HashMap.class);
-        CreateRequest createRequest = new CreateRequest(authToken, getJSONBody.toString());
+        String body = getJSONBody.toString();
+        if(body.equals("{}"))
+        {
+            body = null;
+        }
+        CreateRequest createRequest = new CreateRequest(authToken, body);
         try
         {
             createGame.verifyAuth(authToken);
