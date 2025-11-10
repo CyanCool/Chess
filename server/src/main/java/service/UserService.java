@@ -84,25 +84,4 @@ public class UserService
         }
 
     }
-
-    public boolean authorized(Context ctx)throws InvalidAuthDataException
-    {
-        boolean check = false;
-        String authTokenHeader = ctx.header("authorization");
-
-        for(AuthData authData : myAuth.getAllAuthData())
-        {
-            if(authData.authToken().equals(authTokenHeader))
-            {
-                check = true;
-                myAuth.remove(authData);
-            }
-        }
-        if(!check)
-        {
-            throw new InvalidAuthDataException("Not authorized");
-        }
-        return check; //maybe make a service interface, or parent class?
-    }
-
 }

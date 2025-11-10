@@ -5,16 +5,19 @@ import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryUserDAO;
 import io.javalin.http.Context;
 import model.*;
+import service.AuthService;
 import service.UserService;
 import exception.*;
 
 public class LogoutHandler
 {
     private final UserService userService;
+    private final AuthService authService;
 
     public LogoutHandler(MemoryUserDAO myData, MemoryAuthDAO myAuth)
     {
         userService = new UserService(myData, myAuth);
+        authService = new AuthService(myAuth)
     }
 
     public void logout(Context ctx) throws InvalidAuthDataException, BadRequestException

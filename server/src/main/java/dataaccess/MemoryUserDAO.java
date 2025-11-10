@@ -29,5 +29,4 @@ public class MemoryUserDAO implements UserDAO
     {
         userInfo.remove(username);
     }
-    //method called listgames that returns a list of games
 }

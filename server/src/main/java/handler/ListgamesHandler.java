@@ -2,6 +2,7 @@ package handler;
 
 import com.google.gson.Gson;
 import dataaccess.MemoryAuthDAO;
+import dataaccess.MemoryGameDAO;
 import dataaccess.MemoryUserDAO;
 import io.javalin.http.Context;
 import model.*;
@@ -12,9 +13,9 @@ public class ListgamesHandler
 {
     private final GameService gameService;
 
-    public ListgamesHandler(MemoryUserDAO myData, MemoryAuthDAO myAuth)
+    public ListgamesHandler(MemoryUserDAO myData, MemoryAuthDAO myAuth, MemoryGameDAO myGame)
     {
-        gameService = new GameService(myData, myAuth);
+        gameService = new GameService(myData, myAuth, myGame);
     }
 
     public void listgames(Context ctx) throws InvalidAuthDataException

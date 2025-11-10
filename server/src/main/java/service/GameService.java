@@ -1,6 +1,7 @@
 package service;
 
 import dataaccess.MemoryAuthDAO;
+import dataaccess.MemoryGameDAO;
 import dataaccess.MemoryUserDAO;
 import exception.*;
 import io.javalin.http.Context;
@@ -10,20 +11,22 @@ public class GameService
 {
     private MemoryUserDAO myData;
     private MemoryAuthDAO myAuth;
+    private MemoryGameDAO myGame;
 
-    public GameService(MemoryUserDAO myData, MemoryAuthDAO myAuth)
+    public GameService(MemoryUserDAO myData, MemoryAuthDAO myAuth, MemoryGameDAO myGame)
     {
         this.myData = myData;
         this.myAuth = myAuth;
+        this.myGame = myGame;
     }
 
-    public ListgamesResponse list(ListgamesRequest listgamesRequest)
+    public ListgamesResponse list(ListgamesRequest listgamesRequest) //this is going to list all the games that exist given the authToken
     {
         //if there is no authtoken or it doesnt work, throw exception
         String listOfGames = "";
         if(listgamesRequest.authToken() == null)
         {
-            throw new InvalidAuthDataException("User cannot be verified");
+            throw new InvalidAuthDataException("User cannot be verified"); //make message better later
         }
         else
         {
@@ -33,24 +36,4 @@ public class GameService
             return listgamesResponse;
         }
     }
-
-    public boolean authorized(Context ctx)throws InvalidAuthDataException
-    {
-        boolean check = false;
-        String authTokenHeader = ctx.header("authorization");
-
-        for(AuthData authData : myAuth.getAllAuthData())
-        {
-            if(authData.authToken().equals(authTokenHeader))
-            {
-                check = true;
-                myAuth.remove(authData);
-            }
-        }
-        if(!check)
-        {
-            throw new InvalidAuthDataException("InvalidAuthData");
-        }
-        return check;
-    } //keep here, if works, make more efficient
 }
