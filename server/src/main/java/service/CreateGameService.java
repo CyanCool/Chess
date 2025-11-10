@@ -4,6 +4,7 @@ import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryGameDAO;
 import exception.AlreadyTakenException;
 import exception.BadRequestException;
+import exception.BlankFieldException;
 import model.CreateRequest;
 import model.CreateResponse;
 
@@ -25,7 +26,7 @@ public class CreateGameService extends ParentService
 
         if(createRequest.gameName() == null)
         {
-            throw new BadRequestException("Bad Request");
+            throw new BlankFieldException("The game name is blank");
         }
         else if(myGame.getGame(createRequest.gameName()) != null)
         {

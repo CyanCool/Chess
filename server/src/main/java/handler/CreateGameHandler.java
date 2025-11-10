@@ -2,13 +2,18 @@ package handler;
 
 
 import com.google.gson.Gson;
+import com.google.gson.JsonParser;
 import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryGameDAO;
 import exception.AlreadyTakenException;
 import exception.BadRequestException;
+import exception.BlankFieldException;
+import exception.DoesNotExistException;
 import io.javalin.http.Context;
 import model.*;
 import service.CreateGameService;
+
+import java.util.HashMap;
 
 public class CreateGameHandler
 {
@@ -22,22 +27,23 @@ public class CreateGameHandler
     public void create(Context ctx)
     {
         String authToken = ctx.header("authorization");
-        String gameName = ctx.body();
-
-        CreateRequest createRequest = new CreateRequest(authToken, gameName); //this code may suck
+        System.out.println(ctx.body());
+        HashMap<String, String> getJSONBody = new Gson().fromJson(ctx.body(), HashMap.class);
+        CreateRequest createRequest = new CreateRequest(authToken, getJSONBody.toString());
         try
         {
+            createGame.verifyAuth(authToken);
             CreateResponse createResponse = createGame.createGame(createRequest);
             ctx.result(new Gson().toJson(createResponse));
             ctx.status(200);
         }
-        catch(BadRequestException b)
+        catch(BadRequestException|BlankFieldException b)
         {
             ErrorResponse badReq = new ErrorResponse("Error: bad request");
             ctx.result(new Gson().toJson(badReq));
             ctx.status(400);
         }
-        catch(AlreadyTakenException a)
+        catch(AlreadyTakenException | DoesNotExistException a)
         {
             ErrorResponse taken = new ErrorResponse("Error: unauthorized");
             ctx.result(new Gson().toJson(taken));

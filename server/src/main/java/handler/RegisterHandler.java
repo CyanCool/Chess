@@ -28,6 +28,7 @@ public class RegisterHandler
             RegisterResponse registerResponse = registerService.register(registerRequest);
             ctx.result(new Gson().toJson(registerResponse));
             ctx.status(200);
+            System.out.println(ctx.status());
         }
         catch(BadRequestException b)
         {

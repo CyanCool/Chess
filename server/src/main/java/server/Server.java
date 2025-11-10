@@ -3,10 +3,7 @@ package server;
 import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryGameDAO;
 import dataaccess.MemoryUserDAO;
-import handler.ListgamesHandler;
-import handler.LoginHandler;
-import handler.LogoutHandler;
-import handler.RegisterHandler;
+import handler.*;
 import io.javalin.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +17,7 @@ public class Server
     private final LoginHandler loginHandler;
     private final LogoutHandler logoutHandler;
     //private final ListgamesHandler listgamesHandler;
+    private final CreateGameHandler createGameHandler;
 
     private final MemoryUserDAO userMemory;
     private final MemoryAuthDAO authMemory;
@@ -37,11 +35,13 @@ public class Server
         registerHandler = new RegisterHandler(userMemory, authMemory);
         loginHandler = new LoginHandler(userMemory, authMemory);
         logoutHandler = new LogoutHandler(userMemory, authMemory);
+        createGameHandler = new CreateGameHandler(authMemory, gameMemory);
         //listgamesHandler = new ListgamesHandler(gameMemory);
 
         server.post("user", registerHandler::register);
         server.post("session", loginHandler::login);
         server.delete("session", logoutHandler::logout);
+        server.post("game", createGameHandler::create);
         //server.get("game", listgamesHandler::listgames);
 
 
