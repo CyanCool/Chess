@@ -18,12 +18,23 @@ public class MemoryGameDAO implements GameDAO
         nextID = 1;
     }
 
-    public void createGame(String gameName, String authToken)
+    public void createGame(String gameName)
     {
-        //verify authToken
         ChessGame myGame = new ChessGame();
         GameData myData = new GameData(nextID++, null, null, gameName, myGame);
         gameInfo.add(myData);
+    }
+
+    public GameData getGame(String gameName)
+    {
+        for(GameData g: gameInfo)
+        {
+            if(g.gameName().equals(gameName))
+            {
+                return g;
+            }
+        }
+        return null;
     }
 //
 //    public GameData getGame(String authToken)
