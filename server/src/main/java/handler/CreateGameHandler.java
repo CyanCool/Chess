@@ -21,24 +21,16 @@ public class CreateGameHandler
 
     public CreateGameHandler(MemoryAuthDAO myAuth, MemoryGameDAO myGame)
     {
-        createGame = new CreateGameService(myAuth, myGame);
+        createGame = new CreateGameService(myGame, myAuth);
     }
 
     public void create(Context ctx)
     {
         String authToken = ctx.header("authorization");
-        System.out.println(ctx.body());
-        HashMap<String, String> getJSONBody = new Gson().fromJson(ctx.body(), HashMap.class);
-        String body = getJSONBody.toString();
-        if(body.equals("{}"))
-        {
-            body = null;
-        }
-        CreateRequest createRequest = new CreateRequest(authToken, body);
+        CreateRequest createRequest = new Gson().fromJson(ctx.body(), CreateRequest.class);
         try
         {
-            createGame.verifyAuth(authToken);
-            CreateResponse createResponse = createGame.createGame(createRequest);
+            CreateResponse createResponse = createGame.createGame(authToken, createRequest);
             ctx.result(new Gson().toJson(createResponse));
             ctx.status(200);
         }

@@ -16,7 +16,7 @@ public class Server
     private final RegisterHandler registerHandler;
     private final LoginHandler loginHandler;
     private final LogoutHandler logoutHandler;
-    //private final ListgamesHandler listgamesHandler;
+    private final ListgamesHandler listgamesHandler;
     private final CreateGameHandler createGameHandler;
     private final ClearHandler clearHandler;
     private final JoinGameHandler joinGameHandler;
@@ -36,8 +36,8 @@ public class Server
         logoutHandler = new LogoutHandler(userMemory, authMemory);
         createGameHandler = new CreateGameHandler(authMemory, gameMemory);
         clearHandler = new ClearHandler(userMemory, authMemory, gameMemory);
-        joinGameHandler = new JoinGameHandler(gameMemory);
-        //listgamesHandler = new ListgamesHandler(gameMemory);
+        joinGameHandler = new JoinGameHandler(authMemory, gameMemory);
+        listgamesHandler = new ListgamesHandler(authMemory, gameMemory);
 
         //server.delete("db", ctx -> ctx.result("{}")); //old clear method
         server = Javalin.create(config -> config.staticFiles.add("web"));
@@ -49,7 +49,7 @@ public class Server
         server.delete("session", logoutHandler::logout);
         server.post("game", createGameHandler::create);
         server.put("game", joinGameHandler::join);
-        //server.get("game", listgamesHandler::listgames);
+        server.get("game", listgamesHandler::listgames);
 
 
 

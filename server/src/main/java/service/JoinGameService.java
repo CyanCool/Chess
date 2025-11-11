@@ -9,25 +9,29 @@ import io.javalin.http.Context;
 import model.JoinGameRequest;
 import model.JoinGameResponse;
 
-public class JoinGameService extends ParentService
+public class JoinGameService
 {
     private MemoryAuthDAO myAuth;
     private MemoryGameDAO myGame;
-    private MemoryUserDAO myData;
 
-    public JoinGameService(MemoryAuthDAO myAuth, MemoryGameDAO myGame, MemoryUserDAO myData)
+    public JoinGameService(MemoryAuthDAO myAuth, MemoryGameDAO myGame)
     {
-        super(myAuth);
+        this.myAuth = myAuth;
         this.myGame = myGame;
-        this.myData = myData;
     }
 
-    public JoinGameResponse updateGame(JoinGameRequest joinRequest)
+    public JoinGameResponse updateGame(String authToken, JoinGameRequest joinRequest)
     {
-        //verify the auth token
-        //verify that the game exists based on the name
-        //verify that none of the fields are blank
-        if(joinRequest.gameID() == null || joinRequest.playerColor() == null)
+        //authToken is verified using the parent class ParentService
+        if(authToken == null)
+        {
+            throw new BadRequestException("Bad Request");
+        }
+        else if(myAuth.getAuth(authToken) == null)
+        {
+            throw new DoesNotExistException("This session doesn't exist");
+        }
+        else if(joinRequest.gameID() == 0 || joinRequest.playerColor() == null)
         {
             throw new BadRequestException("One of the required fields are blank");
         }
@@ -37,7 +41,8 @@ public class JoinGameService extends ParentService
         }
         else
         {
-            myGame.updateGame(joinRequest.gameID(), joinRequest.playerColor());
+            String username = myAuth.getAuth(authToken).username(); //gets the username from the AuthData class using one of its methods
+            myGame.updateGame(joinRequest.gameID(), joinRequest.playerColor(), username);
             return new JoinGameResponse();
         }
     }

@@ -14,7 +14,7 @@ import java.util.HashMap;
 
 public class JoinGameHandler
 {
-    JoinGameService joinGame;
+    private JoinGameService joinGame;
     public JoinGameHandler(MemoryAuthDAO myAuth, MemoryGameDAO myGame)
     {
         joinGame = new JoinGameService(myAuth, myGame);
@@ -23,18 +23,10 @@ public class JoinGameHandler
     public void join(Context ctx)
     {
         String authToken = ctx.header("authorization");
-        HashMap<String, String> getJSONBody = new Gson().fromJson(ctx.body(), HashMap.class);
-        String body = getJSONBody.toString();
-        System.out.println(body);
-        if(body.equals("{}"))
-        {
-            body = null;
-        }
-        JoinGameRequest joinGameRequest = new JoinGameRequest(authToken, body, body);//placeholder
+        JoinGameRequest joinGameRequest = new Gson().fromJson(ctx.body(), JoinGameRequest.class);
         try
         {
-            joinGame.verifyAuth(authToken);
-            JoinGameResponse joinGameResponse = joinGame.join(joinGameRequest);
+            JoinGameResponse joinGameResponse = joinGame.updateGame(authToken, joinGameRequest);
             ctx.result(new Gson().toJson(joinGameResponse));
             ctx.status(200);
         }

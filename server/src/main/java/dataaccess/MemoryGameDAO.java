@@ -52,15 +52,19 @@ public class MemoryGameDAO implements GameDAO
 
     public void updateGame(int gameID, String playerColor, String username)
     {
-        GameData oldGame = gameInfo.get(gameID);
+        GameData oldGame = getGame(gameID);
         GameData newGame;
         if(playerColor.equals("WHITE"))
         {
             newGame = new GameData(gameID, username, oldGame.blackUsername(), oldGame.gameName(), oldGame.game());
+            gameInfo.remove(oldGame);
+            gameInfo.add(newGame);
         }
         else if(playerColor.equals("BLACK"))
         {
             newGame = new GameData(gameID, oldGame.whiteUsername(), username, oldGame.gameName(), oldGame.game());
+            gameInfo.remove(oldGame);
+            gameInfo.add(newGame);
         }
         else
         {
@@ -72,31 +76,10 @@ public class MemoryGameDAO implements GameDAO
     {
         gameInfo.clear();
     }
-//
-//    public GameData getGame(String authToken)
-//    {
-//        return gameInfo.get(authToken);
-//    }
 
-//    public String listGames(String authToken)
-//    {
-//        //verify the authToken
-//        String concat = "";
-//        for(GameData g : gameInfo)
-//        {
-//            concat += g.toString();
-//        }
-//        return concat;
-//    }
-//
-//    public void updateGame()
-//    {
-//
-//
-//    }
-//
-//    public void clear()
-//    {
-//
-//    }
+    public ArrayList<GameData> listGames()
+    {
+        return gameInfo;
+    }
+
 }

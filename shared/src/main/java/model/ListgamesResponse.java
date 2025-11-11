@@ -1,3 +1,5 @@
 package model;
 
-public record ListgamesResponse(String authToken, String games) {}
+import java.util.ArrayList;
+
+public record ListgamesResponse(ArrayList<GameData> games) {}

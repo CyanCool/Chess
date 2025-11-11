@@ -5,26 +5,35 @@ import dataaccess.MemoryGameDAO;
 import exception.AlreadyTakenException;
 import exception.BadRequestException;
 import exception.BlankFieldException;
+import exception.DoesNotExistException;
 import model.CreateRequest;
 import model.CreateResponse;
 
-public class CreateGameService extends ParentService
+public class CreateGameService
 {
     private MemoryGameDAO myGame;
+    private MemoryAuthDAO myAuth;
 
-    public CreateGameService(MemoryAuthDAO myAuth, MemoryGameDAO myGame)
+    public CreateGameService(MemoryGameDAO myGame, MemoryAuthDAO myAuth)
     {
-        super(myAuth);
         this.myGame = myGame;
+        this.myAuth = myAuth;
     }
 
-    public CreateResponse createGame(CreateRequest createRequest)throws BadRequestException, AlreadyTakenException
+    public CreateResponse createGame(String authToken, CreateRequest createRequest)throws BadRequestException, AlreadyTakenException, DoesNotExistException
     {
         //check authdata first with other method
         //create needs an authtoken and a gamename
         //if the authtoken is invalid, return exception, use verify auth
-
-        if(createRequest.gameName() == null)
+        if(authToken == null)
+        {
+            throw new BadRequestException("Bad Request");
+        }
+        else if(myAuth.getAuth(authToken) == null)
+        {
+            throw new DoesNotExistException("This session doesn't exist");
+        }
+        else if(createRequest.gameName() == null)
         {
             throw new BlankFieldException("The game name is blank");
         }
