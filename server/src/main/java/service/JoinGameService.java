@@ -3,6 +3,7 @@ package service;
 import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryGameDAO;
 import dataaccess.MemoryUserDAO;
+import exception.AlreadyTakenException;
 import exception.BadRequestException;
 import exception.DoesNotExistException;
 import io.javalin.http.Context;
@@ -38,6 +39,10 @@ public class JoinGameService
         else if(myGame.getGame(joinRequest.gameID()) == null)
         {
             throw new DoesNotExistException("This game does not exist");
+        }
+        else if((myGame.getGame(joinRequest.gameID()).blackUsername() != null && joinRequest.playerColor().equals("BLACK")) || (myGame.getGame(joinRequest.gameID()).whiteUsername() != null && joinRequest.playerColor().equals("WHITE")))
+        {
+            throw new AlreadyTakenException("This spot is already taken");
         }
         else
         {

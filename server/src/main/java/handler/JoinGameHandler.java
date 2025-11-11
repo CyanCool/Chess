@@ -5,6 +5,7 @@ import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryGameDAO;
 import exception.AlreadyTakenException;
 import exception.BadRequestException;
+import exception.DoesNotExistException;
 import exception.InvalidAuthDataException;
 import io.javalin.http.Context;
 import model.*;
@@ -20,7 +21,7 @@ public class JoinGameHandler
         joinGame = new JoinGameService(myAuth, myGame);
     }
 
-    public void join(Context ctx)
+    public void join(Context ctx)throws BadRequestException, DoesNotExistException, AlreadyTakenException
     {
         String authToken = ctx.header("authorization");
         JoinGameRequest joinGameRequest = new Gson().fromJson(ctx.body(), JoinGameRequest.class);
@@ -36,7 +37,7 @@ public class JoinGameHandler
             ctx.result(new Gson().toJson(badReq));
             ctx.status(400);
         }
-        catch(InvalidAuthDataException i)
+        catch(DoesNotExistException d)
         {
             ErrorResponse invalid = new ErrorResponse("Error: unauthorized");
             ctx.result(new Gson().toJson(invalid));
