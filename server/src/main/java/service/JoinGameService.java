@@ -2,13 +2,11 @@ package service;
 
 import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryGameDAO;
-import dataaccess.MemoryUserDAO;
 import exception.AlreadyTakenException;
 import exception.BadRequestException;
-import exception.DoesNotExistException;
-import io.javalin.http.Context;
-import model.JoinGameRequest;
-import model.JoinGameResponse;
+import exception.UnauthorizedException;
+import request.JoinGameRequest;
+import response.JoinGameResponse;
 
 public class JoinGameService
 {
@@ -29,7 +27,7 @@ public class JoinGameService
         }
         else if(myAuth.getAuth(authToken) == null)
         {
-            throw new DoesNotExistException("This session doesn't exist");
+            throw new UnauthorizedException("This session doesn't exist");
         }
         else if(joinRequest.gameID() == 0 || joinRequest.playerColor() == null)
         {
@@ -37,9 +35,10 @@ public class JoinGameService
         }
         else if(myGame.getGame(joinRequest.gameID()) == null)
         {
-            throw new DoesNotExistException("This game does not exist");
+            throw new UnauthorizedException("This game does not exist");
         }
-        else if((myGame.getGame(joinRequest.gameID()).blackUsername() != null && joinRequest.playerColor().equals("BLACK")) || (myGame.getGame(joinRequest.gameID()).whiteUsername() != null && joinRequest.playerColor().equals("WHITE")))
+        else if((myGame.getGame(joinRequest.gameID()).blackUsername() != null && joinRequest.playerColor().equals("BLACK"))
+                || (myGame.getGame(joinRequest.gameID()).whiteUsername() != null && joinRequest.playerColor().equals("WHITE")))
         {
             throw new AlreadyTakenException("This spot is already taken");
         }

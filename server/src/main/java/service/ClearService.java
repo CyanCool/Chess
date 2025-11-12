@@ -3,9 +3,8 @@ package service;
 import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryGameDAO;
 import dataaccess.MemoryUserDAO;
-import model.DeleteRequest;
-import model.DeleteResponse;
-import model.UserData;
+import request.DeleteRequest;
+import response.DeleteResponse;
 
 public class ClearService
 {

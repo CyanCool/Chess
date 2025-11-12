@@ -4,8 +4,8 @@ import com.google.gson.Gson;
 import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryGameDAO;
 import dataaccess.MemoryUserDAO;
-import model.DeleteRequest;
-import model.DeleteResponse;
+import request.DeleteRequest;
+import response.DeleteResponse;
 import service.ClearService;
 import io.javalin.http.Context;
 

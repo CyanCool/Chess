@@ -483,7 +483,8 @@ public class StandardAPITests {
 
     private void assertHttpError(TestResult result, int statusCode, String message) {
         System.out.println(serverFacade.getStatusCode());
-        Assertions.assertEquals(statusCode, serverFacade.getStatusCode(), "Server response code was not %d %s (message: %s)".formatted(statusCode, message, result.getMessage()));
+        Assertions.assertEquals(statusCode, serverFacade.getStatusCode(),
+                "Server response code was not %d %s (message: %s)".formatted(statusCode, message, result.getMessage()));
         Assertions.assertNotNull(result.getMessage(), "Invalid Request didn't return an error message");
         Assertions.assertTrue(result.getMessage().toLowerCase(Locale.ROOT).contains("error"),
                 "Error message didn't contain the word \"Error\"");

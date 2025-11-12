@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 public class Server
 {
 
-    private static final Logger log = LoggerFactory.getLogger(Server.class);
     private final Javalin server;
     private final RegisterHandler registerHandler;
     private final LoginHandler loginHandler;

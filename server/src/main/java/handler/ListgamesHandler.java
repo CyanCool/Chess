@@ -3,10 +3,11 @@ package handler;
 import com.google.gson.Gson;
 import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryGameDAO;
-import dataaccess.MemoryUserDAO;
 import io.javalin.http.Context;
-import model.*;
 import exception.*;
+import request.ListgamesRequest;
+import response.ErrorResponse;
+import response.ListgamesResponse;
 import service.ListGamesService;
 
 public class ListgamesHandler
@@ -18,7 +19,7 @@ public class ListgamesHandler
        listGamesService = new ListGamesService(myAuth, myGame);
     }
 
-    public void listgames(Context ctx) throws BadRequestException, DoesNotExistException
+    public void listgames(Context ctx) throws BadRequestException, UnauthorizedException
     {
         ListgamesRequest listgamesRequest = new ListgamesRequest(ctx.header("authorization"));
         try
@@ -33,7 +34,7 @@ public class ListgamesHandler
             ctx.result(new Gson().toJson(badReq));
             ctx.status(400);
         }
-        catch(DoesNotExistException e)
+        catch(UnauthorizedException e)
         {
             ErrorResponse authWrong = new ErrorResponse("Error: unauthorized");
             ctx.result(new Gson().toJson(authWrong));

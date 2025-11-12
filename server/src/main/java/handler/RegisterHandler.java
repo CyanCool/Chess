@@ -5,9 +5,9 @@ import com.google.gson.Gson;
 import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryUserDAO;
 import exception.*;
-import model.ErrorResponse;
-import model.RegisterRequest;
-import model.RegisterResponse;
+import response.ErrorResponse;
+import request.RegisterRequest;
+import response.RegisterResponse;
 import io.javalin.http.Context;
 import service.RegisterService;
 

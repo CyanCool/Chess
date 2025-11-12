@@ -3,8 +3,8 @@ package service;
 import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryUserDAO;
 import exception.*;
-import io.javalin.http.Context;
-import model.*;
+import request.LogoutRequest;
+import response.LogoutResponse;
 
 public class LogoutService
 {

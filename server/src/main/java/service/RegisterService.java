@@ -4,8 +4,8 @@ import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryUserDAO;
 import exception.AlreadyTakenException;
 import exception.BadRequestException;
-import model.RegisterRequest;
-import model.RegisterResponse;
+import request.RegisterRequest;
+import response.RegisterResponse;
 
 public class RegisterService
 {

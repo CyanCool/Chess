@@ -1,3 +1,3 @@
-package model;
+package response;
 
 public record CreateResponse(int gameID) {}

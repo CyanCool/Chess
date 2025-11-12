@@ -1,13 +1,12 @@
 package dataaccess;
 
-import model.RegisterRequest;
+import request.RegisterRequest;
 import model.UserData;
 
 public interface UserDAO
 {
     public UserData getUser(String username);
     public void createUser(RegisterRequest userData);
-    public void removeUser(String username);
 }
 
 

@@ -3,8 +3,8 @@ package service;
 import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryUserDAO;
 import exception.*;
-import io.javalin.http.Context;
-import model.*;
+import request.LoginRequest;
+import response.LoginResponse;
 
 public class LoginService
 {
@@ -31,7 +31,7 @@ public class LoginService
         }
         else if(myData.getUser(loginRequest.username()) == null)
         {
-            throw new DoesNotExistException("This user does not exist");
+            throw new UnauthorizedException("This user does not exist");
         }
         else if(!myData.getUser(loginRequest.username()).password().equals(loginRequest.password()))
         {

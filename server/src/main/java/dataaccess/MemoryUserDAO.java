@@ -1,6 +1,6 @@
 package dataaccess;
 
-import model.RegisterRequest;
+import request.RegisterRequest;
 import model.UserData;
 import java.util.HashMap;
 
@@ -32,11 +32,6 @@ public class MemoryUserDAO implements UserDAO
     {
         UserData currentUser = new UserData(userData.username(), userData.password(), userData.email());
         userInfo.put(currentUser.username(), currentUser);
-    }
-
-    public void removeUser(String username)
-    {
-        userInfo.remove(username);
     }
 
     public void clearData()

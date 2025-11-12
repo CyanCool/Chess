@@ -4,8 +4,10 @@ import com.google.gson.Gson;
 import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryUserDAO;
 import io.javalin.http.Context;
-import model.*;
 import exception.*;
+import request.LogoutRequest;
+import response.ErrorResponse;
+import response.LogoutResponse;
 import service.LogoutService;
 
 public class LogoutHandler

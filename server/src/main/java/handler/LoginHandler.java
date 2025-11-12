@@ -5,9 +5,9 @@ import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryUserDAO;
 import exception.*;
 import io.javalin.http.Context;
-import model.ErrorResponse;
-import model.LoginRequest;
-import model.LoginResponse;
+import response.ErrorResponse;
+import request.LoginRequest;
+import response.LoginResponse;
 import service.LoginService;
 
 public class LoginHandler
@@ -19,7 +19,7 @@ public class LoginHandler
         loginService = new LoginService(myData, myAuth);
     }
 
-    public void login(Context ctx) throws DoesNotExistException, PasswordIncorrectException
+    public void login(Context ctx) throws UnauthorizedException, PasswordIncorrectException
     {
         LoginRequest loginRequest = new Gson().fromJson(ctx.body(), LoginRequest.class);
 
@@ -38,7 +38,7 @@ public class LoginHandler
             ctx.status(400);
             System.out.println(ctx.status());
         }
-        catch(PasswordIncorrectException|DoesNotExistException p)
+        catch(PasswordIncorrectException | UnauthorizedException p)
         {
             //make a new ErrorResponse
             ErrorResponse passwordWrong = new ErrorResponse("Error: unauthorized");

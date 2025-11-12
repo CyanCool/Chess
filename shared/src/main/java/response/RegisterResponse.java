@@ -1,3 +1,3 @@
-package model;
+package response;
 
 public record RegisterResponse(String username, String authToken) {}

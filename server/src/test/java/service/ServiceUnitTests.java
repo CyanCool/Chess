@@ -4,12 +4,13 @@ import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryGameDAO;
 import dataaccess.MemoryUserDAO;
 import exception.*;
-import model.*;
 import org.junit.jupiter.api.*;
 import passoff.model.TestAuthResult;
 import passoff.model.TestCreateRequest;
 import passoff.model.TestUser;
 import passoff.server.TestServerFacade;
+import request.*;
+import response.*;
 import server.Server;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -34,7 +35,7 @@ public class ServiceUnitTests {
     private String existingAuth;
 
     @BeforeAll
-    public static void init() {
+    public static void initiate() {
         server = new Server();
         var port = server.run(0);
         System.out.println("Started test HTTP server on " + port);
@@ -142,7 +143,7 @@ public class ServiceUnitTests {
     public void notExist()
     {
         LoginRequest loginRequest = new LoginRequest("Kirk", "jlsafj");
-        Assertions.assertThrowsExactly(DoesNotExistException.class, () -> {loginService.login(loginRequest); });
+        Assertions.assertThrowsExactly(UnauthorizedException.class, () -> {loginService.login(loginRequest); });
     }
 
     @Test
@@ -213,7 +214,7 @@ public class ServiceUnitTests {
         LoginRequest loginRequest = new LoginRequest("Steven","password");
         LoginResponse loginResponse = loginService.login(loginRequest);
         CreateRequest createRequest = new CreateRequest("Tyrone");
-        Assertions.assertThrowsExactly(DoesNotExistException.class, () -> {createGameService.createGame("792749274982", createRequest); });
+        Assertions.assertThrowsExactly(UnauthorizedException.class, () -> {createGameService.createGame("792749274982", createRequest); });
     }
 
     @Test
@@ -290,7 +291,7 @@ public class ServiceUnitTests {
         CreateRequest createRequest = new CreateRequest("Boulevard");
         CreateResponse createResponse = createGameService.createGame(loginResponse.authToken(), createRequest);
         JoinGameRequest joinGameRequest = new JoinGameRequest("BLACK", 686);
-        Assertions.assertThrowsExactly(DoesNotExistException.class, () -> {joinGameService.updateGame(loginResponse.authToken(), joinGameRequest);});
+        Assertions.assertThrowsExactly(UnauthorizedException.class, () -> {joinGameService.updateGame(loginResponse.authToken(), joinGameRequest);});
     }
 
     @Test
@@ -312,7 +313,8 @@ public class ServiceUnitTests {
         JoinGameRequest joinGameRequest = new JoinGameRequest("BLACK", createResponse.gameID());
         JoinGameResponse joinGameResponse = joinGameService.updateGame(loginResponse.authToken(), joinGameRequest);
         JoinGameRequest joinGameRequest2 = new JoinGameRequest("BLACK", createResponse.gameID());
-        Assertions.assertThrowsExactly(AlreadyTakenException.class, () -> {joinGameService.updateGame(loginResponse2.authToken(), joinGameRequest2);});
+        Assertions.assertThrowsExactly(AlreadyTakenException.class, () ->
+        {joinGameService.updateGame(loginResponse2.authToken(), joinGameRequest2);});
     }
 
     @Test
@@ -358,7 +360,7 @@ public class ServiceUnitTests {
         JoinGameRequest joinGameRequest = new JoinGameRequest("BLACK", createResponse.gameID());
         JoinGameResponse joinGameResponse = joinGameService.updateGame(loginResponse.authToken(), joinGameRequest);
         ListgamesRequest listgamesRequest = new ListgamesRequest("8979729749");
-        Assertions.assertThrowsExactly(DoesNotExistException.class, () -> {listGamesService.listGames(listgamesRequest);});
+        Assertions.assertThrowsExactly(UnauthorizedException.class, () -> {listGamesService.listGames(listgamesRequest);});
 
     }
 

@@ -3,9 +3,9 @@ package service;
 import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryGameDAO;
 import exception.BadRequestException;
-import exception.DoesNotExistException;
-import model.ListgamesRequest;
-import model.ListgamesResponse;
+import exception.UnauthorizedException;
+import request.ListgamesRequest;
+import response.ListgamesResponse;
 
 public class ListGamesService
 {
@@ -26,7 +26,7 @@ public class ListGamesService
         }
         else if(myAuth.getAuth(myRequest.authToken()) == null)
         {
-            throw new DoesNotExistException("This session doesn't exist");
+            throw new UnauthorizedException("This session doesn't exist");
         }
         else
         {

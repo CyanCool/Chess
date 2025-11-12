@@ -1,3 +1,3 @@
-package model;
+package request;
 
 public record ListgamesRequest(String authToken) {}
