@@ -106,15 +106,27 @@ public class ChessGame
             {
                 ChessPosition pos = new ChessPosition(x, y);
                 ChessPiece piece = testBoard.getPiece(pos);
-                if (piece != null && piece.getTeamColor() != teamColor)
+                seeIfInCheck(piece, testBoard, kingPos, pos);
+                boolean check = seeIfInCheck(piece, testBoard, kingPos, pos);
+                if(check)
                 {
-                    for (ChessMove m : piece.pieceMoves(testBoard, pos))
-                    {
-                        if (m.getEndPosition().equals(kingPos))
-                        {
-                            return true;
-                        }
-                    }
+                    return true;
+                }
+
+            }
+        }
+        return false;
+    }
+
+    private boolean seeIfInCheck(ChessPiece myPiece, ChessBoard myBoard, ChessPosition kingPosition, ChessPosition currentPosition)
+    {
+        if(myPiece != null && myPiece.getTeamColor() != teamColor)
+        {
+            for (ChessMove m : myPiece.pieceMoves(myBoard, currentPosition))
+            {
+                if (m.getEndPosition().equals(kingPosition))
+                {
+                    return true;
                 }
             }
         }
@@ -189,12 +201,10 @@ public class ChessGame
                 if (myPiece != null && myPiece.getTeamColor() != teamColor)
                 {
                     ArrayList<ChessMove> myMoves = new ArrayList<>(myPiece.pieceMoves(board, myPosition));
-                    for (ChessMove m : myMoves)
+                    boolean check = seeIfInCheck(myPiece, board, currentKing, myPosition);
+                    if(check)
                     {
-                        if (m.getEndPosition().equals(currentKing))
-                        {
-                            return true;
-                        }
+                        return true;
                     }
                 }
             }
