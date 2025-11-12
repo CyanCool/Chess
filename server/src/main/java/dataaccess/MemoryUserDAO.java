@@ -19,6 +19,15 @@ public class MemoryUserDAO implements UserDAO
         return userInfo.get(username);
     }
 
+    public HashMap<String, UserData> getMap()
+    {
+        if(userInfo.size() > 0)
+        {
+            return userInfo;
+        }
+        return null;
+    }
+
     public void createUser(RegisterRequest userData)
     {
         UserData currentUser = new UserData(userData.username(), userData.password(), userData.email());

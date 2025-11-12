@@ -23,7 +23,6 @@ public class JoinGameService
 
     public JoinGameResponse updateGame(String authToken, JoinGameRequest joinRequest)
     {
-        //authToken is verified using the parent class ParentService
         if(authToken == null)
         {
             throw new BadRequestException("Bad Request");

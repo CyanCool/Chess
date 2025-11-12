@@ -33,7 +33,11 @@ public class MemoryAuthDAO implements AuthDAO
 
     public ArrayList<AuthData> getAllAuthData()
     {
-        return authDataList;
+        if(authDataList.size() > 0)
+        {
+            return authDataList;
+        }
+        return null;
     }
 
     public String createAuth(String username)

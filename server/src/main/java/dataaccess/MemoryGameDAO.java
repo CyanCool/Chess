@@ -38,6 +38,15 @@ public class MemoryGameDAO implements GameDAO
         return null;
     }
 
+    public ArrayList<GameData> getList()
+    {
+        if(gameInfo.size() > 0)
+        {
+            return gameInfo;
+        }
+        return null;
+    }
+
     public GameData getGame(int gameID)
     {
         for(GameData g: gameInfo)

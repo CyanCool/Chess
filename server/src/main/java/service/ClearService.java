@@ -22,10 +22,12 @@ public class ClearService
 
     public DeleteResponse clear(DeleteRequest deleteRequest)
     {
-        myData.clearData();
-        myAuth.clearData();
-        myGame.clearData();
-
+        if(deleteRequest != null)
+        {
+            myData.clearData();
+            myAuth.clearData();
+            myGame.clearData();
+        }
         return new DeleteResponse();
     }
 }
