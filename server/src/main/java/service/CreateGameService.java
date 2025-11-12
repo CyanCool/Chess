@@ -22,9 +22,6 @@ public class CreateGameService
 
     public CreateResponse createGame(String authToken, CreateRequest createRequest)throws BadRequestException, AlreadyTakenException, DoesNotExistException
     {
-        //check authdata first with other method
-        //create needs an authtoken and a gamename
-        //if the authtoken is invalid, return exception, use verify auth
         if(authToken == null)
         {
             throw new BadRequestException("Bad Request");
