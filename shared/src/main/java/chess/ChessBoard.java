@@ -93,6 +93,25 @@ public class ChessBoard {
         return -1;
     }
 
+    public ChessBoard cloneBoard()
+    {
+        ChessBoard copy = new ChessBoard();
+
+        for(int x = 0; x < 8; x++)
+        {
+            copy.squares[x] = Arrays.copyOf(squares[x], squares[x].length);
+        }
+        return copy;
+    }
+
+    public void removePiece(ChessPosition position)
+    {
+        if(position.getRow() > 0 && position.getRow() < 9 && position.getColumn() > 0 && position.getColumn() < 9)
+        {
+            squares[position.getRow()-1][position.getColumn()-1] = null;
+        }
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) {

@@ -49,7 +49,8 @@ public class ChessPiece {
         return type;
     }
 
-    public ArrayList<ChessMove> recur(ArrayList<ChessMove> myMoves, int row, int col, ChessPosition startPosition, ChessPosition currentPosition, ChessBoard board, ChessPiece myPiece)
+    public ArrayList<ChessMove> recur(ArrayList<ChessMove> myMoves, int row, int col, ChessPosition startPosition,
+                                      ChessPosition currentPosition, ChessBoard board, ChessPiece myPiece)
     {
         if(currentPosition.getRow() < 1 || currentPosition.getRow() > 8 || currentPosition.getColumn() < 1 || currentPosition.getColumn() > 8)
         {
@@ -153,36 +154,12 @@ public class ChessPiece {
         else if(type == PieceType.KING)
         {
             int[][] moves = {{0,1}, {0,-1}, {-1,0}, {1,0}, {1,1}, {-1,-1}, {-1,1}, {1,-1}};
-            for(int x = 0; x<8; x++)
-            {
-                ChessPosition newPosition = new ChessPosition(myPosition.getRow()+moves[x][0], myPosition.getColumn()+moves[x][1]);
-                if(newPosition.getRow() > 0 && newPosition.getRow() < 9 && newPosition.getColumn() > 0 && newPosition.getColumn() < 9)
-                {
-                    int check = board.checkCollision(pieceColor, newPosition);
-                    if(check != 0)
-                    {
-                        ChessMove newMove = new ChessMove(myPosition, newPosition, null);
-                        myMoves.add(newMove);
-                    }
-                }
-            }
+            moveManually(board, myPosition, moves, myMoves);
         }
         else if(type == PieceType.KNIGHT)
         {
             int[][] moves = {{2,-1}, {2,1}, {1,-2}, {1,2}, {-2,-1}, {-2,1}, {-1,-2}, {-1,2}};
-            for(int x = 0; x<8; x++)
-            {
-                ChessPosition newPosition = new ChessPosition(myPosition.getRow()+moves[x][0], myPosition.getColumn()+moves[x][1]);
-                if(newPosition.getRow() > 0 && newPosition.getRow() < 9 && newPosition.getColumn() > 0 && newPosition.getColumn() < 9)
-                {
-                    int check = board.checkCollision(pieceColor, newPosition);
-                    if(check != 0)
-                    {
-                        ChessMove newMove = new ChessMove(myPosition, newPosition, null);
-                        myMoves.add(newMove);
-                    }
-                }
-            }
+            moveManually(board, myPosition, moves, myMoves);
         }
         return myMoves;
     }
@@ -255,6 +232,23 @@ public class ChessPiece {
             myMoves.add(diag);
         }
         return -1;
+    }
+
+    public void moveManually(ChessBoard board, ChessPosition myPosition, int[][] moves, ArrayList<ChessMove> myMoves)
+    {
+        for(int x = 0; x<8; x++)
+        {
+            ChessPosition newPosition = new ChessPosition(myPosition.getRow()+moves[x][0], myPosition.getColumn()+moves[x][1]);
+            if(newPosition.getRow() > 0 && newPosition.getRow() < 9 && newPosition.getColumn() > 0 && newPosition.getColumn() < 9)
+            {
+                int check = board.checkCollision(pieceColor, newPosition);
+                if(check != 0)
+                {
+                    ChessMove newMove = new ChessMove(myPosition, newPosition, null);
+                    myMoves.add(newMove);
+                }
+            }
+        }
     }
 
     @Override

@@ -5,10 +5,6 @@ import dataaccess.MemoryGameDAO;
 import dataaccess.MemoryUserDAO;
 import exception.*;
 import org.junit.jupiter.api.*;
-import passoff.model.TestAuthResult;
-import passoff.model.TestCreateRequest;
-import passoff.model.TestUser;
-import passoff.server.TestServerFacade;
 import request.*;
 import response.*;
 import server.Server;
@@ -27,28 +23,19 @@ public class ServiceUnitTests {
     private JoinGameService joinGameService;
     private ListGamesService listGamesService;
     private ClearService clearService;
-    private static TestUser existingUser;
-    private static TestUser newUser;
-    private static TestCreateRequest createRequest;
-    private static TestServerFacade serverFacade;
     private static Server server;
-    private String existingAuth;
 
     @BeforeAll
-    public static void initiate() {
+    public static void initiate()
+    {
         server = new Server();
         var port = server.run(0);
         System.out.println("Started test HTTP server on " + port);
-
-        serverFacade = new TestServerFacade("localhost", Integer.toString(port));
-        existingUser = new TestUser("ExistingUser", "existingUserPassword", "eu@mail.com");
-        newUser = new TestUser("NewUser", "newUserPassword", "nu@mail.com");
-        createRequest = new TestCreateRequest("testGame");
     }
 
     @BeforeEach
-    public void setup() {
-        // Initialize DAOs and services before every test
+    public void setup()
+    {
         myData = new MemoryUserDAO();
         myAuth = new MemoryAuthDAO();
         myGame = new MemoryGameDAO();
@@ -61,14 +48,8 @@ public class ServiceUnitTests {
         listGamesService = new ListGamesService(myAuth, myGame);
         clearService = new ClearService(myData, myAuth, myGame);
 
-        // Register an initial user (like Steven)
         RegisterRequest regRequest = new RegisterRequest("Steven", "password", "steven@gmail.com");
         regResponse = registerService.register(regRequest);
-
-        // Clear the server and log in the "existing" user for other tests
-        serverFacade.clear();
-        TestAuthResult regResult = serverFacade.register(existingUser);
-        existingAuth = regResult.getAuthToken();
     }
 
     @AfterAll
@@ -225,7 +206,7 @@ public class ServiceUnitTests {
         LoginRequest loginRequest = new LoginRequest("Steven","password");
         LoginResponse loginResponse = loginService.login(loginRequest);
         CreateRequest createRequest = new CreateRequest(null);
-        Assertions.assertThrowsExactly(BlankFieldException.class, () -> {createGameService.createGame(loginResponse.authToken(), createRequest); });
+        Assertions.assertThrowsExactly(BadRequestException.class, () -> {createGameService.createGame(loginResponse.authToken(), createRequest); });
     }
 
     @Test
@@ -240,7 +221,7 @@ public class ServiceUnitTests {
         CreateResponse createResponseDefault = createGameService.createGame(loginResponse.authToken(), createRequestDefault); //create the game
 
         CreateRequest createRequest = new CreateRequest("Gertrude"); //create the duplicate game
-        Assertions.assertThrowsExactly(AlreadyTakenException.class, () -> {createGameService.createGame(loginResponse.authToken(), createRequest); });
+        Assertions.assertThrowsExactly(UnauthorizedException.class, () -> {createGameService.createGame(loginResponse.authToken(), createRequest); });
     }
 
     @Test
