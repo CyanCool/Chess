@@ -229,6 +229,7 @@ public class ChessGame
         return null;
     }
 
+
     public boolean isInCheckmate(TeamColor teamColor)
     {
         if (!isInCheck(teamColor))
