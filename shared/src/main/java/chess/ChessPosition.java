@@ -8,10 +8,9 @@ import java.util.Objects;
  * Note: You can add to this class, but you may not alter
  * signature of the existing methods.
  */
-public class ChessPosition
-{
-    private int row;
-    private int col;
+public class ChessPosition {
+
+    private int row, col;
 
     public ChessPosition(int row, int col)
     {
@@ -38,10 +37,8 @@ public class ChessPosition
     }
 
     @Override
-    public boolean equals(Object o)
-    {
-        if (o == null || getClass() != o.getClass())
-        {
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
         ChessPosition that = (ChessPosition) o;
@@ -49,14 +46,12 @@ public class ChessPosition
     }
 
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         return Objects.hash(row, col);
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "ChessPosition{" +
                 "row=" + row +
                 ", col=" + col +

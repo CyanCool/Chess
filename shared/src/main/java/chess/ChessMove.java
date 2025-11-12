@@ -8,8 +8,8 @@ import java.util.Objects;
  * Note: You can add to this class, but you may not alter
  * signature of the existing methods.
  */
-public class ChessMove
-{
+public class ChessMove {
+
     private ChessPosition startPosition;
     private ChessPosition endPosition;
     private ChessPiece.PieceType promotionPiece;
@@ -24,7 +24,6 @@ public class ChessMove
     /**
      * @return ChessPosition of starting location
      */
-
     public ChessPosition getStartPosition()
     {
         return startPosition;
@@ -50,10 +49,8 @@ public class ChessMove
     }
 
     @Override
-    public boolean equals(Object o)
-    {
-        if (o == null || getClass() != o.getClass())
-        {
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
         ChessMove chessMove = (ChessMove) o;
@@ -61,14 +58,12 @@ public class ChessMove
     }
 
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         return Objects.hash(startPosition, endPosition, promotionPiece);
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "ChessMove{" +
                 "startPosition=" + startPosition +
                 ", endPosition=" + endPosition +
