@@ -19,7 +19,7 @@ public class SQLUserDAO implements UserDAO
 
     public void createUser(RegisterRequest userData) throws DataAccessException, ResponseException
     {
-        var statement = "INSERT INTO userData (username, password, email) VALUES (?, ?, ?)";
+        var statement = "INSERT INTO user (username, password, email) VALUES (?, ?, ?)";
         int id = executeUpdate(statement, userData.username(), userData.password(), userData.email());
     }
 
@@ -27,7 +27,7 @@ public class SQLUserDAO implements UserDAO
     {
         try (Connection conn = DatabaseManager.getConnection())
         {
-            var statement = "SELECT username, json FROM userData WHERE username=?";
+            var statement = "SELECT username,password,email FROM `user` WHERE username=?";
             try (PreparedStatement ps = conn.prepareStatement(statement))
             {
                 ps.setString(1, username);
@@ -48,8 +48,10 @@ public class SQLUserDAO implements UserDAO
 
     private UserData readUser(ResultSet rs) throws SQLException
     {
-        var username = rs.getString("json");
-        UserData myUser = new Gson().fromJson(username, UserData.class);
+        var username = rs.getString("username");
+        var password = rs.getString("password");
+        var email = rs.getString("email");
+        UserData myUser = new UserData(username, password, email);
         return myUser;
     }
 
@@ -87,15 +89,14 @@ public class SQLUserDAO implements UserDAO
             CREATE TABLE IF NOT EXISTS  user (
               `username` varchar(256) NOT NULL,
               `password` varchar(256) NOT NULL,
-              `email` varchar(256) NOT NULL
-              `json` TEXT DEFAULT NULL,
+              `email` varchar(256) NOT NULL,
               PRIMARY KEY (`username`),
               INDEX(username),
-              INDEX(password)
+              INDEX(password),
               INDEX(email)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+            )
             """
-    }; //don't exactly know what this means
+    };
 
     private void configureDatabase() throws ResponseException, DataAccessException
     {
@@ -114,5 +115,28 @@ public class SQLUserDAO implements UserDAO
         {
             throw new ResponseException(ResponseException.Code.ServerError, String.format("Unable to configure database: %s", ex.getMessage()));
         }
+    }
+
+    public void clearTableData() throws DataAccessException, SQLException
+    {
+        try(Connection conn = DatabaseManager.getConnection())
+        {
+            String sql = "SHOW TABLES";
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+
+            Statement truncateStmt = conn.createStatement();
+            truncateStmt.execute("SET FOREIGN_KEY_CHECKS=0");
+
+            while (rs.next())
+            {
+                String table = rs.getString(1);
+                truncateStmt.executeUpdate("TRUNCATE TABLE " + table);
+            }
+
+            truncateStmt.execute("SET FOREIGN_KEY_CHECKS=1");
+
+        }
+
     }
 }
