@@ -86,9 +86,4 @@ public class MemoryGameDAO implements GameDAO
         gameInfo.clear();
     }
 
-    public ArrayList<GameData> listGames()
-    {
-        return gameInfo;
-    }
-
 }

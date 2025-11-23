@@ -30,7 +30,7 @@ public class ListGamesService
         }
         else
         {
-            ListgamesResponse listgamesResponse = new ListgamesResponse(myGame.listGames());
+            ListgamesResponse listgamesResponse = new ListgamesResponse(myGame.getList());
             return listgamesResponse;
         }
     }

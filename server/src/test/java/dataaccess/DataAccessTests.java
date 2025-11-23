@@ -72,21 +72,42 @@ public class DataAccessTests
 
 
     @Test
-    @DisplayName("AuthDAO - Create Auth Success")
-    @Order(3)
+    @DisplayName("AuthDAO - Create and Get Auth Success")
+    @Order(4)
     public void testauthDAOSuccess() throws SQLException, DataAccessException
     {
         LoginRequest myRequest = new LoginRequest("Homer", "doh");
-        Assertions.assertDoesNotThrow(() -> {myAuth.createAuth(myRequest.username());});
+        String storeToken = "";
+        storeToken = Assertions.assertDoesNotThrow(() ->
+                myAuth.createAuth(myRequest.username())
+        );
+        try
+        {
+            Assertions.assertNotNull(myAuth.getAuth(storeToken));
+            Assertions.assertEquals(myAuth.getAuth(storeToken).username(), myRequest.username());
+        }
+        catch(ResponseException e)
+        {
+            Assertions.fail();
+        }
     }
 
     @Test
-    @DisplayName("AuthDAO - Create Auth Failure")
+    @DisplayName("AuthDAO - Create and Get Auth Failure")
     @Order(5)
     public void testauthDAOFailure() throws SQLException, DataAccessException
     {
         LoginRequest myRequest = new LoginRequest(null, "doh");
         Assertions.assertThrowsExactly(ResponseException.class, () -> {myAuth.createAuth(myRequest.username());});
+        Assertions.assertDoesNotThrow(() -> {myAuth.getAuth("supercalafregaliciousexplialadocious");});
+    }
+
+    @Test
+    @DisplayName("AuthDAO - ClearTable Success")
+    @Order(6)
+    public void testAuthDAOClearSuccess() throws SQLException, DataAccessException
+    {
+        Assertions.assertDoesNotThrow(() -> {myAuth.clearTableData();});
     }
 
 
