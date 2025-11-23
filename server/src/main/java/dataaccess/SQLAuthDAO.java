@@ -2,7 +2,6 @@ package dataaccess;
 
 import exception.ResponseException;
 import model.AuthData;
-import model.UserData;
 import request.RegisterRequest;
 
 import java.sql.*;
@@ -120,14 +119,13 @@ public class SQLAuthDAO implements AuthDAO
               `username` varchar(256) NOT NULL,
               PRIMARY KEY (`authToken`),
               INDEX(authToken),
-              INDEX(username),
+              INDEX(username)
             )
             """
             };
 
     private void configureDatabase() throws ResponseException, DataAccessException
     {
-        DatabaseManager.createDatabase();
         try(Connection conn = DatabaseManager.getConnection())
         {
             for(String statement : createStatements)

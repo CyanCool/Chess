@@ -62,9 +62,17 @@ public class DataAccessTests
         }
     }
 
+    @Test
+    @DisplayName("UserDAO - ClearTable Success")
+    @Order(3)
+    public void testUserDAOClearSuccess() throws SQLException, DataAccessException
+    {
+        Assertions.assertDoesNotThrow(() -> {myUser.clearTableData();});
+    }
+
 
     @Test
-    @DisplayName("authDAO - Create Auth Success")
+    @DisplayName("AuthDAO - Create Auth Success")
     @Order(3)
     public void testauthDAOSuccess() throws SQLException, DataAccessException
     {
@@ -73,12 +81,12 @@ public class DataAccessTests
     }
 
     @Test
-    @DisplayName("authDAO - Create Auth Success")
-    @Order(4)
-    public void testauthDAOSuccess() throws SQLException, DataAccessException
+    @DisplayName("AuthDAO - Create Auth Failure")
+    @Order(5)
+    public void testauthDAOFailure() throws SQLException, DataAccessException
     {
-        LoginRequest myRequest = new LoginRequest("Homer", "doh");
-        Assertions.assertDoesNotThrow(() -> {myAuth.createAuth(myRequest.username());});
+        LoginRequest myRequest = new LoginRequest(null, "doh");
+        Assertions.assertThrowsExactly(ResponseException.class, () -> {myAuth.createAuth(myRequest.username());});
     }
 
 
