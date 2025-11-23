@@ -7,6 +7,7 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.function.Executable;
 import passoff.model.*;
 import passoff.server.TestServerFacade;
+import request.LoginRequest;
 import request.RegisterRequest;
 import server.Server;
 
@@ -22,16 +23,28 @@ public class DataAccessTests
 
     private TestUser TEST_USER;
     private SQLUserDAO myUser;
+    private SQLAuthDAO myAuth;
 
     public DataAccessTests() throws ResponseException, DataAccessException
     {
         TEST_USER = new TestUser("Jenneth", "ILikeToMakeJam", "jen@mail.com");
         myUser = new SQLUserDAO();
+        myAuth = new SQLAuthDAO();
+    }
+
+    @Test
+    @DisplayName("UserDAO - Create User and Get User Test Failed")
+    @Order(1)
+    public void testUserDAOFailure() throws SQLException, DataAccessException
+    {
+        myUser.clearTableData();
+        RegisterRequest myRequest = new RegisterRequest(null,"existingUserPassword", "eu@mail.com");
+        Assertions.assertThrowsExactly(ResponseException.class, () -> {myUser.createUser(myRequest);});
     }
 
     @Test
     @DisplayName("UserDAO - Create User and Get User Test Successful")
-    @Order(1)
+    @Order(2)
     public void testUserDAOSuccess() throws DataAccessException, SQLException
     {
         myUser.clearTableData();
@@ -49,13 +62,23 @@ public class DataAccessTests
         }
     }
 
+
     @Test
-    @DisplayName("UserDAO - Create User and Get User Test Failed")
-    @Order(2)
-    public void testUserDAOFailure()
+    @DisplayName("authDAO - Create Auth Success")
+    @Order(3)
+    public void testauthDAOSuccess() throws SQLException, DataAccessException
     {
-        RegisterRequest myRequest = new RegisterRequest(null,"existingUserPassword", "eu@mail.com");
-        Assertions.assertThrowsExactly(ResponseException.class, () -> {myUser.createUser(myRequest);});
+        LoginRequest myRequest = new LoginRequest("Homer", "doh");
+        Assertions.assertDoesNotThrow(() -> {myAuth.createAuth(myRequest.username());});
+    }
+
+    @Test
+    @DisplayName("authDAO - Create Auth Success")
+    @Order(4)
+    public void testauthDAOSuccess() throws SQLException, DataAccessException
+    {
+        LoginRequest myRequest = new LoginRequest("Homer", "doh");
+        Assertions.assertDoesNotThrow(() -> {myAuth.createAuth(myRequest.username());});
     }
 
 
