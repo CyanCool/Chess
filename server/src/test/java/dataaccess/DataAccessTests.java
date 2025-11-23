@@ -140,6 +140,7 @@ public class DataAccessTests
     @Order(9)
     public void testGameDAOSuccess() throws SQLException, DataAccessException
     {
+        myGame.clearTableData();
         int storeID;
         storeID = Assertions.assertDoesNotThrow(() ->
                 myGame.createGame("Bodalicious")
@@ -161,7 +162,7 @@ public class DataAccessTests
     public void testGameDAOFailure() throws SQLException, DataAccessException
     {
         Assertions.assertThrowsExactly(ResponseException.class, () -> {myGame.createGame(null);});
-        Assertions.assertThrowsExactly(ResponseException.class, () -> {myGame.getGame(57576575765757);});
+        Assertions.assertThrowsExactly(ResponseException.class, () -> {myGame.getGame(5757);});
         Assertions.assertThrowsExactly(ResponseException.class, () -> {myGame.getGame(null);});
     }
 
