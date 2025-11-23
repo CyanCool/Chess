@@ -3,6 +3,8 @@ package dataaccess;
 import chess.ChessGame;
 import exception.BadRequestException;
 import exception.ResponseException;
+import model.AuthData;
+import model.GameData;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.function.Executable;
 import passoff.model.*;
@@ -24,12 +26,14 @@ public class DataAccessTests
     private TestUser TEST_USER;
     private SQLUserDAO myUser;
     private SQLAuthDAO myAuth;
+    private SQLGameDAO myGame;
 
     public DataAccessTests() throws ResponseException, DataAccessException
     {
         TEST_USER = new TestUser("Jenneth", "ILikeToMakeJam", "jen@mail.com");
         myUser = new SQLUserDAO();
         myAuth = new SQLAuthDAO();
+        myGame = new SQLGameDAO();
     }
 
     @Test
@@ -103,13 +107,112 @@ public class DataAccessTests
     }
 
     @Test
-    @DisplayName("AuthDAO - ClearTable Success")
+    @DisplayName("AuthDAO - Get ArrayList Auth Success")
     @Order(6)
+    public void testAuthArrayListDAOSuccess() throws SQLException, DataAccessException
+    {
+        Assertions.assertDoesNotThrow(() -> {myAuth.getAllAuthData();});
+        ArrayList<AuthData> myData = new ArrayList<>();
+        myData = Assertions.assertDoesNotThrow(() ->
+                myAuth.getAllAuthData()
+        );
+        System.out.println(myData.toString()); //check if the Auth Data is stored correctly
+    }
+
+    @Test
+    @DisplayName("AuthDAO - ClearTable Success")
+    @Order(7)
     public void testAuthDAOClearSuccess() throws SQLException, DataAccessException
     {
         Assertions.assertDoesNotThrow(() -> {myAuth.clearTableData();});
     }
 
+    @Test
+    @DisplayName("AuthDAO - ClearTable Success")
+    @Order(8)
+    public void testGameDAOClearSuccess() throws SQLException, DataAccessException
+    {
+        Assertions.assertDoesNotThrow(() -> {myGame.clearTableData();});
+    }
+
+    @Test
+    @DisplayName("GameDAO - Create and Get Game Success")
+    @Order(9)
+    public void testGameDAOSuccess() throws SQLException, DataAccessException
+    {
+        int storeID;
+        storeID = Assertions.assertDoesNotThrow(() ->
+                myGame.createGame("Bodalicious")
+        );
+        try
+        {
+            Assertions.assertNotNull(myGame.getGame("Bodalicious"));
+            Assertions.assertNotNull(myGame.getGame(storeID));
+        }
+        catch(ResponseException e)
+        {
+            Assertions.fail();
+        }
+    }
+
+    @Test
+    @DisplayName("GameDAO- Create and Get Game Failure")
+    @Order(10)
+    public void testGameDAOFailure() throws SQLException, DataAccessException
+    {
+        Assertions.assertThrowsExactly(ResponseException.class, () -> {myGame.createGame(null);});
+        Assertions.assertThrowsExactly(ResponseException.class, () -> {myGame.getGame(57576575765757);});
+        Assertions.assertThrowsExactly(ResponseException.class, () -> {myGame.getGame(null);});
+    }
+
+    @Test
+    @DisplayName("GameDAO - Get ArrayList Game Success")
+    @Order(11)
+    public void testGameArrayListDAOSuccess() throws SQLException, DataAccessException
+    {
+        Assertions.assertDoesNotThrow(() -> {myGame.getList();});
+        ArrayList<GameData> myData = new ArrayList<>();
+        myData = Assertions.assertDoesNotThrow(() ->
+                myGame.getList()
+        );
+        System.out.println(myData.toString()); //check if the Game Data is stored correctly
+    }
+
+    @Test
+    @DisplayName("GameDAO - Get ArrayList Game Failure")
+    @Order(12)
+    public void testGameArrayListDAOFailure() throws SQLException, DataAccessException, ResponseException
+    {
+        myGame.clearTableData();
+        Assertions.assertNull(myGame.getList());
+    }
+
+    @Test
+    @DisplayName("GameDAO - test UpdateGameSuccess")
+    @Order(13)
+    public void testGameUpdateDAOSuccess() throws SQLException, DataAccessException, ResponseException
+    {
+        int storeID;
+        storeID = Assertions.assertDoesNotThrow(() ->
+                myGame.createGame("Life")
+        );
+        Assertions.assertDoesNotThrow(() -> {myGame.updateGame(storeID,"WHITE","julianna");});
+        Assertions.assertNotNull(myGame.getGame(storeID).whiteUsername());
+        Assertions.assertNull(myGame.getGame(storeID).blackUsername());
+    }
+
+    @Test
+    @DisplayName("GameDAO - test UpdateGameFailure")
+    @Order(14)
+    public void testGameUpdateDAOFailure() throws SQLException, DataAccessException, ResponseException
+    {
+        int storeID;
+        storeID = Assertions.assertDoesNotThrow(() ->
+                myGame.createGame("Life")
+        );
+        Assertions.assertThrowsExactly(ResponseException.class, () -> {myGame.updateGame(999999,"WHITE","julianna");});
+        Assertions.assertThrowsExactly(ResponseException.class, () -> {myGame.updateGame(storeID,"PURPLE","julianna");});
+    }
 
     @FunctionalInterface
     private interface TableAction

@@ -9,10 +9,7 @@ import model.GameData;
 import model.UserData;
 import request.RegisterRequest;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
@@ -27,12 +24,13 @@ public class SQLGameDAO
         nextID = 1;
     }
 
-    public void createGame(String gameName) throws ResponseException, DataAccessException
+    public int createGame(String gameName) throws ResponseException, DataAccessException
     {
         var statement = "INSERT INTO gameData (gameId, whiteUsername, blackUsername, gameName, game) VALUES (?, ?, ?, ?, ?)";
         ChessGame myGame = new ChessGame();
         String json = new Gson().toJson(myGame);
         int id = executeUpdate(statement, nextID++, null, null, gameName, json);
+        return nextID;
     }
 
     public GameData getGame(String gameName) throws ResponseException
@@ -202,5 +200,28 @@ public class SQLGameDAO
         {
             throw new ResponseException(ResponseException.Code.ServerError, String.format("Unable to configure database: %s", ex.getMessage()));
         }
+    }
+
+    public void clearTableData() throws DataAccessException, SQLException
+    {
+        try(Connection conn = DatabaseManager.getConnection())
+        {
+            String sql = "SHOW TABLES";
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+
+            Statement truncateStmt = conn.createStatement();
+            truncateStmt.execute("SET FOREIGN_KEY_CHECKS=0");
+
+            while (rs.next())
+            {
+                String table = rs.getString(1);
+                truncateStmt.executeUpdate("TRUNCATE TABLE " + table);
+            }
+
+            truncateStmt.execute("SET FOREIGN_KEY_CHECKS=1");
+
+        }
+
     }
 }
