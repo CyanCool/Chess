@@ -21,7 +21,7 @@ public class SQLGameDAO
     public SQLGameDAO() throws ResponseException, DataAccessException
     {
         configureDatabase();
-        nextID = 1;
+        nextID = 0;
     }
 
     public int createGame(String gameName) throws ResponseException, DataAccessException
@@ -37,7 +37,7 @@ public class SQLGameDAO
     {
         try (Connection conn = DatabaseManager.getConnection())
         {
-            var statement = "SELECT game FROM gameData WHERE gameName=?";
+            var statement = "SELECT gameID, whiteUsername, blackUsername, gameName, game FROM gameData WHERE gameName=?";
             try (PreparedStatement ps = conn.prepareStatement(statement))
             {
                 ps.setString(1, gameName);
@@ -45,7 +45,7 @@ public class SQLGameDAO
                 {
                     if (rs.next())
                     {
-                        return readUser(rs);
+                        return readGame(rs);
                     }
                 }
             }
@@ -60,7 +60,7 @@ public class SQLGameDAO
     {
         try (Connection conn = DatabaseManager.getConnection())
         {
-            var statement = "SELECT game FROM gameData WHERE gameID=?";
+            var statement = "SELECT gameID, whiteUsername, blackUsername, gameName, game FROM gameData WHERE gameID=?";
             try (PreparedStatement ps = conn.prepareStatement(statement))
             {
                 ps.setInt(1, gameID);
@@ -68,7 +68,7 @@ public class SQLGameDAO
                 {
                     if (rs.next())
                     {
-                        return readUser(rs);
+                        return readGame(rs);
                     }
                 }
             }
@@ -79,7 +79,7 @@ public class SQLGameDAO
         return null;
     }
 
-    private GameData readUser(ResultSet rs) throws SQLException
+    private GameData readGame(ResultSet rs) throws SQLException
     {
         var gameID = rs.getInt("gameID");
         var whiteUsername = rs.getString("whiteUsername");
@@ -119,7 +119,6 @@ public class SQLGameDAO
                     Object param = params[i];
                     if (param instanceof String p) ps.setString(i + 1, p);
                     else if (param instanceof Integer p) ps.setInt(i + 1, p);
-                    else if (param instanceof ChessGame g) ps.setString(i + 1, g.toString());
                     else if (param == null) ps.setNull(i + 1, NULL);
                 }
                 ps.executeUpdate();
@@ -151,7 +150,7 @@ public class SQLGameDAO
                 {
                     if (rs.next())
                     {
-                        GameData game = readUser(rs);
+                        GameData game = readGame(rs);
                         myGameData.add(game);
                     }
                 }
@@ -165,21 +164,28 @@ public class SQLGameDAO
 
     public void updateGame(int gID, String playerColor, String username) throws ResponseException, DataAccessException
     {
-        GameData oldGame = getGame(gID);
-        GameData newGame;
-        if(playerColor.equals("WHITE"))
+        if(getGame(gID) == null)
         {
-            String statement = "UPDATE gameData SET whiteUsername = username WHERE gameID = gID";
-            int id = executeUpdate(statement,gID, username);
-        }
-        else if(playerColor.equals("BLACK"))
-        {
-            String statement = "UPDATE gameData SET blackUsername = username WHERE gameID = gID";
-            int id = executeUpdate(statement,gID,username);
+            throw new ResponseException(ResponseException.Code.ServerError,"Unable to read data: %s");
         }
         else
         {
-            throw new BadRequestException("This is not a valid player color");
+            GameData oldGame = getGame(gID);
+            GameData newGame;
+            if(playerColor.equals("WHITE"))
+            {
+                String statement = "UPDATE gameData SET whiteUsername = (?) WHERE gameID = (?)";
+                int id = executeUpdate(statement,username,gID);
+            }
+            else if(playerColor.equals("BLACK"))
+            {
+                String statement = "UPDATE gameData SET blackUsername = (?) WHERE gameID = (?)";
+                int id = executeUpdate(statement,username,gID);
+            }
+            else
+            {
+                throw new BadRequestException("This is not a valid player color");
+            }
         }
     }
 
@@ -205,6 +211,7 @@ public class SQLGameDAO
     {
         try(Connection conn = DatabaseManager.getConnection())
         {
+            nextID = 0;
             String sql = "SHOW TABLES";
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);

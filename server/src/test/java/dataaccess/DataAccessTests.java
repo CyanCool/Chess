@@ -147,8 +147,8 @@ public class DataAccessTests
         );
         try
         {
-            Assertions.assertNotNull(myGame.getGame("Bodalicious"));
-            Assertions.assertNotNull(myGame.getGame(storeID));
+            Assertions.assertNotNull(myGame.getGame("Bodalicious").gameName());
+            Assertions.assertNotNull(myGame.getGame(storeID).gameName());
         }
         catch(ResponseException e)
         {
@@ -159,11 +159,11 @@ public class DataAccessTests
     @Test
     @DisplayName("GameDAO- Create and Get Game Failure")
     @Order(10)
-    public void testGameDAOFailure() throws SQLException, DataAccessException
+    public void testGameDAOFailure() throws SQLException, DataAccessException, ResponseException
     {
         Assertions.assertThrowsExactly(ResponseException.class, () -> {myGame.createGame(null);});
-        Assertions.assertThrowsExactly(ResponseException.class, () -> {myGame.getGame(5757);});
-        Assertions.assertThrowsExactly(ResponseException.class, () -> {myGame.getGame(null);});
+        Assertions.assertNull(myGame.getGame(5757));
+        Assertions.assertNull(myGame.getGame(null));
     }
 
     @Test
@@ -185,7 +185,15 @@ public class DataAccessTests
     public void testGameArrayListDAOFailure() throws SQLException, DataAccessException, ResponseException
     {
         myGame.clearTableData();
-        Assertions.assertNull(myGame.getList());
+        try
+        {
+            ArrayList<GameData> myData = myGame.getList();
+            Assertions.assertEquals(myData.size(),0);
+        }
+        catch(ResponseException e)
+        {
+            Assertions.fail();
+        }
     }
 
     @Test
@@ -212,7 +220,7 @@ public class DataAccessTests
                 myGame.createGame("Life")
         );
         Assertions.assertThrowsExactly(ResponseException.class, () -> {myGame.updateGame(999999,"WHITE","julianna");});
-        Assertions.assertThrowsExactly(ResponseException.class, () -> {myGame.updateGame(storeID,"PURPLE","julianna");});
+        Assertions.assertThrowsExactly(BadRequestException.class, () -> {myGame.updateGame(storeID,"PURPLE","julianna");});
     }
 
     @FunctionalInterface
