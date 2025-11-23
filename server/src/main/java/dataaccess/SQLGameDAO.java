@@ -2,6 +2,7 @@ package dataaccess;
 
 import chess.ChessGame;
 import com.google.gson.Gson;
+import exception.BadRequestException;
 import exception.ResponseException;
 import model.AuthData;
 import model.GameData;
@@ -140,28 +141,48 @@ public class SQLGameDAO
         }
     }
 
-    public ArrayList<GameData> getList()
+    public ArrayList<GameData> getList() throws ResponseException
     {
-        ArrayList<AuthData> myAuthData = new ArrayList<>();
+        ArrayList<GameData> myGameData = new ArrayList<>();
 
         try (Connection conn = DatabaseManager.getConnection())
         {
-            var statement = "SELECT authToken FROM authData";
+            var statement = "SELECT gameID, whiteUsername, blackUsername, gameName, game FROM gameData";
             try (PreparedStatement ps = conn.prepareStatement(statement))
             {
                 try (ResultSet rs = ps.executeQuery())
                 {
                     if (rs.next())
                     {
-                        AuthData authAsString = readUser(rs);
-                        myAuthData.add(authAsString);
+                        GameData game = readUser(rs);
+                        myGameData.add(game);
                     }
                 }
-                return myAuthData;
+                return myGameData;
             }
         } catch (Exception e)
         {
             throw new ResponseException(ResponseException.Code.ServerError, String.format("Unable to read data: %s", e.getMessage()));
+        }
+    }
+
+    public void updateGame(int gID, String playerColor, String username) throws ResponseException, DataAccessException
+    {
+        GameData oldGame = getGame(gID);
+        GameData newGame;
+        if(playerColor.equals("WHITE"))
+        {
+            String statement = "UPDATE gameData SET whiteUsername = username WHERE gameID = gID";
+            int id = executeUpdate(statement,gID, username);
+        }
+        else if(playerColor.equals("BLACK"))
+        {
+            String statement = "UPDATE gameData SET blackUsername = username WHERE gameID = gID";
+            int id = executeUpdate(statement,gID,username);
+        }
+        else
+        {
+            throw new BadRequestException("This is not a valid player color");
         }
     }
 
