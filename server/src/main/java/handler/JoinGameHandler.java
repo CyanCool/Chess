@@ -5,6 +5,7 @@ import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryGameDAO;
 import exception.AlreadyTakenException;
 import exception.BadRequestException;
+import exception.ResponseException;
 import exception.UnauthorizedException;
 import io.javalin.http.Context;
 import request.JoinGameRequest;
@@ -30,7 +31,7 @@ public class JoinGameHandler
             ctx.result(new Gson().toJson(joinGameResponse));
             ctx.status(200);
         }
-        catch(BadRequestException b)
+        catch(BadRequestException | ResponseException b)
         {
             ErrorResponse badReq = new ErrorResponse("Error: bad request");
             ctx.result(new Gson().toJson(badReq));

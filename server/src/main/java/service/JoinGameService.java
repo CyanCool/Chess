@@ -1,25 +1,28 @@
 package service;
 
+import dataaccess.AuthDAO;
+import dataaccess.GameDAO;
 import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryGameDAO;
 import exception.AlreadyTakenException;
 import exception.BadRequestException;
+import exception.ResponseException;
 import exception.UnauthorizedException;
 import request.JoinGameRequest;
 import response.JoinGameResponse;
 
 public class JoinGameService
 {
-    private MemoryAuthDAO myAuth;
-    private MemoryGameDAO myGame;
+    private AuthDAO myAuth;
+    private GameDAO myGame;
 
-    public JoinGameService(MemoryAuthDAO myAuth, MemoryGameDAO myGame)
+    public JoinGameService(AuthDAO myAuth, GameDAO myGame)
     {
         this.myAuth = myAuth;
         this.myGame = myGame;
     }
 
-    public JoinGameResponse updateGame(String authToken, JoinGameRequest joinRequest)
+    public JoinGameResponse updateGame(String authToken, JoinGameRequest joinRequest) throws ResponseException
     {
         if(authToken == null)
         {

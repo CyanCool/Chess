@@ -126,6 +126,7 @@ public class SQLAuthDAO implements AuthDAO
 
     private void configureDatabase() throws ResponseException, DataAccessException
     {
+        DatabaseManager.createDatabase();
         try(Connection conn = DatabaseManager.getConnection())
         {
             for(String statement : createStatements)
@@ -148,7 +149,7 @@ public class SQLAuthDAO implements AuthDAO
         int id = executeUpdate(statement, myData.username());
     }
 
-    public void clearTableData() throws DataAccessException, SQLException
+    public void clearData() throws DataAccessException, SQLException
     {
         try(Connection conn = DatabaseManager.getConnection())
         {

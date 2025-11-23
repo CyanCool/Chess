@@ -41,7 +41,7 @@ public class DataAccessTests
     @Order(1)
     public void testUserDAOFailure() throws SQLException, DataAccessException
     {
-        myUser.clearTableData();
+        myUser.clearData();
         RegisterRequest myRequest = new RegisterRequest(null,"existingUserPassword", "eu@mail.com");
         Assertions.assertThrowsExactly(ResponseException.class, () -> {myUser.createUser(myRequest);});
     }
@@ -51,7 +51,7 @@ public class DataAccessTests
     @Order(2)
     public void testUserDAOSuccess() throws DataAccessException, SQLException
     {
-        myUser.clearTableData();
+        myUser.clearData();
         RegisterRequest myRequest = new RegisterRequest("Homer", "doh", "marge@simpson.com");
         Assertions.assertDoesNotThrow(() -> myUser.createUser(myRequest));
         try
@@ -71,7 +71,7 @@ public class DataAccessTests
     @Order(3)
     public void testUserDAOClearSuccess() throws SQLException, DataAccessException
     {
-        Assertions.assertDoesNotThrow(() -> {myUser.clearTableData();});
+        Assertions.assertDoesNotThrow(() -> {myUser.clearData();});
     }
 
 
@@ -124,7 +124,7 @@ public class DataAccessTests
     @Order(7)
     public void testAuthDAOClearSuccess() throws SQLException, DataAccessException
     {
-        Assertions.assertDoesNotThrow(() -> {myAuth.clearTableData();});
+        Assertions.assertDoesNotThrow(() -> {myAuth.clearData();});
     }
 
     @Test
@@ -132,7 +132,7 @@ public class DataAccessTests
     @Order(8)
     public void testGameDAOClearSuccess() throws SQLException, DataAccessException
     {
-        Assertions.assertDoesNotThrow(() -> {myGame.clearTableData();});
+        Assertions.assertDoesNotThrow(() -> {myGame.clearData();});
     }
 
     @Test
@@ -140,7 +140,7 @@ public class DataAccessTests
     @Order(9)
     public void testGameDAOSuccess() throws SQLException, DataAccessException
     {
-        myGame.clearTableData();
+        myGame.clearData();
         int storeID;
         storeID = Assertions.assertDoesNotThrow(() ->
                 myGame.createGame("Bodalicious")
@@ -184,7 +184,7 @@ public class DataAccessTests
     @Order(12)
     public void testGameArrayListDAOFailure() throws SQLException, DataAccessException, ResponseException
     {
-        myGame.clearTableData();
+        myGame.clearData();
         try
         {
             ArrayList<GameData> myData = myGame.getList();

@@ -1,23 +1,23 @@
 package service;
 
-import dataaccess.MemoryAuthDAO;
-import dataaccess.MemoryUserDAO;
+import dataaccess.*;
 import exception.*;
 import request.LogoutRequest;
 import response.LogoutResponse;
 
 public class LogoutService
 {
-    private MemoryUserDAO myData;
-    private MemoryAuthDAO myAuth;
+    private UserDAO myData;
+    private AuthDAO myAuth;
 
-    public LogoutService(MemoryUserDAO myData, MemoryAuthDAO myAuth)
+    public LogoutService(UserDAO myData, AuthDAO myAuth)
     {
         this.myData = myData;
         this.myAuth = myAuth;
     }
 
-    public LogoutResponse logout(LogoutRequest logoutRequest) throws BadRequestException, InvalidAuthDataException
+    public LogoutResponse logout(LogoutRequest logoutRequest) throws BadRequestException, InvalidAuthDataException,
+            ResponseException, DataAccessException
     {
         if(logoutRequest == null)
         {

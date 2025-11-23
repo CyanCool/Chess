@@ -1,23 +1,22 @@
 package service;
 
-import dataaccess.MemoryAuthDAO;
-import dataaccess.MemoryUserDAO;
+import dataaccess.*;
 import exception.*;
 import request.LoginRequest;
 import response.LoginResponse;
 
 public class LoginService
 {
-    private MemoryUserDAO myData;
-    private MemoryAuthDAO myAuth;
+    private UserDAO myData;
+    private AuthDAO myAuth;
 
-    public LoginService(MemoryUserDAO myData, MemoryAuthDAO myAuth)
+    public LoginService(UserDAO myData, AuthDAO myAuth)
     {
         this.myData = myData;
         this.myAuth = myAuth;
     }
 
-    public LoginResponse login(LoginRequest loginRequest)
+    public LoginResponse login(LoginRequest loginRequest) throws ResponseException, DataAccessException
     {
         //success case for login
         //the username and password are both strings and none of them are null

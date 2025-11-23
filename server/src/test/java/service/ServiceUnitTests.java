@@ -1,5 +1,6 @@
 package service;
 
+import dataaccess.DataAccessException;
 import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryGameDAO;
 import dataaccess.MemoryUserDAO;
@@ -8,6 +9,8 @@ import org.junit.jupiter.api.*;
 import request.*;
 import response.*;
 import server.Server;
+
+import java.sql.SQLException;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ServiceUnitTests {
@@ -34,7 +37,7 @@ public class ServiceUnitTests {
     }
 
     @BeforeEach
-    public void setup()
+    public void setup() throws ResponseException, DataAccessException
     {
         myData = new MemoryUserDAO();
         myAuth = new MemoryAuthDAO();
@@ -97,7 +100,7 @@ public class ServiceUnitTests {
     @Test
     @Order(5)
     @DisplayName("Successful Registration")
-    public void registerSuccess()
+    public void registerSuccess() throws ResponseException, DataAccessException
     {
         RegisterRequest myRequest = new RegisterRequest("Bartholemue", "Imanerd", "bartholemue@gmail.com");
         RegisterResponse myResponse = registerService.register(myRequest);
@@ -139,7 +142,7 @@ public class ServiceUnitTests {
     @Test
     @Order(10)
     @DisplayName("Login Successful")
-    public void successLogin()
+    public void successLogin() throws ResponseException, DataAccessException
     {
         LoginRequest loginRequest = new LoginRequest("Steven","password");
         LoginResponse loginResponse = loginService.login(loginRequest);
@@ -150,7 +153,7 @@ public class ServiceUnitTests {
     @Test
     @Order(11)
     @DisplayName("Logout Successful")
-    public void logoutSuccessful()
+    public void logoutSuccessful() throws ResponseException, DataAccessException
     {
         LogoutRequest logoutRequest = new LogoutRequest(regResponse.authToken());
         LogoutResponse logoutResponse = logoutService.logout(logoutRequest);
@@ -179,7 +182,7 @@ public class ServiceUnitTests {
     @Test
     @Order(14)
     @DisplayName("Authentication is null")
-    public void badCreateAuth()
+    public void badCreateAuth() throws ResponseException, DataAccessException
     {
         LoginRequest loginRequest = new LoginRequest("Steven","password");
         LoginResponse loginResponse = loginService.login(loginRequest);
@@ -190,7 +193,7 @@ public class ServiceUnitTests {
     @Test
     @Order(15)
     @DisplayName("The session does not exist")
-    public void createAuthNotExist()
+    public void createAuthNotExist() throws ResponseException, DataAccessException
     {
         LoginRequest loginRequest = new LoginRequest("Steven","password");
         LoginResponse loginResponse = loginService.login(loginRequest);
@@ -201,7 +204,7 @@ public class ServiceUnitTests {
     @Test
     @Order(16)
     @DisplayName("Game name is blank")
-    public void blankName()
+    public void blankName() throws ResponseException, DataAccessException
     {
         LoginRequest loginRequest = new LoginRequest("Steven","password");
         LoginResponse loginResponse = loginService.login(loginRequest);
@@ -212,7 +215,7 @@ public class ServiceUnitTests {
     @Test
     @Order(17)
     @DisplayName("Game Name is Already Taken")
-    public void alreadyTaken()
+    public void alreadyTaken() throws ResponseException, DataAccessException
     {
         LoginRequest loginRequest = new LoginRequest("Steven","password"); //login first
         LoginResponse loginResponse = loginService.login(loginRequest);
@@ -227,7 +230,7 @@ public class ServiceUnitTests {
     @Test
     @Order(18)
     @DisplayName("Create Game Successful")
-    public void createSuccess()
+    public void createSuccess() throws ResponseException, DataAccessException
     {
         LoginRequest loginRequest = new LoginRequest("Steven","password");
         LoginResponse loginResponse = loginService.login(loginRequest);
@@ -239,7 +242,7 @@ public class ServiceUnitTests {
     @Test
     @Order(19)
     @DisplayName("Empty field")
-    public void emptyFieldPlayerColor()
+    public void emptyFieldPlayerColor() throws ResponseException, DataAccessException
     {
         LoginRequest loginRequest = new LoginRequest("Steven","password");
         LoginResponse loginResponse = loginService.login(loginRequest);
@@ -252,7 +255,7 @@ public class ServiceUnitTests {
     @Test
     @Order(20)
     @DisplayName("Empty field")
-    public void emptyFieldGameID()
+    public void emptyFieldGameID() throws ResponseException, DataAccessException
     {
         LoginRequest loginRequest = new LoginRequest("Steven","password");
         LoginResponse loginResponse = loginService.login(loginRequest);
@@ -265,7 +268,7 @@ public class ServiceUnitTests {
     @Test
     @Order(21)
     @DisplayName("Game doesn't exist")
-    public void gameNotExist()
+    public void gameNotExist() throws ResponseException, DataAccessException
     {
         LoginRequest loginRequest = new LoginRequest("Steven","password");
         LoginResponse loginResponse = loginService.login(loginRequest);
@@ -278,7 +281,7 @@ public class ServiceUnitTests {
     @Test
     @Order(22)
     @DisplayName("Spot Already Taken")
-    public void spotTaken()
+    public void spotTaken() throws ResponseException, DataAccessException
     {
         LoginRequest loginRequest = new LoginRequest("Steven","password");
         LoginResponse loginResponse = loginService.login(loginRequest);
@@ -301,7 +304,7 @@ public class ServiceUnitTests {
     @Test
     @Order(23)
     @DisplayName("Join Success")
-    public void joinSuccess()
+    public void joinSuccess() throws ResponseException, DataAccessException
     {
         LoginRequest loginRequest = new LoginRequest("Steven","password");
         LoginResponse loginResponse = loginService.login(loginRequest);
@@ -316,7 +319,7 @@ public class ServiceUnitTests {
     @Test
     @Order(24)
     @DisplayName("AuthToken Null")
-    public void listAuthNull()
+    public void listAuthNull() throws ResponseException, DataAccessException
     {
         LoginRequest loginRequest = new LoginRequest("Steven","password");
         LoginResponse loginResponse = loginService.login(loginRequest);
@@ -332,7 +335,7 @@ public class ServiceUnitTests {
     @Test
     @Order(25)
     @DisplayName("Session does not exist")
-    public void seshNotExistList()
+    public void seshNotExistList() throws ResponseException, DataAccessException
     {
         LoginRequest loginRequest = new LoginRequest("Steven","password");
         LoginResponse loginResponse = loginService.login(loginRequest);
@@ -348,7 +351,7 @@ public class ServiceUnitTests {
     @Test
     @Order(26)
     @DisplayName("List Success")
-    public void listSuccess()
+    public void listSuccess() throws ResponseException, DataAccessException
     {
         LoginRequest loginRequest = new LoginRequest("Steven","password");
         LoginResponse loginResponse = loginService.login(loginRequest);
@@ -365,7 +368,7 @@ public class ServiceUnitTests {
     @Test
     @Order(27)
     @DisplayName("Clear Not Successful")
-    public void badClear()
+    public void badClear() throws ResponseException, DataAccessException, SQLException
     {
         LoginRequest loginRequest = new LoginRequest("Steven","password");
         LoginResponse loginResponse = loginService.login(loginRequest);
@@ -385,8 +388,8 @@ public class ServiceUnitTests {
 
     @Test
     @Order(28)
-    @DisplayName("Clear Not Successful")
-    public void clearSuccess()
+    @DisplayName("Clear Successful")
+    public void clearSuccess() throws ResponseException, DataAccessException, SQLException
     {
         LoginRequest loginRequest = new LoginRequest("Steven","password");
         LoginResponse loginResponse = loginService.login(loginRequest);
@@ -400,7 +403,8 @@ public class ServiceUnitTests {
         DeleteResponse deleteResponse = clearService.clear(deleteRequest);
         Assertions.assertNull(myData.getMap());
         Assertions.assertNull(myAuth.getAllAuthData());
-        Assertions.assertNull(myGame.getList());
+        System.out.println(myGame.getList());
+        Assertions.assertEquals(myGame.getList().size(),0);
     }
 
 }

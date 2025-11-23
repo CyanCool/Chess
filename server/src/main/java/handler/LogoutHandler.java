@@ -1,6 +1,7 @@
 package handler;
 
 import com.google.gson.Gson;
+import dataaccess.DataAccessException;
 import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryUserDAO;
 import io.javalin.http.Context;
@@ -29,7 +30,7 @@ public class LogoutHandler
             ctx.result(new Gson().toJson(logoutResponse));
             ctx.status(200);
         }
-        catch(BadRequestException b)
+        catch(BadRequestException | ResponseException | DataAccessException b)
         {
             ErrorResponse badReq = new ErrorResponse("Error: bad request");
             ctx.result(new Gson().toJson(badReq));
@@ -42,11 +43,5 @@ public class LogoutHandler
             ctx.status(401);
         }
     }
-    //System.out.println(ctx.header("authorization"));
-    //authorization stores the authtoken
-    //use it to get the authtoken
-    //use the authtoken to search through the usernames and see if one matches
-    //if it matches, then clear the auth data for them
-    //if none of them do, throw an invalid authorization exception
 
 }

@@ -2,9 +2,11 @@ package handler;
 
 
 import com.google.gson.Gson;
+import dataaccess.DataAccessException;
 import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryGameDAO;
 import exception.BadRequestException;
+import exception.ResponseException;
 import exception.UnauthorizedException;
 import io.javalin.http.Context;
 import request.CreateRequest;
@@ -31,13 +33,13 @@ public class CreateGameHandler
             ctx.result(new Gson().toJson(createResponse));
             ctx.status(200);
         }
-        catch(BadRequestException e)
+        catch(BadRequestException | ResponseException | DataAccessException a)
         {
             ErrorResponse badReq = new ErrorResponse("Error: bad request");
             ctx.result(new Gson().toJson(badReq));
             ctx.status(400);
         }
-        catch(UnauthorizedException a)
+        catch(UnauthorizedException e)
         {
             ErrorResponse taken = new ErrorResponse("Error: unauthorized");
             ctx.result(new Gson().toJson(taken));

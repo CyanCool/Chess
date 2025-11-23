@@ -117,7 +117,7 @@ public class SQLUserDAO implements UserDAO
         }
     }
 
-    public void clearTableData() throws DataAccessException, SQLException
+    public void clearData() throws DataAccessException, SQLException
     {
         try(Connection conn = DatabaseManager.getConnection())
         {

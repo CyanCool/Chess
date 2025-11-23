@@ -28,7 +28,7 @@ public class ListgamesHandler
             ctx.result(new Gson().toJson(listgamesResponse));
             ctx.status(200);
         }
-        catch(BadRequestException b)
+        catch(BadRequestException | ResponseException b)
         {
             ErrorResponse badReq = new ErrorResponse("Error: bad request");
             ctx.result(new Gson().toJson(badReq));

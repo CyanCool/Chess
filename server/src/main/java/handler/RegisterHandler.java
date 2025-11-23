@@ -2,6 +2,7 @@ package handler;
 
 import com.google.gson.Gson;
 //import exception.AlreadyTakenException; //need to implement
+import dataaccess.DataAccessException;
 import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryUserDAO;
 import exception.*;
@@ -30,7 +31,7 @@ public class RegisterHandler
             ctx.status(200);
             System.out.println(ctx.status());
         }
-        catch(BadRequestException b)
+        catch(BadRequestException | ResponseException | DataAccessException b)
         {
             ErrorResponse badRequest = new ErrorResponse("Error: bad request");
             ctx.result(new Gson().toJson(badRequest));

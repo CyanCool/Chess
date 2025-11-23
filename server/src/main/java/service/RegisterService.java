@@ -1,16 +1,16 @@
 package service;
 
-import dataaccess.MemoryAuthDAO;
-import dataaccess.MemoryUserDAO;
+import dataaccess.*;
 import exception.AlreadyTakenException;
 import exception.BadRequestException;
+import exception.ResponseException;
 import request.RegisterRequest;
 import response.RegisterResponse;
 
 public class RegisterService
 {
-    private MemoryUserDAO myData;
-    private MemoryAuthDAO myAuth;
+    private UserDAO myData;
+    private AuthDAO myAuth;
 
     public RegisterService(MemoryUserDAO myData, MemoryAuthDAO myAuth)
     {
@@ -18,7 +18,7 @@ public class RegisterService
         this.myAuth = myAuth;
     }
 
-    public RegisterResponse register(RegisterRequest registerRequest)
+    public RegisterResponse register(RegisterRequest registerRequest) throws ResponseException, DataAccessException
     {
         String token;
         if(registerRequest.username() == null || registerRequest.password() == null || registerRequest.email() == null)

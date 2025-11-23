@@ -1,25 +1,25 @@
 package service;
 
-import dataaccess.MemoryAuthDAO;
-import dataaccess.MemoryGameDAO;
-import dataaccess.MemoryUserDAO;
+import dataaccess.*;
 import request.DeleteRequest;
 import response.DeleteResponse;
 
+import java.sql.SQLException;
+
 public class ClearService
 {
-    private MemoryUserDAO myData;
-    private MemoryAuthDAO myAuth;
-    private MemoryGameDAO myGame;
+    private UserDAO myData;
+    private AuthDAO myAuth;
+    private GameDAO myGame;
 
-    public ClearService(MemoryUserDAO myData, MemoryAuthDAO myAuth, MemoryGameDAO myGame)
+    public ClearService(UserDAO myData, AuthDAO myAuth, GameDAO myGame)
     {
         this.myData = myData;
         this.myAuth = myAuth;
         this.myGame = myGame;
     }
 
-    public DeleteResponse clear(DeleteRequest deleteRequest)
+    public DeleteResponse clear(DeleteRequest deleteRequest) throws SQLException, DataAccessException
     {
         if(deleteRequest != null)
         {

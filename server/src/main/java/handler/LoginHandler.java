@@ -1,6 +1,7 @@
 package handler;
 
 import com.google.gson.Gson;
+import dataaccess.DataAccessException;
 import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryUserDAO;
 import exception.*;
@@ -31,7 +32,7 @@ public class LoginHandler
             ctx.result(new Gson().toJson(loginResponse));
             ctx.status(200);
         }
-        catch(BlankFieldException b)
+        catch(BlankFieldException | ResponseException | DataAccessException b)
         {
             ErrorResponse notExist = new ErrorResponse("Error: bad request");
             ctx.result(new Gson().toJson(notExist));

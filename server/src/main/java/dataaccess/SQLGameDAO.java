@@ -154,8 +154,8 @@ public class SQLGameDAO
                         myGameData.add(game);
                     }
                 }
-                return myGameData;
             }
+            return myGameData;
         } catch (Exception e)
         {
             throw new ResponseException(ResponseException.Code.ServerError, String.format("Unable to read data: %s", e.getMessage()));
@@ -191,6 +191,7 @@ public class SQLGameDAO
 
     private void configureDatabase() throws ResponseException, DataAccessException
     {
+        DatabaseManager.createDatabase();
         try(Connection conn = DatabaseManager.getConnection())
         {
             for(String statement : createStatements)
@@ -207,7 +208,7 @@ public class SQLGameDAO
         }
     }
 
-    public void clearTableData() throws DataAccessException, SQLException
+    public void clearData() throws DataAccessException, SQLException
     {
         try(Connection conn = DatabaseManager.getConnection())
         {
