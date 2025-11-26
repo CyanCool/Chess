@@ -2,9 +2,9 @@ package handler;
 
 import com.google.gson.Gson;
 import dataaccess.DataAccessException;
-import dataaccess.MemoryAuthDAO;
-import dataaccess.MemoryGameDAO;
-import dataaccess.MemoryUserDAO;
+import dataaccess.AuthDAO;
+import dataaccess.GameDAO;
+import dataaccess.UserDAO;
 import request.DeleteRequest;
 import response.DeleteResponse;
 import service.ClearService;
@@ -16,7 +16,7 @@ public class ClearHandler
 {
     private final ClearService clearService;
 
-    public ClearHandler(MemoryUserDAO myData, MemoryAuthDAO myAuth, MemoryGameDAO myGame)
+    public ClearHandler(UserDAO myData, AuthDAO myAuth, GameDAO myGame)
     {
         clearService = new ClearService(myData, myAuth, myGame);
     }

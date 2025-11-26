@@ -2,8 +2,8 @@ package handler;
 
 import com.google.gson.Gson;
 import dataaccess.DataAccessException;
-import dataaccess.MemoryAuthDAO;
-import dataaccess.MemoryUserDAO;
+import dataaccess.AuthDAO;
+import dataaccess.UserDAO;
 import exception.*;
 import io.javalin.http.Context;
 import response.ErrorResponse;
@@ -15,7 +15,7 @@ public class LoginHandler
 {
     private final LoginService loginService;
 
-    public LoginHandler(MemoryUserDAO myData, MemoryAuthDAO myAuth)
+    public LoginHandler(UserDAO myData, AuthDAO myAuth)
     {
         loginService = new LoginService(myData, myAuth);
     }

@@ -1,9 +1,6 @@
 package service;
 
-import dataaccess.AuthDAO;
-import dataaccess.GameDAO;
-import dataaccess.MemoryAuthDAO;
-import dataaccess.MemoryGameDAO;
+import dataaccess.*;
 import exception.AlreadyTakenException;
 import exception.BadRequestException;
 import exception.ResponseException;
@@ -48,7 +45,14 @@ public class JoinGameService
         else
         {
             String username = myAuth.getAuth(authToken).username(); //gets the username from the AuthData class using one of its methods
-            myGame.updateGame(joinRequest.gameID(), joinRequest.playerColor(), username);
+            try
+            {
+                myGame.updateGame(joinRequest.gameID(), joinRequest.playerColor(), username);
+            }
+            catch(ResponseException | DataAccessException e)
+            {
+                System.out.println("Update Game not functional");
+            }
             return new JoinGameResponse();
         }
     }

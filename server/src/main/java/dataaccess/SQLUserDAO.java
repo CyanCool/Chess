@@ -3,6 +3,7 @@ package dataaccess;
 import com.google.gson.Gson;
 import exception.ResponseException;
 import model.*;
+import org.mindrot.jbcrypt.BCrypt;
 import request.RegisterRequest;
 
 import java.sql.*;
@@ -19,8 +20,9 @@ public class SQLUserDAO implements UserDAO
 
     public void createUser(RegisterRequest userData) throws DataAccessException, ResponseException
     {
+        String hashedPassword = storeUserPassword(userData.password());
         var statement = "INSERT INTO user (username, password, email) VALUES (?, ?, ?)";
-        int id = executeUpdate(statement, userData.username(), userData.password(), userData.email());
+        int id = executeUpdate(statement, userData.username(), hashedPassword, userData.email());
     }
 
     public UserData getUser(String username) throws ResponseException
@@ -137,6 +139,41 @@ public class SQLUserDAO implements UserDAO
             truncateStmt.execute("SET FOREIGN_KEY_CHECKS=1");
 
         }
+    }
 
+    public String storeUserPassword(String clearTextPassword)
+    {
+        return BCrypt.hashpw(clearTextPassword, BCrypt.gensalt());
+    }
+
+    public boolean verifyUser(String username, String providedClearTextPassword) throws ResponseException
+    {
+        String hashedPassword = readHashedPasswordFromDatabase(username);
+        return BCrypt.checkpw(providedClearTextPassword, hashedPassword);
+    }
+
+    public String readHashedPasswordFromDatabase(String username) throws ResponseException
+    {
+        UserData myUser;
+        try (Connection conn = DatabaseManager.getConnection())
+        {
+            var statement = "SELECT password FROM `user` WHERE username=?";
+            try (PreparedStatement ps = conn.prepareStatement(statement))
+            {
+                ps.setString(1, username);
+                try (ResultSet rs = ps.executeQuery())
+                {
+                    if (rs.next())
+                    {
+                        myUser =  readUser(rs);
+                        return myUser.password();
+                    }
+                }
+            }
+        } catch (Exception e)
+        {
+            throw new ResponseException(ResponseException.Code.ServerError, String.format("Unable to read data: %s", e.getMessage()));
+        }
+        return null;
     }
 }

@@ -2,8 +2,8 @@ package handler;
 
 import com.google.gson.Gson;
 import dataaccess.DataAccessException;
-import dataaccess.MemoryAuthDAO;
-import dataaccess.MemoryUserDAO;
+import dataaccess.AuthDAO;
+import dataaccess.UserDAO;
 import io.javalin.http.Context;
 import exception.*;
 import request.LogoutRequest;
@@ -15,7 +15,7 @@ public class LogoutHandler
 {
     private final LogoutService logoutService;
 
-    public LogoutHandler(MemoryUserDAO myData, MemoryAuthDAO myAuth)
+    public LogoutHandler(UserDAO myData, AuthDAO myAuth)
     {
         logoutService = new LogoutService(myData, myAuth);
     }

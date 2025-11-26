@@ -1,5 +1,6 @@
 package dataaccess;
 
+import exception.ResponseException;
 import request.RegisterRequest;
 import model.UserData;
 import java.util.HashMap;
@@ -37,5 +38,10 @@ public class MemoryUserDAO implements UserDAO
     public void clearData()
     {
         userInfo.clear();
+    }
+
+    public boolean verifyUser(String username, String password) throws ResponseException
+    {
+        return false;
     }
 }

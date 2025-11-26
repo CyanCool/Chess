@@ -1,15 +1,16 @@
 package dataaccess;
 
+import exception.ResponseException;
 import model.GameData;
 
 import java.util.ArrayList;
 
 public interface GameDAO
 {
-    public void createGame(String gameName);
-    public GameData getGame(String gameName);
-    public GameData getGame(int gameID);
-    public void clearData();
-    public void updateGame(int i, String s, String username);
-    public ArrayList<GameData> getList();
+    public int createGame(String gameName) throws ResponseException, DataAccessException;
+    public GameData getGame(String gameName) throws ResponseException;
+    public GameData getGame(int gameID) throws ResponseException;
+    public void clearData() throws DataAccessException;
+    public void updateGame(int i, String s, String username) throws ResponseException, DataAccessException;
+    public ArrayList<GameData> getList() throws ResponseException;
 }

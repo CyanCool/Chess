@@ -3,8 +3,8 @@ package handler;
 import com.google.gson.Gson;
 //import exception.AlreadyTakenException; //need to implement
 import dataaccess.DataAccessException;
-import dataaccess.MemoryAuthDAO;
-import dataaccess.MemoryUserDAO;
+import dataaccess.AuthDAO;
+import dataaccess.UserDAO;
 import exception.*;
 import response.ErrorResponse;
 import request.RegisterRequest;
@@ -16,7 +16,7 @@ import service.RegisterService;
 public class RegisterHandler
 {
     private final RegisterService registerService;
-    public RegisterHandler(MemoryUserDAO myData, MemoryAuthDAO myAuth)
+    public RegisterHandler(UserDAO myData, AuthDAO myAuth)
     {
         registerService = new RegisterService(myData, myAuth);
     }

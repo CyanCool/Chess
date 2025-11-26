@@ -4,10 +4,7 @@ import chess.ChessGame;
 import com.google.gson.Gson;
 import exception.BadRequestException;
 import exception.ResponseException;
-import model.AuthData;
 import model.GameData;
-import model.UserData;
-import request.RegisterRequest;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -15,7 +12,7 @@ import java.util.ArrayList;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 import static java.sql.Types.NULL;
 
-public class SQLGameDAO
+public class SQLGameDAO implements GameDAO
 {
     private int nextID;
     public SQLGameDAO() throws ResponseException, DataAccessException
@@ -208,7 +205,7 @@ public class SQLGameDAO
         }
     }
 
-    public void clearData() throws DataAccessException, SQLException
+    public void clearData() throws DataAccessException
     {
         try(Connection conn = DatabaseManager.getConnection())
         {
@@ -227,7 +224,10 @@ public class SQLGameDAO
             }
 
             truncateStmt.execute("SET FOREIGN_KEY_CHECKS=1");
-
+        }
+        catch(SQLException e)
+        {
+            throw new DataAccessException("SQL not functional");
         }
 
     }

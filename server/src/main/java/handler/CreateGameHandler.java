@@ -3,8 +3,8 @@ package handler;
 
 import com.google.gson.Gson;
 import dataaccess.DataAccessException;
-import dataaccess.MemoryAuthDAO;
-import dataaccess.MemoryGameDAO;
+import dataaccess.AuthDAO;
+import dataaccess.GameDAO;
 import exception.BadRequestException;
 import exception.ResponseException;
 import exception.UnauthorizedException;
@@ -18,7 +18,7 @@ public class CreateGameHandler
 {
     private final CreateGameService createGame;
 
-    public CreateGameHandler(MemoryAuthDAO myAuth, MemoryGameDAO myGame)
+    public CreateGameHandler(AuthDAO myAuth, GameDAO myGame)
     {
         createGame = new CreateGameService(myGame, myAuth);
     }

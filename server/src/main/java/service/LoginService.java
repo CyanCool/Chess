@@ -18,12 +18,6 @@ public class LoginService
 
     public LoginResponse login(LoginRequest loginRequest) throws ResponseException, DataAccessException
     {
-        //success case for login
-        //the username and password are both strings and none of them are null
-        //exceptions that I will throw
-        //user with the username does not exist
-        //password is incorrect
-        //one or more of the something are null
         if(loginRequest.username() == null || loginRequest.password() == null)
         {
             throw new BlankFieldException("One of the fields are missing");
@@ -32,7 +26,7 @@ public class LoginService
         {
             throw new UnauthorizedException("This user does not exist");
         }
-        else if(!myData.getUser(loginRequest.username()).password().equals(loginRequest.password()))
+        else if(!myData.verifyUser(loginRequest.username(), loginRequest.password()))
         {
             throw new PasswordIncorrectException("This password is incorrect");
         }

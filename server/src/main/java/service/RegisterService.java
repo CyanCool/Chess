@@ -12,7 +12,7 @@ public class RegisterService
     private UserDAO myData;
     private AuthDAO myAuth;
 
-    public RegisterService(MemoryUserDAO myData, MemoryAuthDAO myAuth)
+    public RegisterService(UserDAO myData, AuthDAO myAuth)
     {
         this.myData = myData;
         this.myAuth = myAuth;

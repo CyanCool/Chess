@@ -12,4 +12,6 @@ public interface UserDAO
     public void createUser(RegisterRequest userData) throws DataAccessException, ResponseException;
 
     void clearData() throws DataAccessException, SQLException;
+
+    boolean verifyUser(String username, String password) throws ResponseException;
 }

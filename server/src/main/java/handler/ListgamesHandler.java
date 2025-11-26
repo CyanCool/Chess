@@ -1,8 +1,8 @@
 package handler;
 
 import com.google.gson.Gson;
-import dataaccess.MemoryAuthDAO;
-import dataaccess.MemoryGameDAO;
+import dataaccess.AuthDAO;
+import dataaccess.GameDAO;
 import io.javalin.http.Context;
 import exception.*;
 import request.ListgamesRequest;
@@ -14,7 +14,7 @@ public class ListgamesHandler
 {
     private  ListGamesService listGamesService;
 
-    public ListgamesHandler(MemoryAuthDAO myAuth, MemoryGameDAO myGame)
+    public ListgamesHandler(AuthDAO myAuth, GameDAO myGame)
     {
        listGamesService = new ListGamesService(myAuth, myGame);
     }

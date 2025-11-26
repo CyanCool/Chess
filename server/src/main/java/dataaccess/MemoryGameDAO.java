@@ -5,7 +5,6 @@ import exception.BadRequestException;
 import model.GameData;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
 public class MemoryGameDAO implements GameDAO
 {
@@ -19,11 +18,12 @@ public class MemoryGameDAO implements GameDAO
         nextID = 1;
     }
 
-    public void createGame(String gameName)
+    public int createGame(String gameName)
     {
         ChessGame myGame = new ChessGame();
         GameData myData = new GameData(nextID++, null, null, gameName, myGame);
         gameInfo.add(myData);
+        return 0;
     }
 
     public GameData getGame(String gameName)

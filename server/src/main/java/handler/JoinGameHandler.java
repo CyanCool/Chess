@@ -1,8 +1,8 @@
 package handler;
 
 import com.google.gson.Gson;
-import dataaccess.MemoryAuthDAO;
-import dataaccess.MemoryGameDAO;
+import dataaccess.AuthDAO;
+import dataaccess.GameDAO;
 import exception.AlreadyTakenException;
 import exception.BadRequestException;
 import exception.ResponseException;
@@ -16,7 +16,7 @@ import service.JoinGameService;
 public class JoinGameHandler
 {
     private JoinGameService joinGame;
-    public JoinGameHandler(MemoryAuthDAO myAuth, MemoryGameDAO myGame)
+    public JoinGameHandler(AuthDAO myAuth, GameDAO myGame)
     {
         joinGame = new JoinGameService(myAuth, myGame);
     }

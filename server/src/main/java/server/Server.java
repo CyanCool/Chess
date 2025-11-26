@@ -1,8 +1,7 @@
 package server;
 
-import dataaccess.MemoryAuthDAO;
-import dataaccess.MemoryGameDAO;
-import dataaccess.MemoryUserDAO;
+import dataaccess.*;
+import exception.ResponseException;
 import handler.*;
 import io.javalin.*;
 import org.slf4j.Logger;
@@ -20,15 +19,26 @@ public class Server
     private final ClearHandler clearHandler;
     private final JoinGameHandler joinGameHandler;
 
-    private final MemoryUserDAO userMemory;
-    private final MemoryAuthDAO authMemory;
-    private final MemoryGameDAO gameMemory;
+    private UserDAO userMemory;
+    private AuthDAO authMemory;
+    private GameDAO gameMemory;
 
     public Server()
     {
         userMemory = new MemoryUserDAO();
-        authMemory = new MemoryAuthDAO(); //makes the memory global
+        authMemory = new MemoryAuthDAO();
         gameMemory = new MemoryGameDAO();
+
+        try
+        {
+            userMemory = new SQLUserDAO();
+            authMemory = new SQLAuthDAO();
+            gameMemory = new SQLGameDAO();
+        }
+        catch(DataAccessException| ResponseException e)
+        {
+            System.out.println("Database not working");
+        }
 
         registerHandler = new RegisterHandler(userMemory, authMemory);
         loginHandler = new LoginHandler(userMemory, authMemory);
