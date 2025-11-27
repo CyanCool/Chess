@@ -26,7 +26,7 @@ public class CreateGameService
         {
             throw new BadRequestException("Bad Request");
         }
-        else if(myAuth.getAuth(authToken) == null)
+        else if(myAuth.getClassInfo(authToken) == null)
         {
             throw new UnauthorizedException("This session doesn't exist");
         }
@@ -34,14 +34,14 @@ public class CreateGameService
         {
             throw new BadRequestException("The game name is blank");
         }
-        else if(myGame.getGame(createRequest.gameName()) != null)
+        else if(myGame.getClassInfo(createRequest.gameName()) != null)
         {
             throw new UnauthorizedException("This game name is already taken");
         }
         else
         {
             myGame.createGame(createRequest.gameName());
-            return new CreateResponse(myGame.getGame(createRequest.gameName()).gameID());
+            return new CreateResponse(myGame.getClassInfo(createRequest.gameName()).gameID());
         }
     }
 }

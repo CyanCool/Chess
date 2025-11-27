@@ -19,7 +19,7 @@ public class MemoryAuthDAO implements AuthDAO
         authDataList = new ArrayList<>();
     }
 
-    public AuthData getAuth(String myToken)
+    public AuthData getClassInfo(String myToken)
     {
         for(AuthData a : authDataList)
         {

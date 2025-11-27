@@ -25,7 +25,7 @@ public class RegisterService
         {
             throw new BadRequestException("One of the required fields (username, password, or email) are missing");
         }
-        else if(myData.getUser(registerRequest.username()) != null)
+        else if(myData.getClassInfo(registerRequest.username()) != null)
         {
             throw new AlreadyTakenException("This Username is already taken");
         }

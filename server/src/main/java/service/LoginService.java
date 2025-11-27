@@ -22,7 +22,7 @@ public class LoginService
         {
             throw new BlankFieldException("One of the fields are missing");
         }
-        else if(myData.getUser(loginRequest.username()) == null)
+        else if(myData.getClassInfo(loginRequest.username()) == null)
         {
             throw new UnauthorizedException("This user does not exist");
         }

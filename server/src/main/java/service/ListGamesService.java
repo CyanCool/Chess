@@ -30,7 +30,7 @@ public class ListGamesService
         {
             throw new BadRequestException("Bad Request");
         }
-        else if(myAuth.getAuth(myRequest.authToken()) == null)
+        else if(myAuth.getClassInfo(myRequest.authToken()) == null)
         {
             throw new UnauthorizedException("This session doesn't exist");
         }

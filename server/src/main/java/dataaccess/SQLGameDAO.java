@@ -9,9 +9,6 @@ import model.GameData;
 import java.sql.*;
 import java.util.ArrayList;
 
-import static java.sql.Statement.RETURN_GENERATED_KEYS;
-import static java.sql.Types.NULL;
-
 public class SQLGameDAO extends SQL implements GameDAO
 {
     private int nextID;
@@ -31,28 +28,10 @@ public class SQLGameDAO extends SQL implements GameDAO
         return nextID--;
     }
 
-    public GameData getGame(String gameName) throws ResponseException
+    public GameData getClassInfo(String gameName) throws ResponseException
     {
-        try (Connection conn = DatabaseManager.getConnection())
-        {
-            var statement = "SELECT gameID, whiteUsername, blackUsername, gameName, game FROM gameData WHERE gameName=?";
-            try (PreparedStatement ps = conn.prepareStatement(statement))
-            {
-                ps.setString(1, gameName);
-                try (ResultSet rs = ps.executeQuery())
-                {
-                    if (rs.next())
-                    {
-                        return readGame(rs);
-                    }
-                }
-            }
-        } catch (Exception e)
-        {
-            throw new ResponseException(ResponseException.Code.ServerError,
-                    String.format("Unable to read data: %s", e.getMessage()));
-        }
-        return null;
+        String stat = "SELECT gameID, whiteUsername, blackUsername, gameName, game FROM gameData WHERE gameName=?";
+        return (GameData) super.getClassInfo(gameName, stat);
     }
 
     public GameData getGame(int gameID) throws ResponseException
@@ -67,7 +46,7 @@ public class SQLGameDAO extends SQL implements GameDAO
                 {
                     if (rs.next())
                     {
-                        return readGame(rs);
+                        return readClass(rs);
                     }
                 }
             }
@@ -79,7 +58,7 @@ public class SQLGameDAO extends SQL implements GameDAO
         return null;
     }
 
-    private GameData readGame(ResultSet rs) throws SQLException
+    public GameData readClass(ResultSet rs) throws SQLException
     {
         var gameID = rs.getInt("gameID");
         var whiteUsername = rs.getString("whiteUsername");
@@ -121,7 +100,7 @@ public class SQLGameDAO extends SQL implements GameDAO
                 {
                     while (rs.next())
                     {
-                        GameData game = readGame(rs);
+                        GameData game = readClass(rs);
                         myGameData.add(game);
                     }
                 }

@@ -25,7 +25,7 @@ public class JoinGameService
         {
             throw new BadRequestException("Bad Request");
         }
-        else if(myAuth.getAuth(authToken) == null)
+        else if(myAuth.getClassInfo(authToken) == null)
         {
             throw new UnauthorizedException("This session doesn't exist");
         }
@@ -44,7 +44,7 @@ public class JoinGameService
         }
         else
         {
-            String username = myAuth.getAuth(authToken).username(); //gets the username from the AuthData class using one of its methods
+            String username = myAuth.getClassInfo(authToken).username(); //gets the username from the AuthData class using one of its methods
             try
             {
                 myGame.updateGame(joinRequest.gameID(), joinRequest.playerColor(), username);

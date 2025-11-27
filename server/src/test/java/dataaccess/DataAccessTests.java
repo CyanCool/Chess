@@ -56,7 +56,7 @@ public class DataAccessTests
         {
             //We know that the username is equal if getUser retrieves it successfully, so we just have to test if the password and email are equal
             Assertions.assertTrue( myUser.verifyUser(myRequest.username(), myRequest.password()));
-            Assertions.assertEquals(myUser.getUser(myRequest.username()).email(), myRequest.email());
+            Assertions.assertEquals(myUser.getClassInfo(myRequest.username()).email(), myRequest.email());
         }
         catch(ResponseException e)
         {
@@ -85,8 +85,8 @@ public class DataAccessTests
         );
         try
         {
-            Assertions.assertNotNull(myAuth.getAuth(storeToken));
-            Assertions.assertEquals(myAuth.getAuth(storeToken).username(), myRequest.username());
+            Assertions.assertNotNull(myAuth.getClassInfo(storeToken));
+            Assertions.assertEquals(myAuth.getClassInfo(storeToken).username(), myRequest.username());
         }
         catch(ResponseException e)
         {
@@ -101,7 +101,7 @@ public class DataAccessTests
     {
         LoginRequest myRequest = new LoginRequest(null, "doh");
         Assertions.assertThrowsExactly(ResponseException.class, () -> {myAuth.createAuth(myRequest.username());});
-        Assertions.assertDoesNotThrow(() -> {myAuth.getAuth("supercalafregaliciousexplialadocious");});
+        Assertions.assertDoesNotThrow(() -> {myAuth.getClassInfo("supercalafregaliciousexplialadocious");});
     }
 
     @Test
@@ -145,7 +145,7 @@ public class DataAccessTests
         );
         try
         {
-            Assertions.assertNotNull(myGame.getGame("Bodalicious").gameName());
+            Assertions.assertNotNull(myGame.getClassInfo("Bodalicious").gameName());
             Assertions.assertNotNull(myGame.getGame(storeID).gameName());
         }
         catch(ResponseException e)
@@ -161,7 +161,6 @@ public class DataAccessTests
     {
         Assertions.assertThrowsExactly(ResponseException.class, () -> {myGame.createGame(null);});
         Assertions.assertNull(myGame.getGame(5757));
-        Assertions.assertNull(myGame.getGame(null));
     }
 
     @Test

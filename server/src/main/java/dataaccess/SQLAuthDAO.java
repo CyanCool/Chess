@@ -27,28 +27,10 @@ public class SQLAuthDAO extends SQL implements AuthDAO
         return myToken;
     }
 
-    public AuthData getAuth(String myToken) throws ResponseException
+    public AuthData getClassInfo(String myToken) throws ResponseException
     {
-        try (Connection conn = DatabaseManager.getConnection())
-        {
-            var statement = "SELECT authToken,username FROM authData WHERE authToken=?";
-            try (PreparedStatement ps = conn.prepareStatement(statement))
-            {
-                ps.setString(1, myToken);
-                try (ResultSet rs = ps.executeQuery())
-                {
-                    if (rs.next())
-                    {
-                        return readUser(rs);
-                    }
-                }
-            }
-        } catch (Exception e)
-        {
-            throw new ResponseException(ResponseException.Code.ServerError,
-                    String.format("Unable to read data: %s", e.getMessage()));
-        }
-        return null;
+        String statement = "SELECT authToken,username FROM authData WHERE authToken=?";
+        return (AuthData) super.getClassInfo(myToken, statement);
     }
 
     public ArrayList<AuthData> getAllAuthData() throws ResponseException
@@ -64,7 +46,7 @@ public class SQLAuthDAO extends SQL implements AuthDAO
                 {
                     if (rs.next())
                     {
-                        AuthData authAsString = readUser(rs);
+                        AuthData authAsString = readClass(rs);
                         myAuthData.add(authAsString);
                     }
                 }
@@ -78,7 +60,7 @@ public class SQLAuthDAO extends SQL implements AuthDAO
 
     }
 
-    private AuthData readUser(ResultSet rs) throws SQLException
+    public AuthData readClass(ResultSet rs) throws SQLException
     {
         var authToken = rs.getString("authToken");
         var username = rs.getString("username");

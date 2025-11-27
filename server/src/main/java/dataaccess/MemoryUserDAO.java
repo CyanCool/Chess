@@ -16,7 +16,7 @@ public class MemoryUserDAO implements UserDAO
         userInfo = new HashMap<>();
     }
 
-    public UserData getUser(String username)
+    public UserData getClassInfo(String username)
     {
         return userInfo.get(username);
     }

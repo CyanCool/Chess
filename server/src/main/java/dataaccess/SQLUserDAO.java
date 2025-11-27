@@ -25,31 +25,13 @@ public class SQLUserDAO extends SQL implements UserDAO
         int id = executeUpdate(statement, userData.username(), hashedPassword, userData.email());
     }
 
-    public UserData getUser(String username) throws ResponseException
+    public UserData getClassInfo(String username) throws ResponseException
     {
-        try (Connection conn = DatabaseManager.getConnection())
-        {
-            var statement = "SELECT username,password,email FROM `user` WHERE username=?";
-            try (PreparedStatement ps = conn.prepareStatement(statement))
-            {
-                ps.setString(1, username);
-                try (ResultSet rs = ps.executeQuery())
-                {
-                    if (rs.next())
-                    {
-                        return readUser(rs);
-                    }
-                }
-            }
-        } catch (Exception e)
-        {
-            throw new ResponseException(ResponseException.Code.ServerError,
-                    String.format("Unable to read data: %s", e.getMessage()));
-        }
-        return null;
+        var statement = "SELECT username,password,email FROM `user` WHERE username=?";
+        return (UserData) super.getClassInfo(username, statement);
     }
 
-    private UserData readUser(ResultSet rs) throws SQLException
+    public UserData readClass(ResultSet rs) throws SQLException
     {
         var username = rs.getString("username");
         var password = rs.getString("password");

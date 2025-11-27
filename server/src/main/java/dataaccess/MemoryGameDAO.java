@@ -27,7 +27,7 @@ public class MemoryGameDAO implements GameDAO
         return nextID--;
     }
 
-    public GameData getGame(String gameName)
+    public GameData getClassInfo(String gameName)
     {
         for(GameData g: gameInfo)
         {
