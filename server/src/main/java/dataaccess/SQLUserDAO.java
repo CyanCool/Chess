@@ -57,6 +57,11 @@ public class SQLUserDAO implements UserDAO
         return myUser;
     }
 
+    private String readPassword(ResultSet rs) throws SQLException
+    {
+        return rs.getString("password");
+    }
+
     private int executeUpdate(String statement, Object... params) throws ResponseException, DataAccessException
     {
         try (Connection conn = DatabaseManager.getConnection())
@@ -165,8 +170,7 @@ public class SQLUserDAO implements UserDAO
                 {
                     if (rs.next())
                     {
-                        myUser =  readUser(rs);
-                        return myUser.password();
+                        return readPassword(rs);
                     }
                 }
             }

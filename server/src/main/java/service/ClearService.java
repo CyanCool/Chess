@@ -1,8 +1,11 @@
 package service;
 
 import dataaccess.*;
+import exception.InaccessibleConnection;
+import exception.ResponseException;
 import request.DeleteRequest;
 import response.DeleteResponse;
+import response.ErrorResponse;
 
 import java.sql.SQLException;
 
@@ -19,13 +22,20 @@ public class ClearService
         this.myGame = myGame;
     }
 
-    public DeleteResponse clear(DeleteRequest deleteRequest) throws SQLException, DataAccessException
+    public DeleteResponse clear(DeleteRequest deleteRequest) throws SQLException, DataAccessException, ResponseException
     {
         if(deleteRequest != null)
         {
-            myData.clearData();
-            myAuth.clearData();
-            myGame.clearData();
+            try
+            {
+                myData.clearData();
+                myAuth.clearData();
+                myGame.clearData();
+            }
+            catch (Exception e)
+            {
+                throw new ResponseException(ResponseException.Code.ServerError, String.format("Unable to read data: %s", e.getMessage()));
+            }
         }
         return new DeleteResponse();
     }

@@ -30,7 +30,7 @@ public class LogoutHandler
             ctx.result(new Gson().toJson(logoutResponse));
             ctx.status(200);
         }
-        catch(BadRequestException | ResponseException | DataAccessException b)
+        catch(BadRequestException | DataAccessException b)
         {
             ErrorResponse badReq = new ErrorResponse("Error: bad request");
             ctx.result(new Gson().toJson(badReq));
@@ -41,6 +41,13 @@ public class LogoutHandler
             ErrorResponse authWrong = new ErrorResponse("Error: unauthorized");
             ctx.result(new Gson().toJson(authWrong));
             ctx.status(401);
+        }
+        catch(ResponseException e)
+        {
+            ErrorResponse serverIssue = new ErrorResponse("Server Issue");
+            ctx.result(new Gson().toJson(serverIssue));
+            System.err.println("The server is having an issue");
+            ctx.status(500);
         }
     }
 

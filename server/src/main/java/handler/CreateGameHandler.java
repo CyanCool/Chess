@@ -33,7 +33,7 @@ public class CreateGameHandler
             ctx.result(new Gson().toJson(createResponse));
             ctx.status(200);
         }
-        catch(BadRequestException | ResponseException | DataAccessException a)
+        catch(BadRequestException | DataAccessException a)
         {
             ErrorResponse badReq = new ErrorResponse("Error: bad request");
             ctx.result(new Gson().toJson(badReq));
@@ -44,6 +44,13 @@ public class CreateGameHandler
             ErrorResponse taken = new ErrorResponse("Error: unauthorized");
             ctx.result(new Gson().toJson(taken));
             ctx.status(401);
+        }
+        catch(ResponseException e)
+        {
+            ErrorResponse serverIssue = new ErrorResponse("Server Issue");
+            ctx.result(new Gson().toJson(serverIssue));
+            System.err.println("The server is having an issue");
+            ctx.status(500);
         }
 
     }

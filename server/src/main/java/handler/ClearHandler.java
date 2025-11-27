@@ -5,8 +5,11 @@ import dataaccess.DataAccessException;
 import dataaccess.AuthDAO;
 import dataaccess.GameDAO;
 import dataaccess.UserDAO;
+import exception.InaccessibleConnection;
+import exception.ResponseException;
 import request.DeleteRequest;
 import response.DeleteResponse;
+import response.ErrorResponse;
 import service.ClearService;
 import io.javalin.http.Context;
 
@@ -24,8 +27,17 @@ public class ClearHandler
     public void clear(Context ctx) throws SQLException, DataAccessException
     {
         DeleteRequest deleteRequest = new DeleteRequest();
-        DeleteResponse deleteResponse = clearService.clear(deleteRequest);
-        ctx.result(new Gson().toJson(deleteResponse));
-        ctx.status(200);
+        try
+        {
+            DeleteResponse deleteResponse = clearService.clear(deleteRequest);
+            ctx.result(new Gson().toJson(deleteResponse));
+            ctx.status(200);
+        }
+        catch(ResponseException e)
+        {
+            ErrorResponse notAccessible = new ErrorResponse("Error: Could not create connection to database server");
+            ctx.result(new Gson().toJson(notAccessible));
+            ctx.status(500);
+        }
     }
 }

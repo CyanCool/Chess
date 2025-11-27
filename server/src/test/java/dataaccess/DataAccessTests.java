@@ -57,7 +57,7 @@ public class DataAccessTests
         try
         {
             //We know that the username is equal if getUser retrieves it successfully, so we just have to test if the password and email are equal
-            Assertions.assertEquals(myUser.getUser(myRequest.username()).password(), myRequest.password());
+            Assertions.assertTrue( myUser.verifyUser(myRequest.username(), myRequest.password()));
             Assertions.assertEquals(myUser.getUser(myRequest.username()).email(), myRequest.email());
         }
         catch(ResponseException e)

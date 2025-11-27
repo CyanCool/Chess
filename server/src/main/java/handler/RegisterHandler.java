@@ -31,7 +31,7 @@ public class RegisterHandler
             ctx.status(200);
             System.out.println(ctx.status());
         }
-        catch(BadRequestException | ResponseException | DataAccessException b)
+        catch(BadRequestException | DataAccessException b)
         {
             ErrorResponse badRequest = new ErrorResponse("Error: bad request");
             ctx.result(new Gson().toJson(badRequest));
@@ -45,6 +45,13 @@ public class RegisterHandler
             //System.out.println(ctx.result());
             System.err.println("Error: This Username is Already Taken.");
             ctx.status(403);
+        }
+        catch(ResponseException e)
+        {
+            ErrorResponse serverIssue = new ErrorResponse("Server Issue");
+            ctx.result(new Gson().toJson(serverIssue));
+            System.err.println("The server is having an issue");
+            ctx.status(500);
         }
     }
 }

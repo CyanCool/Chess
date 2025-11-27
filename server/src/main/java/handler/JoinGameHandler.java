@@ -31,7 +31,7 @@ public class JoinGameHandler
             ctx.result(new Gson().toJson(joinGameResponse));
             ctx.status(200);
         }
-        catch(BadRequestException | ResponseException b)
+        catch(BadRequestException b)
         {
             ErrorResponse badReq = new ErrorResponse("Error: bad request");
             ctx.result(new Gson().toJson(badReq));
@@ -48,6 +48,13 @@ public class JoinGameHandler
             ErrorResponse taken = new ErrorResponse("Error: already taken");
             ctx.result(new Gson().toJson(taken));
             ctx.status(403);
+        }
+        catch(ResponseException e)
+        {
+            ErrorResponse serverIssue = new ErrorResponse("Server Issue");
+            ctx.result(new Gson().toJson(serverIssue));
+            System.err.println("The server is having an issue");
+            ctx.status(500);
         }
     }
 }

@@ -32,7 +32,7 @@ public class LoginHandler
             ctx.result(new Gson().toJson(loginResponse));
             ctx.status(200);
         }
-        catch(BlankFieldException | ResponseException | DataAccessException b)
+        catch(BlankFieldException | DataAccessException b)
         {
             ErrorResponse notExist = new ErrorResponse("Error: bad request");
             ctx.result(new Gson().toJson(notExist));
@@ -46,6 +46,13 @@ public class LoginHandler
             //update the context status and result
             ctx.result(new Gson().toJson(passwordWrong));
             ctx.status(401);
+        }
+        catch(ResponseException e)
+        {
+            ErrorResponse serverIssue = new ErrorResponse("Server Issue");
+            ctx.result(new Gson().toJson(serverIssue));
+            System.err.println("The server is having an issue");
+            ctx.status(500);
         }
     }
 }
