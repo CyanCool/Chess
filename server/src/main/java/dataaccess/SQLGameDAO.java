@@ -12,12 +12,12 @@ import java.util.ArrayList;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 import static java.sql.Types.NULL;
 
-public class SQLGameDAO implements GameDAO
+public class SQLGameDAO extends SQL implements GameDAO
 {
     private int nextID;
     public SQLGameDAO() throws ResponseException, DataAccessException
     {
-        configureDatabase();
+        configureDatabase(createStatements);
         nextID = 0;
     }
 
@@ -49,7 +49,8 @@ public class SQLGameDAO implements GameDAO
             }
         } catch (Exception e)
         {
-            throw new ResponseException(ResponseException.Code.ServerError, String.format("Unable to read data: %s", e.getMessage()));
+            throw new ResponseException(ResponseException.Code.ServerError,
+                    String.format("Unable to read data: %s", e.getMessage()));
         }
         return null;
     }
@@ -72,7 +73,8 @@ public class SQLGameDAO implements GameDAO
             }
         } catch (Exception e)
         {
-            throw new ResponseException(ResponseException.Code.ServerError, String.format("Unable to read data: %s", e.getMessage()));
+            throw new ResponseException(ResponseException.Code.ServerError,
+                    String.format("Unable to read data: %s", e.getMessage()));
         }
         return null;
     }
@@ -106,35 +108,6 @@ public class SQLGameDAO implements GameDAO
             """
             };
 
-    private int executeUpdate(String statement, Object... params) throws ResponseException, DataAccessException
-    {
-        try (Connection conn = DatabaseManager.getConnection())
-        {
-            try (PreparedStatement ps = conn.prepareStatement(statement, RETURN_GENERATED_KEYS))
-            {
-                for (int i = 0; i < params.length; i++)
-                {
-                    Object param = params[i];
-                    if (param instanceof String p) ps.setString(i + 1, p);
-                    else if (param instanceof Integer p) ps.setInt(i + 1, p);
-                    else if (param == null) ps.setNull(i + 1, NULL);
-                }
-                ps.executeUpdate();
-
-                ResultSet rs = ps.getGeneratedKeys();
-                if (rs.next())
-                {
-                    return rs.getInt(1);
-                }
-
-                return 0;
-            }
-        } catch (SQLException e)
-        {
-            throw new ResponseException(ResponseException.Code.ServerError, String.format("unable to update database: %s, %s", statement, e.getMessage()));
-        }
-    }
-
     public ArrayList<GameData> getList() throws ResponseException
     {
         ArrayList<GameData> myGameData = new ArrayList<>();
@@ -156,7 +129,8 @@ public class SQLGameDAO implements GameDAO
             return myGameData;
         } catch (Exception e)
         {
-            throw new ResponseException(ResponseException.Code.ServerError, String.format("Unable to read data: %s", e.getMessage()));
+            throw new ResponseException(ResponseException.Code.ServerError,
+                    String.format("Unable to read data: %s", e.getMessage()));
         }
     }
 
@@ -187,49 +161,10 @@ public class SQLGameDAO implements GameDAO
         }
     }
 
-    private void configureDatabase() throws ResponseException, DataAccessException
-    {
-        DatabaseManager.createDatabase();
-        try(Connection conn = DatabaseManager.getConnection())
-        {
-            for(String statement : createStatements)
-            {
-                try(var preparedStatement = conn.prepareStatement(statement))
-                {
-                    preparedStatement.executeUpdate();
-                }
-            }
-        }
-        catch(SQLException ex)
-        {
-            throw new ResponseException(ResponseException.Code.ServerError, String.format("Unable to configure database: %s", ex.getMessage()));
-        }
-    }
-
+    @Override
     public void clearData() throws DataAccessException
     {
-        try(Connection conn = DatabaseManager.getConnection())
-        {
-            nextID = 0;
-            String sql = "SHOW TABLES";
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-
-            Statement truncateStmt = conn.createStatement();
-            truncateStmt.execute("SET FOREIGN_KEY_CHECKS=0");
-
-            while (rs.next())
-            {
-                String table = rs.getString(1);
-                truncateStmt.executeUpdate("TRUNCATE TABLE " + table);
-            }
-
-            truncateStmt.execute("SET FOREIGN_KEY_CHECKS=1");
-        }
-        catch(SQLException e)
-        {
-            throw new DataAccessException("SQL not functional");
-        }
-
+        super.clearData();
+        nextID = 0;
     }
 }

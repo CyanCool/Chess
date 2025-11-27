@@ -58,7 +58,7 @@ public class Server
         server.delete("session", logoutHandler::logout);
         server.post("game", createGameHandler::create);
         server.put("game", joinGameHandler::join);
-        server.get("game", listgamesHandler::listgames);
+        server.get("game", listgamesHandler::listGames);
 
 
 

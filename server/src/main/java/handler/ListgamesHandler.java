@@ -19,7 +19,7 @@ public class ListgamesHandler
        listGamesService = new ListGamesService(myAuth, myGame);
     }
 
-    public void listgames(Context ctx) throws BadRequestException, UnauthorizedException
+    public void listGames(Context ctx) throws BadRequestException, UnauthorizedException
     {
         ListgamesRequest listgamesRequest = new ListgamesRequest(ctx.header("authorization"));
         try
@@ -44,7 +44,7 @@ public class ListgamesHandler
         {
             ErrorResponse serverIssue = new ErrorResponse("Error: Server Issue");
             ctx.result(new Gson().toJson(serverIssue));
-            System.err.println("Error: The server is having an issue.");
+            System.err.println("Error: The server is having an issue creating the list.");
             ctx.status(e.toHttpStatusCode());
         }
     }

@@ -51,7 +51,7 @@ public class LoginHandler
         {
             ErrorResponse serverIssue = new ErrorResponse("Error: Server Issue");
             ctx.result(new Gson().toJson(serverIssue));
-            System.err.println("Error: The server is having an issue.");
+            System.err.println("Error: The server is having an issue logging in.");
             ctx.status(e.toHttpStatusCode());
         }
     }

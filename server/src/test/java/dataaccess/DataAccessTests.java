@@ -23,14 +23,12 @@ import java.util.function.Supplier;
 public class DataAccessTests
 {
 
-    private TestUser TEST_USER;
     private SQLUserDAO myUser;
     private SQLAuthDAO myAuth;
     private SQLGameDAO myGame;
 
     public DataAccessTests() throws ResponseException, DataAccessException
     {
-        TEST_USER = new TestUser("Jenneth", "ILikeToMakeJam", "jen@mail.com");
         myUser = new SQLUserDAO();
         myAuth = new SQLAuthDAO();
         myGame = new SQLGameDAO();
