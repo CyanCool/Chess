@@ -37,7 +37,8 @@ public class SQLGameDAO extends SQL implements GameDAO
     public GameData getClassInfo(int gameID) throws ResponseException
     {
         var statement = "SELECT gameID, whiteUsername, blackUsername, gameName, game FROM gameData WHERE gameID=?";
-        return (GameData) super.getClassInfo(gameID, statement);
+        String toString = String.valueOf(gameID);
+        return (GameData) super.getClassInfo(toString, statement);
     }
 
     public GameData readClass(ResultSet rs) throws SQLException

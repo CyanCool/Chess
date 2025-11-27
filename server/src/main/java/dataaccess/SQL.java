@@ -94,29 +94,6 @@ public abstract class SQL
         return null;
     }
 
-    public Data getClassInfo(int gameID, String statement) throws ResponseException
-    {
-        try (Connection conn = DatabaseManager.getConnection())
-        {
-            try (PreparedStatement ps = conn.prepareStatement(statement))
-            {
-                ps.setInt(1, gameID);
-                try (ResultSet rs = ps.executeQuery())
-                {
-                    if (rs.next())
-                    {
-                        return readClass(rs);
-                    }
-                }
-            }
-        } catch (Exception e)
-        {
-            throw new ResponseException(ResponseException.Code.ServerError,
-                    String.format("Unable to read data: %s", e.getMessage()));
-        }
-        return null;
-    }
-
     public abstract Data readClass(ResultSet rs) throws SQLException;
 
 
