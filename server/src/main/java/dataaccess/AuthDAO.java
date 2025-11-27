@@ -5,6 +5,7 @@ import model.AuthData;
 import model.Data;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public interface AuthDAO
 {
@@ -14,4 +15,6 @@ public interface AuthDAO
     void clearData() throws DataAccessException, SQLException;
 
     AuthData getClassInfo(String s) throws ResponseException;
+
+    ArrayList<AuthData> getAllAuthData() throws ResponseException;
 }

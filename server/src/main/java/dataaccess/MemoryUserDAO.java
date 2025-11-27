@@ -52,4 +52,10 @@ public class MemoryUserDAO implements UserDAO
         String hashedPassword = userInfo.get(username).password();
         return BCrypt.checkpw(password, hashedPassword);
     }
+
+    @Override
+    public String readHashedPasswordFromDatabase(String username) throws ResponseException
+    {
+        return userInfo.get(username).password();
+    }
 }

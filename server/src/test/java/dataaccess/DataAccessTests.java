@@ -23,9 +23,9 @@ import java.util.function.Supplier;
 public class DataAccessTests
 {
 
-    private SQLUserDAO myUser;
-    private SQLAuthDAO myAuth;
-    private SQLGameDAO myGame;
+    private UserDAO myUser;
+    private AuthDAO myAuth;
+    private GameDAO myGame;
 
     public DataAccessTests() throws ResponseException, DataAccessException
     {
@@ -72,10 +72,60 @@ public class DataAccessTests
         Assertions.assertDoesNotThrow(() -> {myUser.clearData();});
     }
 
+    @Test
+    @DisplayName("UserDAO - Get User Failure")
+    @Order(4)
+    public void testUserDAOGetUserFailure() throws DataAccessException, SQLException
+    {
+        myUser.clearData();
+        try
+        {
+            Assertions.assertNull(myUser.getClassInfo("YourMom"));
+        } catch (ResponseException e) {
+            Assertions.fail();
+        }
+    }
+
+    @Test
+    @DisplayName("UserDAO - Wrong Password")
+    @Order(5)
+    public void testUserDAOVerifyWrongPassword() throws DataAccessException, SQLException, ResponseException
+    {
+        myUser.clearData();
+        RegisterRequest req = new RegisterRequest("Bart", "eatmyshorts", "bart@simpson.com");
+        myUser.createUser(req);
+
+        Assertions.assertFalse(myUser.verifyUser("Bart", "wrongpassword"));
+    }
+
+    @Test
+    @DisplayName("UserDAO - ReadHashedPassword Success")
+    @Order(6)
+    public void testUserDAOReadPasswordSuccess() throws DataAccessException, SQLException, ResponseException
+    {
+        myUser.clearData();
+        RegisterRequest req = new RegisterRequest("Lisa", "saxophone", "lisa@simpson.com");
+        myUser.createUser(req);
+
+        Assertions.assertNotNull(myUser.readHashedPasswordFromDatabase("Lisa"));
+    }
+
+    @Test
+    @DisplayName("UserDAO - ReadHashedPassword Failure")
+    @Order(7)
+    public void testUserDAOReadPasswordFailure()
+    {
+        Assertions.assertDoesNotThrow(() ->
+        {
+            String password = myUser.readHashedPasswordFromDatabase("GhostUser123");
+            Assertions.assertNull(password);
+        });
+    }
+
 
     @Test
     @DisplayName("AuthDAO - Create and Get Auth Success")
-    @Order(4)
+    @Order(8)
     public void testauthDAOSuccess() throws SQLException, DataAccessException
     {
         LoginRequest myRequest = new LoginRequest("Homer", "doh");
@@ -96,7 +146,7 @@ public class DataAccessTests
 
     @Test
     @DisplayName("AuthDAO - Create and Get Auth Failure")
-    @Order(5)
+    @Order(9)
     public void testauthDAOFailure() throws SQLException, DataAccessException
     {
         LoginRequest myRequest = new LoginRequest(null, "doh");
@@ -106,7 +156,7 @@ public class DataAccessTests
 
     @Test
     @DisplayName("AuthDAO - Get ArrayList Auth Success")
-    @Order(6)
+    @Order(10)
     public void testAuthArrayListDAOSuccess() throws SQLException, DataAccessException
     {
         Assertions.assertDoesNotThrow(() -> {myAuth.getAllAuthData();});
@@ -119,15 +169,62 @@ public class DataAccessTests
 
     @Test
     @DisplayName("AuthDAO - ClearTable Success")
-    @Order(7)
+    @Order(11)
     public void testAuthDAOClearSuccess() throws SQLException, DataAccessException
     {
         Assertions.assertDoesNotThrow(() -> {myAuth.clearData();});
     }
 
     @Test
+    @DisplayName("AuthDAO - Token Not Found")
+    @Order(12)
+    public void testAuthDAOGetFailure()
+    {
+        Assertions.assertDoesNotThrow(() ->
+        {
+            Assertions.assertNull(myAuth.getClassInfo("notARealToken"));
+        });
+    }
+
+    @Test
+    @DisplayName("AuthDAO - GetAllAuth Empty Table Success")
+    @Order(13)
+    public void testAuthDAOEmptyList() throws DataAccessException, SQLException
+    {
+        myAuth.clearData();
+        ArrayList<AuthData> list = Assertions.assertDoesNotThrow(() -> myAuth.getAllAuthData());
+        Assertions.assertEquals(0, list.size());
+    }
+
+    @Test
+    @DisplayName("AuthDAO - Remove Auth Success")
+    @Order(14)
+    public void testAuthDAORemoveSuccess() throws DataAccessException, ResponseException, SQLException
+    {
+        myAuth.clearData();
+        String token = myAuth.createAuth("Marge");
+        AuthData myData = new AuthData(token, "Marge");
+
+        Assertions.assertDoesNotThrow(() -> myAuth.remove(myData));
+        Assertions.assertNull(myAuth.getClassInfo(token));
+    }
+
+    @Test
+    @DisplayName("AuthDAO - Token not found")
+    @Order(15)
+    public void testAuthDAORemoveFailure()
+    {
+        AuthData fake = new AuthData("69678", "Nobody");
+        Assertions.assertThrowsExactly(ResponseException.class, () ->
+        {
+            myAuth.remove(fake);
+        });
+    }
+
+
+    @Test
     @DisplayName("AuthDAO - ClearTable Success")
-    @Order(8)
+    @Order(16)
     public void testGameDAOClearSuccess() throws SQLException, DataAccessException
     {
         Assertions.assertDoesNotThrow(() -> {myGame.clearData();});
@@ -135,7 +232,7 @@ public class DataAccessTests
 
     @Test
     @DisplayName("GameDAO - Create and Get Game Success")
-    @Order(9)
+    @Order(17)
     public void testGameDAOSuccess() throws SQLException, DataAccessException
     {
         myGame.clearData();
@@ -156,7 +253,7 @@ public class DataAccessTests
 
     @Test
     @DisplayName("GameDAO- Create and Get Game Failure")
-    @Order(10)
+    @Order(18)
     public void testGameDAOFailure() throws SQLException, DataAccessException, ResponseException
     {
         Assertions.assertThrowsExactly(ResponseException.class, () -> {myGame.createGame(null);});
@@ -165,7 +262,7 @@ public class DataAccessTests
 
     @Test
     @DisplayName("GameDAO - Get ArrayList Game Success")
-    @Order(11)
+    @Order(19)
     public void testGameArrayListDAOSuccess() throws SQLException, DataAccessException
     {
         Assertions.assertDoesNotThrow(() -> {myGame.getList();});
@@ -178,7 +275,7 @@ public class DataAccessTests
 
     @Test
     @DisplayName("GameDAO - Get ArrayList Game Failure")
-    @Order(12)
+    @Order(20)
     public void testGameArrayListDAOFailure() throws SQLException, DataAccessException, ResponseException
     {
         myGame.clearData();
@@ -195,7 +292,7 @@ public class DataAccessTests
 
     @Test
     @DisplayName("GameDAO - test UpdateGameSuccess")
-    @Order(13)
+    @Order(21)
     public void testGameUpdateDAOSuccess() throws SQLException, DataAccessException, ResponseException
     {
         int storeID;
@@ -209,7 +306,7 @@ public class DataAccessTests
 
     @Test
     @DisplayName("GameDAO - test UpdateGameFailure")
-    @Order(14)
+    @Order(22)
     public void testGameUpdateDAOFailure() throws SQLException, DataAccessException, ResponseException
     {
         int storeID;
@@ -219,6 +316,23 @@ public class DataAccessTests
         Assertions.assertThrowsExactly(ResponseException.class, () -> {myGame.updateGame(999999,"WHITE","julianna");});
         Assertions.assertThrowsExactly(BadRequestException.class, () -> {myGame.updateGame(storeID,"PURPLE","julianna");});
     }
+
+    @Test
+    @DisplayName("GameDAO - Get Game By Name Failure")
+    @Order(23)
+    public void testGameDAOGetByNameFailure()
+    {
+        Assertions.assertDoesNotThrow(() -> {Assertions.assertNull(myGame.getClassInfo("ThisGameDoesNotExist"));});
+    }
+
+    @Test
+    @DisplayName("GameDAO - Get Game By ID Failure")
+    @Order(24)
+    public void testGameDAOGetByIDFailure()
+    {
+        Assertions.assertDoesNotThrow(() -> {Assertions.assertNull(myGame.getClassInfo(123456789));});
+    }
+
 
     @FunctionalInterface
     private interface TableAction

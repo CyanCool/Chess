@@ -16,4 +16,6 @@ public interface UserDAO
     boolean verifyUser(String username, String password) throws ResponseException;
 
     UserData getClassInfo(String username) throws ResponseException;
+
+    String readHashedPasswordFromDatabase(String lisa) throws ResponseException;
 }

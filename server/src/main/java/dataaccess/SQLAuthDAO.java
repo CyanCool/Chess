@@ -81,7 +81,14 @@ public class SQLAuthDAO extends SQL implements AuthDAO
 
     public void remove(AuthData myData) throws ResponseException, DataAccessException
     {
-        var statement = "DELETE FROM authData WHERE authToken = ?";
-        int id = executeUpdate(statement, myData.authToken());
+        if(getClassInfo(myData.authToken()) == null)
+        {
+            throw new ResponseException(ResponseException.Code.ServerError, "Unable to read data: Authtoken does not exist");
+        }
+        else
+        {
+            var statement = "DELETE FROM authData WHERE authToken = ?";
+            int id = executeUpdate(statement, myData.authToken());
+        }
     }
 }
