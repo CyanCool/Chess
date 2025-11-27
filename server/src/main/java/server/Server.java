@@ -51,8 +51,6 @@ public class Server
         //server.delete("db", ctx -> ctx.result("{}")); //old clear method
         server = Javalin.create(config -> config.staticFiles.add("web"));
         server.delete("db", clearHandler::clear);
-
-
         server.post("user", registerHandler::register);
         server.post("session", loginHandler::login);
         server.delete("session", logoutHandler::logout);
