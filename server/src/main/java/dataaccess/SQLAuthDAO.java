@@ -145,8 +145,8 @@ public class SQLAuthDAO implements AuthDAO
 
     public void remove(AuthData myData) throws ResponseException, DataAccessException
     {
-        var statement = "DELETE authToken, username FROM authData WHERE authToken = ?";
-        int id = executeUpdate(statement, myData.username());
+        var statement = "DELETE FROM authData WHERE authToken = ?";
+        int id = executeUpdate(statement, myData.authToken());
     }
 
     public void clearData() throws DataAccessException, SQLException

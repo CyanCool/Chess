@@ -26,8 +26,9 @@ public class SQLGameDAO implements GameDAO
         var statement = "INSERT INTO gameData (gameId, whiteUsername, blackUsername, gameName, game) VALUES (?, ?, ?, ?, ?)";
         ChessGame myGame = new ChessGame();
         String json = new Gson().toJson(myGame);
-        int id = executeUpdate(statement, nextID++, null, null, gameName, json);
-        return nextID;
+        int id = executeUpdate(statement, nextID, null, null, gameName, json);
+        nextID+= 1;
+        return nextID--;
     }
 
     public GameData getGame(String gameName) throws ResponseException
@@ -145,7 +146,7 @@ public class SQLGameDAO implements GameDAO
             {
                 try (ResultSet rs = ps.executeQuery())
                 {
-                    if (rs.next())
+                    while (rs.next())
                     {
                         GameData game = readGame(rs);
                         myGameData.add(game);

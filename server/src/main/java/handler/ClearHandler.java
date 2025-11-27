@@ -37,7 +37,7 @@ public class ClearHandler
         {
             ErrorResponse notAccessible = new ErrorResponse("Error: Could not create connection to database server");
             ctx.result(new Gson().toJson(notAccessible));
-            ctx.status(500);
+            ctx.status(e.toHttpStatusCode());
         }
     }
 }

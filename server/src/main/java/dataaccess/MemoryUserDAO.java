@@ -1,6 +1,7 @@
 package dataaccess;
 
 import exception.ResponseException;
+import org.mindrot.jbcrypt.BCrypt;
 import request.RegisterRequest;
 import model.UserData;
 import java.util.HashMap;
@@ -31,7 +32,8 @@ public class MemoryUserDAO implements UserDAO
 
     public void createUser(RegisterRequest userData)
     {
-        UserData currentUser = new UserData(userData.username(), userData.password(), userData.email());
+        String hashedPassword = storeUserPassword(userData.password());
+        UserData currentUser = new UserData(userData.username(), hashedPassword, userData.email());
         userInfo.put(currentUser.username(), currentUser);
     }
 
@@ -40,8 +42,14 @@ public class MemoryUserDAO implements UserDAO
         userInfo.clear();
     }
 
+    public String storeUserPassword(String clearTextPassword)
+    {
+        return BCrypt.hashpw(clearTextPassword, BCrypt.gensalt());
+    }
+
     public boolean verifyUser(String username, String password) throws ResponseException
     {
-        return false;
+        String hashedPassword = userInfo.get(username).password();
+        return BCrypt.checkpw(password, hashedPassword);
     }
 }
