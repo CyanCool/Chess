@@ -48,7 +48,6 @@ public class Server
         joinGameHandler = new JoinGameHandler(authMemory, gameMemory);
         listgamesHandler = new ListgamesHandler(authMemory, gameMemory);
 
-        //server.delete("db", ctx -> ctx.result("{}")); //old clear method
         server = Javalin.create(config -> config.staticFiles.add("web"));
         server.delete("db", clearHandler::clear);
         server.post("user", registerHandler::register);
