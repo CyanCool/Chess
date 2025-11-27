@@ -44,7 +44,7 @@ public class MemoryGameDAO implements GameDAO
         return gameInfo;
     }
 
-    public GameData getGame(int gameID)
+    public GameData getClassInfo(int gameID)
     {
         for(GameData g: gameInfo)
         {
@@ -58,7 +58,7 @@ public class MemoryGameDAO implements GameDAO
 
     public void updateGame(int gameID, String playerColor, String username)
     {
-        GameData oldGame = getGame(gameID);
+        GameData oldGame = getClassInfo(gameID);
         GameData newGame;
         if(playerColor.equals("WHITE"))
         {

@@ -34,28 +34,10 @@ public class SQLGameDAO extends SQL implements GameDAO
         return (GameData) super.getClassInfo(gameName, stat);
     }
 
-    public GameData getGame(int gameID) throws ResponseException
+    public GameData getClassInfo(int gameID) throws ResponseException
     {
-        try (Connection conn = DatabaseManager.getConnection())
-        {
-            var statement = "SELECT gameID, whiteUsername, blackUsername, gameName, game FROM gameData WHERE gameID=?";
-            try (PreparedStatement ps = conn.prepareStatement(statement))
-            {
-                ps.setInt(1, gameID);
-                try (ResultSet rs = ps.executeQuery())
-                {
-                    if (rs.next())
-                    {
-                        return readClass(rs);
-                    }
-                }
-            }
-        } catch (Exception e)
-        {
-            throw new ResponseException(ResponseException.Code.ServerError,
-                    String.format("Unable to read data: %s", e.getMessage()));
-        }
-        return null;
+        var statement = "SELECT gameID, whiteUsername, blackUsername, gameName, game FROM gameData WHERE gameID=?";
+        return (GameData) super.getClassInfo(gameID, statement);
     }
 
     public GameData readClass(ResultSet rs) throws SQLException
@@ -115,13 +97,13 @@ public class SQLGameDAO extends SQL implements GameDAO
 
     public void updateGame(int gID, String playerColor, String username) throws ResponseException, DataAccessException
     {
-        if(getGame(gID) == null)
+        if(getClassInfo(gID) == null)
         {
             throw new ResponseException(ResponseException.Code.ServerError,"Unable to read data: %s");
         }
         else
         {
-            GameData oldGame = getGame(gID);
+            GameData oldGame = getClassInfo(gID);
             GameData newGame;
             if(playerColor.equals("WHITE"))
             {

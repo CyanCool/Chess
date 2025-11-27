@@ -146,7 +146,7 @@ public class DataAccessTests
         try
         {
             Assertions.assertNotNull(myGame.getClassInfo("Bodalicious").gameName());
-            Assertions.assertNotNull(myGame.getGame(storeID).gameName());
+            Assertions.assertNotNull(myGame.getClassInfo(storeID).gameName());
         }
         catch(ResponseException e)
         {
@@ -160,7 +160,7 @@ public class DataAccessTests
     public void testGameDAOFailure() throws SQLException, DataAccessException, ResponseException
     {
         Assertions.assertThrowsExactly(ResponseException.class, () -> {myGame.createGame(null);});
-        Assertions.assertNull(myGame.getGame(5757));
+        Assertions.assertNull(myGame.getClassInfo(5757));
     }
 
     @Test
@@ -203,8 +203,8 @@ public class DataAccessTests
                 myGame.createGame("Life")
         );
         Assertions.assertDoesNotThrow(() -> {myGame.updateGame(storeID,"WHITE","julianna");});
-        Assertions.assertNotNull(myGame.getGame(storeID).whiteUsername());
-        Assertions.assertNull(myGame.getGame(storeID).blackUsername());
+        Assertions.assertNotNull(myGame.getClassInfo(storeID).whiteUsername());
+        Assertions.assertNull(myGame.getClassInfo(storeID).blackUsername());
     }
 
     @Test

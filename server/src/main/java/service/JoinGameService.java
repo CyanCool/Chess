@@ -33,12 +33,12 @@ public class JoinGameService
         {
             throw new BadRequestException("One of the required fields are blank");
         }
-        else if(myGame.getGame(joinRequest.gameID()) == null)
+        else if(myGame.getClassInfo(joinRequest.gameID()) == null)
         {
             throw new UnauthorizedException("This game does not exist");
         }
-        else if((myGame.getGame(joinRequest.gameID()).blackUsername() != null && joinRequest.playerColor().equals("BLACK"))
-                || (myGame.getGame(joinRequest.gameID()).whiteUsername() != null && joinRequest.playerColor().equals("WHITE")))
+        else if((myGame.getClassInfo(joinRequest.gameID()).blackUsername() != null && joinRequest.playerColor().equals("BLACK"))
+                || (myGame.getClassInfo(joinRequest.gameID()).whiteUsername() != null && joinRequest.playerColor().equals("WHITE")))
         {
             throw new AlreadyTakenException("This spot is already taken");
         }
