@@ -3,13 +3,16 @@ package ui;
 import java.util.Arrays;
 import java.util.Scanner;
 
+
 public class PreLogin
 {
     private String serverURL;
+    private ServerFacade serverFacade;
 
     public PreLogin(String serverURL)
     {
         this.serverURL = serverURL;
+        serverFacade = new ServerFacade();
     }
 
     public void run()
@@ -63,6 +66,20 @@ public class PreLogin
             };
         } catch (ResponseException ex) { //catch whatever exceptions my server facade throws
             return ex.getMessage();
+        }
+    }
+
+    public void register(String[] params)
+    {
+        try
+        {
+            serverFacade.register(params);
+            PostLogin ui = new PostLogin();
+            ui.run();
+        }
+        catch(Exception e)
+        {
+
         }
     }
 
