@@ -21,7 +21,7 @@ public class ServerFacade
         this.serverUrl = serverUrl;
     }
 
-    public void register(String[] params) throws ResponseException
+    public void register(String[] params)
     {
         if(params.length != 3)
         {

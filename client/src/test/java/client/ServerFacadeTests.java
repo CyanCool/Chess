@@ -18,7 +18,7 @@ public class ServerFacadeTests
     public static void init()
     {
         server = new Server();
-        facade = new ServerFacade("what should i put here"); //what should i put here, where is it
+        facade = new ServerFacade("http://localhost:7777");
 
         var port = server.run(0);
         System.out.println("Started test HTTP server on " + port);
