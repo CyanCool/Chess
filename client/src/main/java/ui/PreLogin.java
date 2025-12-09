@@ -62,7 +62,7 @@ public class PreLogin
             {
                 case "register" -> register(params);
                 case "login" -> login(params);
-                case "quit" -> quit();
+                case "quit" -> "quit";
                 case "help" -> help();
                 default -> help();
             };
@@ -71,19 +71,34 @@ public class PreLogin
         }
     }
 
-    public void register(String[] params)
+    public String register(String[] params) throws ResponseException
     {
         try
         {
-            System.out.println("Enter your username, password, and email. Each entry should be separated by a space");
-
             serverFacade.register(params);
+            serverFacade.login(new String[]{params[0],params[1]});
             PostLogin ui = new PostLogin();
             ui.run();
+            return String.format("You registered as %s.", params[0]);
         }
         catch(Exception e)
         {
-            System.out.println(e.getMessage());
+            throw new ResponseException(ResponseException.Code.ClientError, e.getMessage());
+        }
+    }
+
+    public String login(String[] params) throws ResponseException
+    {
+        try
+        {
+            serverFacade.login(params);
+            PostLogin ui = new PostLogin();
+            ui.run();
+            return String.format("You logged in as %s.", params[0]);
+        }
+        catch(Exception e)
+        {
+            throw new ResponseException(ResponseException.Code.ClientError, e.getMessage());
         }
     }
 
@@ -91,26 +106,4 @@ public class PreLogin
     {
         System.out.print("\nWhich action would you like to take?:\n");
     }
-
-    public void quit()
-    {
-        //exits the program, ends the infinite loops
-    }
-
-    public void login()
-    {
-        //Prompts the user for login information
-        //Makes a login request based on the information, checking to see if the input is wrong in various
-        //cases and making sure to return an error that the user can understand
-        //If successful, make a new postlogin object and call its run function
-    }
-
-    public void register()
-    {
-        //call server facade register
-        //catch any exceptions thrown by it
-
-    }
-
-
 }
