@@ -5,6 +5,8 @@ import request.CreateRequest;
 import request.LoginRequest;
 import request.LogoutRequest;
 import request.RegisterRequest;
+import response.ListgamesResponse;
+import response.LoginResponse;
 import response.LogoutResponse;
 
 import java.net.*;
@@ -17,6 +19,7 @@ public class ServerFacade
 {
     private final HttpClient client = HttpClient.newHttpClient();
     private final String serverUrl;
+    private LoginResponse loginResponse;
 
     public ServerFacade(String serverUrl)
     {
@@ -33,10 +36,10 @@ public class ServerFacade
         {
              throw new NullPointerException("One of your fields is blank");
         }
-        else if((params[0].length() > Integer.MAX_VALUE - 1) || (params[1].length() > Integer.MAX_VALUE - 1) || (params[2].length() > Integer.MAX_VALUE - 1))
-        {
-            throw new StringTooLargeException("Your input was too large, enter a shorter one");
-        }
+//        else if((params[0].length() > Integer.MAX_VALUE - 1) || (params[1].length() > Integer.MAX_VALUE - 1) || (params[2].length() > Integer.MAX_VALUE - 1))
+//        {
+//            throw new StringTooLargeException("Your input was too large, enter a shorter one");
+//        }
         else if(!params[0].matches("[A-Za-z0-9_\\-!.@?']+") || !params[1].matches("[A-Za-z0-9_\\-!.@?']+") || !params[2].matches("[A-Za-z0-9_\\-!.@?']+"))
         {
             throw new InvalidCharacterException("This game name has invalid characters." +
@@ -49,7 +52,7 @@ public class ServerFacade
         else
         {
             RegisterRequest myRequest = new RegisterRequest(params[0],params[1],params[2]);
-            var request = buildRequest("POST", "/user", myRequest);
+            var request = buildRequest("POST", "/user", myRequest, null);
             var response = sendRequest(request);
             handleResponse(response, null);
             String[] loginInfo = new String[2];
@@ -69,10 +72,10 @@ public class ServerFacade
         {
             throw new NullPointerException("One of your fields is blank");
         }
-        else if((params[0].length() > Integer.MAX_VALUE - 1) || (params[1].length() > Integer.MAX_VALUE - 1))
-        {
-            throw new StringTooLargeException("Your input was too large, enter a shorter one");
-        }
+//        else if((params[0].length() > Integer.MAX_VALUE - 1) || (params[1].length() > Integer.MAX_VALUE - 1))
+//        {
+//            throw new StringTooLargeException("Your input was too large, enter a shorter one");
+//        }
         else if(!params[0].matches("[A-Za-z0-9_\\-!.@?']+") || !params[1].matches("[A-Za-z0-9_\\-!.@?']+"))
         {
             throw new InvalidCharacterException("This game name has invalid characters." +
@@ -81,15 +84,16 @@ public class ServerFacade
         else
         {
             LoginRequest loginRequest = new LoginRequest(params[0],params[1]);
-            var request = buildRequest("POST", "/session", loginRequest);
+            var request = buildRequest("POST", "/session", loginRequest, null);
             var response = sendRequest(request);
+            loginResponse = new Gson().fromJson(response.body(), LoginResponse.class);
             handleResponse(response, null);
         }
     }
 
     public void logout() throws ResponseException
     {
-        var request = buildRequest("DELETE", "/session", null);
+        var request = buildRequest("DELETE", "/session", null, loginResponse.authToken());
         var response = sendRequest(request);
         handleResponse(response, LogoutResponse.class);
     }
@@ -104,10 +108,10 @@ public class ServerFacade
         {
             throw new NullPointerException("One of your fields is blank");
         }
-        else if((params[0].length() > Integer.MAX_VALUE - 1))
-        {
-            throw new StringTooLargeException("Your input was too large, enter a shorter one");
-        }
+//        else if((params[0].length() > Integer.MAX_VALUE - 1))
+//        {
+//            throw new StringTooLargeException("Your input was too large, enter a shorter one");
+//        }
         else if(!params[0].matches("[A-Za-z0-9_\\-!.@?']+"))
         {
             throw new InvalidCharacterException("This game name has invalid characters." +
@@ -116,19 +120,30 @@ public class ServerFacade
         else
         {
             CreateRequest createRequest = new CreateRequest(params[0]);
-            var request = buildRequest("POST", "/game", createRequest);
+            var request = buildRequest("POST", "/game", createRequest, loginResponse.authToken());
             var response = sendRequest(request);
             handleResponse(response, null);
         }
     }
 
+    public void listGames() throws ResponseException
+    {
+        var request = buildRequest("GET", "/game", null, loginResponse.authToken());
+        var response = sendRequest(request);
+        handleResponse(response, ListgamesResponse.class);
+    }
 
 
-    private HttpRequest buildRequest(String method, String path, Object body)
+
+    private HttpRequest buildRequest(String method, String path, Object body, String authToken)
     {
         var request = HttpRequest.newBuilder()
                 .uri(URI.create(serverUrl + path))
                 .method(method, makeRequestBody(body));
+        if(authToken != null)
+        {
+            request.setHeader("authorization", authToken);
+        }
         if (body != null)
         {
             request.setHeader("Content-Type", "application/json");

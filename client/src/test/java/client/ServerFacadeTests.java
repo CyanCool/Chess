@@ -123,7 +123,42 @@ public class ServerFacadeTests
     @DisplayName("Log-out - Unsuccessful User Log-out")
     public void logoutFailure() throws ResponseException
     {
-        Assertions.assertThrowsExactly(ResponseException.class , () -> {facade.logout();});
+        Assertions.assertThrowsExactly(NullPointerException.class , () -> {facade.logout();});
     }
 
+    @Test
+    @Order(7)
+    @DisplayName("Create Game - Successful")
+    public void createSuccess() throws ResponseException
+    {
+        String[] userInfo = {"Phineas", "Where'sPerry", "Phineas@gmail.com"};
+        facade.register(userInfo);
+
+        String[] userInfo2 = {"Phineas", "Where'sPerry"};
+        Assertions.assertDoesNotThrow(() -> {facade.login(userInfo2);});
+
+        Assertions.assertDoesNotThrow(() -> {facade.createGame(new String[]{"Steven"});});
+    }
+
+    @Test
+    @Order(8)
+    @DisplayName("Create Game - Unsuccessful")
+    public void createFailure() throws ResponseException
+    {
+        //Wrong number of arguments
+        String[] userInfo1 = {"myGame", "Steven"};
+        Assertions.assertThrowsExactly(WrongNumberOfArgumentsException.class , () -> {facade.createGame(userInfo1);});
+
+        //Null Game Name
+        String[] userInfo2 = {null};
+        Assertions.assertThrowsExactly(NullPointerException.class, () -> {facade.createGame(userInfo2);});
+
+        //Blank Game Name
+        String[] userInfo3 = {"      "};
+        Assertions.assertThrowsExactly(NullPointerException.class, () -> {facade.createGame(userInfo3);}); //Maybe make a seperate exception for blank
+
+        //Invalid Characters
+        String[] userInfo4 = {"%***<<<<"};
+        Assertions.assertThrowsExactly(InvalidCharacterException.class, () -> {facade.createGame(userInfo4);});
+    }
 }

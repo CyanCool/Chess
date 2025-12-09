@@ -79,13 +79,22 @@ public class PostLogin
 
     }
 
-//    public String listGames(String[] params)
-//    {
-//        //make sure the user is logged in
-//        //make sure params has the right number of arguments
-//        //make sure none of the arguments are null or whitespace
-//        //
-//    }
+    public String listGames(String[] params) throws ResponseException
+    {
+        //make sure the user is logged in
+        //make sure params has the right number of arguments
+        //make sure none of the arguments are null or whitespace
+        //
+        try
+        {
+            serverFacade.listGames(params);
+            return String.format("Current Games: ", params[0]);
+        }
+        catch(Exception e)
+        {
+            throw new ResponseException(ResponseException.Code.ClientError, e.getMessage());
+        }
+    }
 //
 //    public String joinGame(String[] params)
 //    {
