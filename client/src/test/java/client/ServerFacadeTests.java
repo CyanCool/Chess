@@ -161,4 +161,25 @@ public class ServerFacadeTests
         String[] userInfo4 = {"%***<<<<"};
         Assertions.assertThrowsExactly(InvalidCharacterException.class, () -> {facade.createGame(userInfo4);});
     }
+
+    @Test
+    @Order(9)
+    @DisplayName("List Games - Successful")
+    public void listSuccess() throws ResponseException
+    {
+        loginSuccess();
+
+        Assertions.assertDoesNotThrow(() -> {facade.createGame(new String[]{"Steven"});});
+
+        Assertions.assertDoesNotThrow(() -> {facade.listGames();});
+        int a = 1;
+    }
+
+    @Test
+    @Order(9)
+    @DisplayName("List Games - Unsuccessful")
+    public void listFailure() throws ResponseException
+    {
+        Assertions.assertThrowsExactly(NullPointerException.class , () -> {facade.listGames();});
+    }
 }

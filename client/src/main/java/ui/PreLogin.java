@@ -4,15 +4,24 @@ import exception.ResponseException;
 
 import java.util.Arrays;
 import java.util.Scanner;
+import server.Server;
+import ui.ServerFacade;
 
 
 public class PreLogin
 {
     private String serverURL;
-    private ServerFacade serverFacade;
+    private static Server server;
+    private static ServerFacade serverFacade;
+
 
     public PreLogin(String serverURL)
     {
+        //Start the server
+        server = new Server();
+        var port = server.run(7777);
+
+        //Connect to the server
         this.serverURL = serverURL;
         serverFacade = new ServerFacade(serverURL);
     }

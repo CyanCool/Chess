@@ -1,8 +1,14 @@
 package ui;
 
+import com.google.gson.Gson;
 import exception.ResponseException;
+import model.GameData;
+import request.RegisterRequest;
+import response.ListgamesResponse;
 import tools.State;
 
+import java.net.http.HttpResponse;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -10,11 +16,13 @@ public class PostLogin
 {
     private String serverURL;
     private ServerFacade serverFacade;
+    private ArrayList<GameData> mapOfGames;
 
     public PostLogin(String serverURL, ServerFacade serverFacade)
     {
         this.serverURL = serverURL;
         this.serverFacade = serverFacade;
+        mapOfGames = new ArrayList<>();
     }
 
     public void run()
@@ -51,7 +59,7 @@ public class PostLogin
             return switch (cmd)
             {
                 case "create" -> createGame(params);
-//                case "list" -> listGames(params);
+                case "list" -> listGames();
 //                case "join" -> joinGame(params);
 //                case "observe" -> observeGame(params);
                 case "logout" -> logout();
@@ -79,26 +87,39 @@ public class PostLogin
 
     }
 
-    public String listGames(String[] params) throws ResponseException
+    public String listGames() throws ResponseException
     {
-        //make sure the user is logged in
-        //make sure params has the right number of arguments
-        //make sure none of the arguments are null or whitespace
-        //
         try
         {
-            serverFacade.listGames(params);
-            return String.format("Current Games: ", params[0]);
+            HttpResponse<String> myResponse = serverFacade.listGames();
+            ListgamesResponse listGames = new Gson().fromJson(myResponse.body(), ListgamesResponse.class);
+            String response = "";
+            for(int i = 0; i<listGames.games().size(); i++)
+            {
+                mapOfGames.add(listGames.games().get(i));
+                response += String.format("Game Name: %s\nGame Players: %s, %s\n", mapOfGames.get(i).gameName(), mapOfGames.get(i).whiteUsername(), mapOfGames.get(i).blackUsername());
+            }
+            return String.format("Current Games:\n%s", response);
         }
         catch(Exception e)
         {
             throw new ResponseException(ResponseException.Code.ClientError, e.getMessage());
         }
     }
-//
-//    public String joinGame(String[] params)
+
+//    public String joinGame(String[] params) throws ResponseException
 //    {
-//
+//        try
+//        {
+//            HttpResponse<String> myResponse =
+//            String listOfGames = myResponse.body();
+//            System.out.println(listOfGames);
+//            return String.format("Current Games: ", null);
+//        }
+//        catch(Exception e)
+//        {
+//            throw new ResponseException(ResponseException.Code.ClientError, e.getMessage());
+//        }
 //    }
 //
 //    public String observeGame(String[] params)

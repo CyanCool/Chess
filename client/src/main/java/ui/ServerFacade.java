@@ -126,11 +126,13 @@ public class ServerFacade
         }
     }
 
-    public void listGames() throws ResponseException
+    public HttpResponse<String> listGames() throws ResponseException
     {
         var request = buildRequest("GET", "/game", null, loginResponse.authToken());
         var response = sendRequest(request);
         handleResponse(response, ListgamesResponse.class);
+
+        return response;
     }
 
 
