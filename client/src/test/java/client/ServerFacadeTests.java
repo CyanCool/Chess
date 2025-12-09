@@ -1,10 +1,7 @@
 package client;
 
 import dataaccess.DataAccessException;
-import exception.BadRequestException;
-import exception.InvalidEmailException;
-import exception.ResponseException;
-import exception.WrongNumberOfArgumentsException;
+import exception.*;
 import org.junit.jupiter.api.*;
 import server.Server;
 import ui.ServerFacade;
@@ -67,6 +64,10 @@ public class ServerFacadeTests
         //Blank Username
         String[] userInfo3 = {"      ", "Where'sPerry", "Phineas@gmail.com"};
         Assertions.assertThrowsExactly(NullPointerException.class, () -> {facade.register(userInfo3);}); //Maybe make a seperate exception for blank
+
+        //Invalid Characters
+        String[] userInfo4 = {"%***<<<<", "Where'sPerry", "Phineas@gmail.com"};
+        Assertions.assertThrowsExactly(InvalidCharacterException.class, () -> {facade.register(userInfo4);});
     }
 
     @Test
@@ -97,6 +98,32 @@ public class ServerFacadeTests
         //Blank Username
         String[] userInfo3 = {"      ", "Where'sPerry"};
         Assertions.assertThrowsExactly(NullPointerException.class, () -> {facade.login(userInfo3);}); //Maybe make a seperate exception for blank
+
+        //Invalid Characters
+        String[] userInfo4 = {"%***<<<<", "Where'sPerry"};
+        Assertions.assertThrowsExactly(InvalidCharacterException.class, () -> {facade.login(userInfo4);});
+    }
+
+    @Test
+    @Order(5)
+    @DisplayName("Log-out - Successful User Log-out")
+    public void logoutSuccess() throws ResponseException
+    {
+        String[] userInfo = {"Phineas", "Where'sPerry", "Phineas@gmail.com"};
+        facade.register(userInfo);
+
+        String[] userInfo2 = {"Phineas", "Where'sPerry"};
+        Assertions.assertDoesNotThrow(() -> {facade.login(userInfo2);});
+
+        Assertions.assertDoesNotThrow(() -> {facade.logout();});
+    }
+
+    @Test
+    @Order(6)
+    @DisplayName("Log-out - Unsuccessful User Log-out")
+    public void logoutFailure() throws ResponseException
+    {
+        Assertions.assertThrowsExactly(ResponseException.class , () -> {facade.logout();});
     }
 
 }

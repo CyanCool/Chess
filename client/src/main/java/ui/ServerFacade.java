@@ -1,11 +1,11 @@
 package ui;
 import com.google.gson.Gson;
-import exception.InvalidEmailException;
-import exception.ResponseException;
-import exception.StringTooLargeException;
-import exception.WrongNumberOfArgumentsException;
+import exception.*;
+import request.CreateRequest;
 import request.LoginRequest;
+import request.LogoutRequest;
 import request.RegisterRequest;
+import response.LogoutResponse;
 
 import java.net.*;
 import java.net.http.*;
@@ -36,6 +36,11 @@ public class ServerFacade
         else if((params[0].length() > Integer.MAX_VALUE - 1) || (params[1].length() > Integer.MAX_VALUE - 1) || (params[2].length() > Integer.MAX_VALUE - 1))
         {
             throw new StringTooLargeException("Your input was too large, enter a shorter one");
+        }
+        else if(!params[0].matches("[A-Za-z0-9_\\-!.@?']+") || !params[1].matches("[A-Za-z0-9_\\-!.@?']+") || !params[2].matches("[A-Za-z0-9_\\-!.@?']+"))
+        {
+            throw new InvalidCharacterException("This game name has invalid characters." +
+                    " Enter a game name with only letters, numbers, and special characters !, ., -, @, ?, '." );
         }
         else if(!params[2].contains("@") || !params[2].contains("."))
         {
@@ -68,6 +73,11 @@ public class ServerFacade
         {
             throw new StringTooLargeException("Your input was too large, enter a shorter one");
         }
+        else if(!params[0].matches("[A-Za-z0-9_\\-!.@?']+") || !params[1].matches("[A-Za-z0-9_\\-!.@?']+"))
+        {
+            throw new InvalidCharacterException("This game name has invalid characters." +
+                    " Enter a game name with only letters, numbers, and special characters !, ., -, @, ?,'." );
+        }
         else
         {
             LoginRequest loginRequest = new LoginRequest(params[0],params[1]);
@@ -76,6 +86,43 @@ public class ServerFacade
             handleResponse(response, null);
         }
     }
+
+    public void logout() throws ResponseException
+    {
+        var request = buildRequest("DELETE", "/session", null);
+        var response = sendRequest(request);
+        handleResponse(response, LogoutResponse.class);
+    }
+
+    public void createGame(String[] params) throws ResponseException
+    {
+        if(params.length != 1)
+        {
+            throw new WrongNumberOfArgumentsException("Your input has the wrong number of arguments");
+        }
+        else if(params[0] == null || params[0].isBlank())
+        {
+            throw new NullPointerException("One of your fields is blank");
+        }
+        else if((params[0].length() > Integer.MAX_VALUE - 1))
+        {
+            throw new StringTooLargeException("Your input was too large, enter a shorter one");
+        }
+        else if(!params[0].matches("[A-Za-z0-9_\\-!.@?']+"))
+        {
+            throw new InvalidCharacterException("This game name has invalid characters." +
+                    " Enter a game name with only letters, numbers, and special characters !, ., -, @, ?,'." );
+        }
+        else
+        {
+            CreateRequest createRequest = new CreateRequest(params[0]);
+            var request = buildRequest("POST", "/game", createRequest);
+            var response = sendRequest(request);
+            handleResponse(response, null);
+        }
+    }
+
+
 
     private HttpRequest buildRequest(String method, String path, Object body)
     {

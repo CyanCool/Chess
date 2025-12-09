@@ -77,7 +77,7 @@ public class PreLogin
         {
             serverFacade.register(params);
             serverFacade.login(new String[]{params[0],params[1]});
-            PostLogin ui = new PostLogin();
+            PostLogin ui = new PostLogin(serverURL,serverFacade);
             ui.run();
             return String.format("You registered as %s.", params[0]);
         }
@@ -92,7 +92,7 @@ public class PreLogin
         try
         {
             serverFacade.login(params);
-            PostLogin ui = new PostLogin();
+            PostLogin ui = new PostLogin(serverURL,serverFacade);
             ui.run();
             return String.format("You logged in as %s.", params[0]);
         }
