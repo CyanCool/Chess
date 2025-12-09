@@ -1,5 +1,6 @@
 package client;
 
+import dataaccess.DataAccessException;
 import exception.BadRequestException;
 import exception.InvalidEmailException;
 import exception.ResponseException;
@@ -7,6 +8,8 @@ import exception.WrongNumberOfArgumentsException;
 import org.junit.jupiter.api.*;
 import server.Server;
 import ui.ServerFacade;
+
+import java.sql.SQLException;
 
 
 public class ServerFacadeTests
@@ -18,10 +21,15 @@ public class ServerFacadeTests
     public static void init()
     {
         server = new Server();
-        facade = new ServerFacade("http://localhost:7777");
-
-        var port = server.run(0);
+        var port = server.run(7777);
+        facade = new ServerFacade("http://localhost:"+port);
         System.out.println("Started test HTTP server on " + port);
+    }
+
+    @BeforeEach
+    public void clear() throws SQLException, DataAccessException
+    {
+        server.clear();
     }
 
     @AfterAll
@@ -66,8 +74,11 @@ public class ServerFacadeTests
     @DisplayName("Log-in - Successful User Log-in")
     public void loginSuccess() throws ResponseException
     {
-        String[] userInfo = {"Phineas", "Where'sPerry"};
-        Assertions.assertDoesNotThrow(() -> {facade.login(userInfo);});
+        String[] userInfo = {"Phineas", "Where'sPerry", "Phineas@gmail.com"};
+        facade.register(userInfo);
+
+        String[] userInfo2 = {"Phineas", "Where'sPerry"};
+        Assertions.assertDoesNotThrow(() -> {facade.login(userInfo2);});
     }
 
     @Test

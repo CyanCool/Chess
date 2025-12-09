@@ -4,6 +4,8 @@ import exception.InvalidEmailException;
 import exception.ResponseException;
 import exception.StringTooLargeException;
 import exception.WrongNumberOfArgumentsException;
+import request.LoginRequest;
+import request.RegisterRequest;
 
 import java.net.*;
 import java.net.http.*;
@@ -21,7 +23,7 @@ public class ServerFacade
         this.serverUrl = serverUrl;
     }
 
-    public void register(String[] params)
+    public void register(String[] params) throws ResponseException
     {
         if(params.length != 3)
         {
@@ -41,7 +43,8 @@ public class ServerFacade
         }
         else
         {
-            var request = buildRequest("POST", "/user", params);
+            RegisterRequest myRequest = new RegisterRequest(params[0],params[1],params[2]);
+            var request = buildRequest("POST", "/user", myRequest);
             var response = sendRequest(request);
             handleResponse(response, null);
             String[] loginInfo = new String[2];
@@ -67,7 +70,8 @@ public class ServerFacade
         }
         else
         {
-            var request = buildRequest("POST", "/session", params);
+            LoginRequest loginRequest = new LoginRequest(params[0],params[1]);
+            var request = buildRequest("POST", "/session", loginRequest);
             var response = sendRequest(request);
             handleResponse(response, null);
         }
@@ -89,17 +93,20 @@ public class ServerFacade
     {
         try
         {
+            System.out.println(request);
+            System.out.println(BodyHandlers.ofString());
             return client.send(request, BodyHandlers.ofString());
         }
         catch (Exception ex)
         {
+            System.out.println(ex.toString());
             throw new ResponseException(ResponseException.Code.ServerError, ex.getMessage());
         }
     }
 
     private BodyPublisher makeRequestBody(Object request) {
         if (request != null)
-        {
+        {   System.out.println(BodyPublishers.ofString(new Gson().toJson(request)));
             return BodyPublishers.ofString(new Gson().toJson(request));
         }
         else

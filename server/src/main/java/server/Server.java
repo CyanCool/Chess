@@ -7,6 +7,8 @@ import io.javalin.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.sql.SQLException;
+
 public class Server
 {
 
@@ -56,13 +58,13 @@ public class Server
         server.post("game", createGameHandler::create);
         server.put("game", joinGameHandler::join);
         server.get("game", listgamesHandler::listGames);
+    }
 
-
-
-        //{\"username\":\joe\", \"authToken\":\"xyz\"}"
-
-        // Register your endpoints and exception handlers here.
-
+    public void clear() throws SQLException, DataAccessException
+    {
+        userMemory.clearData();
+        authMemory.clearData();
+        gameMemory.clearData(); //This might be bad practice if there is a hacker
     }
 
     public int run(int desiredPort)

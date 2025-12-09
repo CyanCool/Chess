@@ -17,30 +17,30 @@ public class PreLogin
         serverFacade = new ServerFacade(serverURL);
     }
 
-//    public void run()
-//    {
-//        System.out.println(" Welcome to 240 chess. Type help to get started.");
-//        System.out.print(help());
-//
-//        Scanner scanner = new Scanner(System.in);
-//        var result = "";
-//        while (!result.equals("quit"))
-//        {
-//            printPrompt();
-//            String line = scanner.nextLine();
-//
-//            try
-//            {
-//                result = eval(line);
-//                System.out.print(result);
-//            } catch (Throwable e)
-//            {
-//                var msg = e.toString();
-//                System.out.print(msg);
-//            }
-//        }
-//        System.out.println();
-//    }
+    public void run()
+    {
+        System.out.println(" Welcome to 240 chess. Type help to get started.");
+        System.out.print(help());
+
+        Scanner scanner = new Scanner(System.in);
+        var result = "";
+        while (!result.equals("quit"))
+        {
+            printPrompt();
+            String line = scanner.nextLine();
+
+            try
+            {
+                result = eval(line);
+                System.out.print(result);
+            } catch (Throwable e)
+            {
+                var msg = e.toString();
+                System.out.print(msg);
+            }
+        }
+        System.out.println();
+    }
 
     public String help()
     {
@@ -52,38 +52,40 @@ public class PreLogin
                 """;
     }
 
-//    public String eval(String input)
-//    {
-//        try {
-//            String[] tokens = input.toLowerCase().split(" ");
-//            String cmd = (tokens.length > 0) ? tokens[0] : "help"; //maybe respond in a different way instead of setting the command to help by default
-//            String[] params = Arrays.copyOfRange(tokens, 1, tokens.length);
-//            return switch (cmd)
-//            {
-//                case "register" -> register(params);
-//                case "login" -> login(params);
-//                case "quit" -> quit();
-//                case "help" -> help();
-//                default -> help();
-//            };
-//        } catch (ResponseException ex) { //catch whatever exceptions my server facade throws
-//            return ex.getMessage();
-//        }
-//    }
+    public String eval(String input)
+    {
+        try {
+            String[] tokens = input.toLowerCase().split(" ");
+            String cmd = (tokens.length > 0) ? tokens[0] : "help"; //maybe respond in a different way instead of setting the command to help by default
+            String[] params = Arrays.copyOfRange(tokens, 1, tokens.length);
+            return switch (cmd)
+            {
+                case "register" -> register(params);
+                case "login" -> login(params);
+                case "quit" -> quit();
+                case "help" -> help();
+                default -> help();
+            };
+        } catch (ResponseException ex) { //catch whatever exceptions my server facade throws
+            return ex.getMessage();
+        }
+    }
 
-//    public void register(String[] params)
-//    {
-//        try
-//        {
-//            serverFacade.register(params);
-//            PostLogin ui = new PostLogin();
-//            ui.run();
-//        }
-//        catch(Exception e)
-//        {
-//
-//        }
-//    }
+    public void register(String[] params)
+    {
+        try
+        {
+            System.out.println("Enter your username, password, and email. Each entry should be separated by a space");
+
+            serverFacade.register(params);
+            PostLogin ui = new PostLogin();
+            ui.run();
+        }
+        catch(Exception e)
+        {
+            System.out.println(e.getMessage());
+        }
+    }
 
     private void printPrompt()
     {
