@@ -68,6 +68,14 @@ public class EscapeSequences {
     public static final String UNICODE_F = " \uff46 ";
     public static final String UNICODE_G = " \uff47 ";
     public static final String UNICODE_H = " \uff48 ";
+    public static final String UNICODE_1 = " \uff11 ";
+    public static final String UNICODE_2 = " \uff12 ";
+    public static final String UNICODE_3 = " \uff13 ";
+    public static final String UNICODE_4 = " \uff14 ";
+    public static final String UNICODE_5 = " \uff15 ";
+    public static final String UNICODE_6 = " \uff16 ";
+    public static final String UNICODE_7 = " \uff17 ";
+    public static final String UNICODE_8 = " \uff18 ";
 
 
     public static String moveCursorToLocation(int x, int y) { return UNICODE_ESCAPE + "[" + y + ";" + x + "H"; }
