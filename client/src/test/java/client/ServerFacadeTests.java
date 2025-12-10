@@ -18,7 +18,7 @@ public class ServerFacadeTests
     public static void init()
     {
         server = new Server();
-        var port = server.run(7777);
+        var port = server.run(0);
         facade = new ServerFacade("http://localhost:"+port);
         System.out.println("Started test HTTP server on " + port);
     }
@@ -172,7 +172,6 @@ public class ServerFacadeTests
         Assertions.assertDoesNotThrow(() -> {facade.createGame(new String[]{"Steven"});});
 
         Assertions.assertDoesNotThrow(() -> {facade.listGames();});
-        int a = 1;
     }
 
     @Test
