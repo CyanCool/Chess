@@ -133,7 +133,7 @@ public class ServerFacade
         return response;
     }
 
-    public void joinGame(GameData myGame, String[] params) throws ResponseException
+    public void joinGame(int gameID, String[] params) throws ResponseException
     {
         if(params.length != 2)
         {
@@ -157,7 +157,7 @@ public class ServerFacade
         }
         else
         {
-            JoinGameRequest joinRequest = new JoinGameRequest(params[1].toUpperCase(), myGame.gameID());
+            JoinGameRequest joinRequest = new JoinGameRequest(params[1].toUpperCase(), gameID);
             var request = buildRequest("PUT", "/game", joinRequest, loginResponse.authToken());
             var response = sendRequest(request);
             handleResponse(response, null);

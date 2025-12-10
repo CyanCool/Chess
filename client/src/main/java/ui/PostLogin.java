@@ -117,7 +117,7 @@ public class PostLogin
                 throw new ResponseException(ResponseException.Code.ClientError, "This id number is invalid");
             }
             GameData myGame = mapOfGames.get(Integer.parseInt(params[0])-1);
-            serverFacade.joinGame(myGame, params);
+            serverFacade.joinGame(myGame.gameID(), params);
             return String.format("You joined the game #: %d",myGame.gameID());
         }
         catch(Exception e)

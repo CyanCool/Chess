@@ -182,4 +182,50 @@ public class ServerFacadeTests
     {
         Assertions.assertThrowsExactly(NullPointerException.class , () -> {facade.listGames();});
     }
+
+    @Test
+    @Order(10)
+    @DisplayName("Join Game - Successful")
+    public void joinSuccess() throws ResponseException
+    {
+        listSuccess();
+        Assertions.assertDoesNotThrow(() -> {facade.joinGame(1, new String[]{"1", "white"});});
+    }
+
+    @Test
+    @Order(11)
+    @DisplayName("Join Game - Unsuccessful")
+    public void joinFailure() throws ResponseException
+    {
+        //Wrong number of arguments
+        String[] param = {"white"};
+        Assertions.assertThrowsExactly(WrongNumberOfArgumentsException.class , () -> {facade.joinGame(1, param);});
+
+        //Null Player Color
+        String[] param2 = {"1",null};
+        Assertions.assertThrowsExactly(NullPointerException.class, () -> {facade.joinGame(1, param2);});
+
+        //Blank Player Color
+        String[] param3 = {"1","      "};
+        Assertions.assertThrowsExactly(NullPointerException.class, () -> {facade.joinGame(1, param3);});
+
+        //Null Game ID
+        String[] param4 = {null,"white"};
+        Assertions.assertThrowsExactly(NullPointerException.class, () -> {facade.joinGame(1, param4);});
+
+        //Blank Player Color
+        String[] param5 = {" ","white"};
+        Assertions.assertThrowsExactly(NullPointerException.class, () -> {facade.joinGame(1, param5);});
+
+        //Invalid Characters
+        String[] param6 = {"1", "%***<<<<"};
+        Assertions.assertThrowsExactly(InvalidCharacterException.class, () -> {facade.joinGame(1, param6);});
+
+        String[] param7 = {"hkh", "white"};
+        Assertions.assertThrowsExactly(InvalidCharacterException.class, () -> {facade.joinGame(1, param7);});
+
+        //Invalid Player Color
+        String[] param8 = {"1", "green"};
+        Assertions.assertThrowsExactly(InvalidCharacterException.class, () -> {facade.joinGame(1, param8);});
+    }
 }
