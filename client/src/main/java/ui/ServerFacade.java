@@ -190,10 +190,10 @@ public class ServerFacade
         }
         else
         {
-            JoinGameRequest joinRequest = new JoinGameRequest("OBSERVE", gameID);
-            var request = buildRequest("PUT", "/game", joinRequest, loginResponse.authToken());
-            var response = sendRequest(request);
-            handleResponse(response, null);
+//            JoinGameRequest joinRequest = new JoinGameRequest("OBSERVE", gameID);
+//            var request = buildRequest("PUT", "/game", joinRequest, loginResponse.authToken());
+//            var response = sendRequest(request);
+//            handleResponse(response, null);
         }
     }
 
