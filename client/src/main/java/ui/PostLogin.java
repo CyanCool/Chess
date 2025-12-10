@@ -107,21 +107,20 @@ public class PostLogin
         }
     }
 
-//    public String joinGame(String[] params) throws ResponseException
-//    {
-//        try
-//        {
-//            HttpResponse<String> myResponse =
-//            String listOfGames = myResponse.body();
-//            System.out.println(listOfGames);
-//            return String.format("Current Games: ", null);
-//        }
-//        catch(Exception e)
-//        {
-//            throw new ResponseException(ResponseException.Code.ClientError, e.getMessage());
-//        }
-//    }
-//
+    public String joinGame(String[] params) throws ResponseException
+    {
+        try
+        {
+            GameData myGame = mapOfGames.get(Integer.parseInt(params[0]));
+            serverFacade.joinGame(myGame, params);
+            return String.format("You joined the game #: %s",myGame.gameName());
+        }
+        catch(Exception e)
+        {
+            throw new ResponseException(ResponseException.Code.ClientError, e.getMessage());
+        }
+    }
+
 //    public String observeGame(String[] params)
 //    {
 //

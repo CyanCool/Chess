@@ -1,6 +1,7 @@
 package ui;
 import com.google.gson.Gson;
 import exception.*;
+import model.GameData;
 import request.CreateRequest;
 import request.LoginRequest;
 import request.LogoutRequest;
@@ -133,6 +134,35 @@ public class ServerFacade
         handleResponse(response, ListgamesResponse.class);
 
         return response;
+    }
+
+    public void joinGame(GameData myGame, String[] params)
+    {
+        if(params.length != 2)
+        {
+            throw new WrongNumberOfArgumentsException("Your input has the wrong number of arguments");
+        }
+        else if((params[0] == null || params[0].isBlank()) || (params[1] == null || params[1].isBlank()))
+        {
+            throw new NullPointerException("One of your fields is blank");
+        }
+//        else if((params[0].length() > Integer.MAX_VALUE - 1) || (params[1].length() > Integer.MAX_VALUE - 1))
+//        {
+//            throw new StringTooLargeException("Your input was too large, enter a shorter one");
+//        }
+        else if(!params[0].matches("[A-Za-z0-9_\\-!.@?']+") || !params[1].matches("[A-Za-z0-9_\\-!.@?']+"))
+        {
+            throw new InvalidCharacterException("This game name has invalid characters." +
+                    " Enter a game name with only letters, numbers, and special characters !, ., -, @, ?,'." );
+        }
+        else
+        {
+            LoginRequest loginRequest = new LoginRequest(params[0],params[1]);
+            var request = buildRequest("POST", "/session", loginRequest, null);
+            var response = sendRequest(request);
+            loginResponse = new Gson().fromJson(response.body(), LoginResponse.class);
+            handleResponse(response, null);
+        }
     }
 
 
