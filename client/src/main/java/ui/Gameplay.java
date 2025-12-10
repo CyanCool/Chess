@@ -33,7 +33,7 @@ public class Gameplay
     {
         //System.out.print(UNICODE_ESCAPE);
         System.out.print(SET_BG_COLOR_LIGHT_GREY + SET_TEXT_COLOR_BLACK);
-        String[] row = {EMPTY,UNICODE_A,UNICODE_B,"c","d","e","f","g","h",EMPTY};
+        String[] row = {EMPTY,UNICODE_A,UNICODE_B,UNICODE_C,UNICODE_D,UNICODE_E,UNICODE_F,UNICODE_G, UNICODE_H,EMPTY};
         for(int i = 0; i<row.length; i++)
         {
             if(i > 1 && i < 9)
