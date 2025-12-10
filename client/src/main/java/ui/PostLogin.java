@@ -17,12 +17,14 @@ public class PostLogin
     private String serverURL;
     private ServerFacade serverFacade;
     private ArrayList<GameData> mapOfGames;
+    private Gameplay myGame;
 
     public PostLogin(String serverURL, ServerFacade serverFacade)
     {
         this.serverURL = serverURL;
         this.serverFacade = serverFacade;
         mapOfGames = new ArrayList<>();
+        myGame = new Gameplay();
     }
 
     public void run()
@@ -60,8 +62,18 @@ public class PostLogin
             {
                 case "create" -> createGame(params);
                 case "list" -> listGames();
-                case "join" -> joinGame(params);
-//                case "observe" -> observeGame(params);
+                case "join" ->
+                {
+                    String jgame = joinGame(params);
+                    myGame.printBoard(params[1].equals("white"));
+                    yield jgame;
+                }
+                case "observe" ->
+                {
+                    String ogame = observeGame(params);
+                    myGame.printBoard(true);
+                    yield ogame;
+                }
                 case "logout" -> logout();
                 case "quit" -> "quit";
                 case "help" -> help();
@@ -97,7 +109,17 @@ public class PostLogin
             for(int i = 0; i<listGames.games().size(); i++)
             {
                 mapOfGames.add(listGames.games().get(i));
-                response += String.format("Game Name: %s\nGame #: %d\nGame Players: %s, %s\n", mapOfGames.get(i).gameName(), i+1, mapOfGames.get(i).whiteUsername(), mapOfGames.get(i).blackUsername());
+                String blackUsername = listGames.games().get(i).blackUsername();
+                String whiteUsername = listGames.games().get(i).whiteUsername();
+                if(blackUsername == null)
+                {
+                    blackUsername = "Not Taken";
+                }
+                if(whiteUsername == null)
+                {
+                    whiteUsername = "Not Taken";
+                }
+                response += String.format("Game Name: %s\nGame #: %d\nGame Players: %s, %s\n", mapOfGames.get(i).gameName(), i+1, whiteUsername, blackUsername);
             }
             return String.format("Current Games:\n%s", response);
         }
@@ -118,7 +140,7 @@ public class PostLogin
             }
             GameData myGame = mapOfGames.get(Integer.parseInt(params[0])-1);
             serverFacade.joinGame(myGame.gameID(), params);
-            return String.format("You joined the game #: %d",myGame.gameID());
+            return String.format("You joined the game #: %d\n",myGame.gameID());
         }
         catch(Exception e)
         {
@@ -126,10 +148,24 @@ public class PostLogin
         }
     }
 
-//    public String observeGame(String[] params)
-//    {
-//
-//    }
+    public String observeGame(String[] params) throws ResponseException
+    {
+        try
+        {
+            int index = Integer.parseInt(params[0])-1;
+            if(index > mapOfGames.size() -1)
+            {
+                throw new ResponseException(ResponseException.Code.ClientError, "This id number is invalid");
+            }
+            GameData myGame = mapOfGames.get(Integer.parseInt(params[0])-1);
+            serverFacade.observeGame(myGame.gameID(), params);
+            return String.format("You are observing the game #: %d\n",myGame.gameID());
+        }
+        catch(Exception e)
+        {
+            throw new ResponseException(ResponseException.Code.ClientError, e.getMessage());
+        }
+    }
 
     public String logout() throws ResponseException
     {

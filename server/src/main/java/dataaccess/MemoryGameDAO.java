@@ -72,6 +72,10 @@ public class MemoryGameDAO implements GameDAO
             gameInfo.remove(oldGame);
             gameInfo.add(newGame);
         }
+        else if(playerColor.equals("OBSERVE"))
+        {
+            //todo:Phase 6
+        }
         else
         {
             throw new BadRequestException("This is not a valid player color");

@@ -164,6 +164,33 @@ public class ServerFacade
         }
     }
 
+    public void observeGame(int gameID, String[] params) throws ResponseException
+    {
+        if(params.length != 1)
+        {
+            throw new WrongNumberOfArgumentsException("Your input has the wrong number of arguments");
+        }
+        else if((params[0] == null || params[0].isBlank()))
+        {
+            throw new NullPointerException("One of your fields is blank");
+        }
+//        else if((params[0].length() > Integer.MAX_VALUE - 1) || (params[1].length() > Integer.MAX_VALUE - 1))
+//        {
+//            throw new StringTooLargeException("Your input was too large, enter a shorter one");
+//        }
+        else if(!params[0].matches("[0-9]+"))
+        {
+            throw new InvalidCharacterException("Enter a valid integer for the index");
+        }
+        else
+        {
+            JoinGameRequest joinRequest = new JoinGameRequest("OBSERVE", gameID);
+            var request = buildRequest("PUT", "/game", joinRequest, loginResponse.authToken());
+            var response = sendRequest(request);
+            handleResponse(response, null);
+        }
+    }
+
 
 
     private HttpRequest buildRequest(String method, String path, Object body, String authToken)
@@ -186,6 +213,7 @@ public class ServerFacade
     {
         try
         {
+            //return client.send(request, BodyHandlers.ofString());
             return client.send(request, BodyHandlers.ofString());
         }
         catch (Exception ex)

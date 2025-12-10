@@ -228,4 +228,35 @@ public class ServerFacadeTests
         String[] param8 = {"1", "green"};
         Assertions.assertThrowsExactly(InvalidCharacterException.class, () -> {facade.joinGame(1, param8);});
     }
+
+    @Test
+    @Order(12)
+    @DisplayName("Observe Game - Successful")
+    public void observeSuccess() throws ResponseException
+    {
+        listSuccess();
+        Assertions.assertDoesNotThrow(() -> {facade.observeGame(1, new String[]{"1"});});
+    }
+
+    @Test
+    @Order(13)
+    @DisplayName("Observe Game - Unsuccessful")
+    public void observeFailure() throws ResponseException
+    {
+        //Wrong number of arguments
+        String[] param = {"OBSERVE","1"};
+        Assertions.assertThrowsExactly(WrongNumberOfArgumentsException.class , () -> {facade.observeGame(1, param);});
+
+        //Null Game ID
+        String[] param2 = {null};
+        Assertions.assertThrowsExactly(NullPointerException.class, () -> {facade.observeGame(1, param2);});
+
+        //Blank Game ID
+        String[] param3 = {" "};
+        Assertions.assertThrowsExactly(NullPointerException.class, () -> {facade.observeGame(1, param3);});
+
+        //Invalid Characters
+        String[] param6 = {"%***<<<<"};
+        Assertions.assertThrowsExactly(InvalidCharacterException.class, () -> {facade.observeGame(1, param6);});
+    }
 }

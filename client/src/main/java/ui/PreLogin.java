@@ -29,10 +29,6 @@ public class PreLogin
     public void run()
     {
         System.out.println(" Welcome to 240 chess. Type help to get started.");
-
-        Gameplay gameplay = new Gameplay();
-        gameplay.printBoardWhite();
-
         System.out.print(help());
 
         Scanner scanner = new Scanner(System.in);
