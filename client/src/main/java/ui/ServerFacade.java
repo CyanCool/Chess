@@ -17,6 +17,12 @@ public class ServerFacade
 {
     private final HttpClient client = HttpClient.newHttpClient();
     private final String serverUrl;
+
+    public void setLoginResponse(LoginResponse loginResponse)
+    {
+        this.loginResponse = loginResponse;
+    }
+
     private LoginResponse loginResponse;
 
     public ServerFacade(String serverUrl)

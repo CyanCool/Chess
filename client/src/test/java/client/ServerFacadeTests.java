@@ -27,6 +27,7 @@ public class ServerFacadeTests
     public void clear() throws SQLException, DataAccessException
     {
         server.clear();
+        facade.setLoginResponse(null);
     }
 
     @AfterAll
