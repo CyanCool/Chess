@@ -60,7 +60,7 @@ public class PostLogin
             {
                 case "create" -> createGame(params);
                 case "list" -> listGames();
-//                case "join" -> joinGame(params);
+                case "join" -> joinGame(params);
 //                case "observe" -> observeGame(params);
                 case "logout" -> logout();
                 case "quit" -> "quit";
@@ -97,7 +97,7 @@ public class PostLogin
             for(int i = 0; i<listGames.games().size(); i++)
             {
                 mapOfGames.add(listGames.games().get(i));
-                response += String.format("Game Name: %s\nGame Players: %s, %s\n", mapOfGames.get(i).gameName(), mapOfGames.get(i).whiteUsername(), mapOfGames.get(i).blackUsername());
+                response += String.format("Game Name: %s\nGame #: %d\nGame Players: %s, %s\n", mapOfGames.get(i).gameName(), i+1, mapOfGames.get(i).whiteUsername(), mapOfGames.get(i).blackUsername());
             }
             return String.format("Current Games:\n%s", response);
         }
@@ -111,9 +111,14 @@ public class PostLogin
     {
         try
         {
-            GameData myGame = mapOfGames.get(Integer.parseInt(params[0]));
+            int index = Integer.parseInt(params[0])-1;
+            if(index > mapOfGames.size() -1)
+            {
+                throw new ResponseException(ResponseException.Code.ClientError, "This id number is invalid");
+            }
+            GameData myGame = mapOfGames.get(Integer.parseInt(params[0])-1);
             serverFacade.joinGame(myGame, params);
-            return String.format("You joined the game #: %s",myGame.gameName());
+            return String.format("You joined the game #: %d",myGame.gameID());
         }
         catch(Exception e)
         {

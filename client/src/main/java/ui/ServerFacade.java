@@ -2,10 +2,7 @@ package ui;
 import com.google.gson.Gson;
 import exception.*;
 import model.GameData;
-import request.CreateRequest;
-import request.LoginRequest;
-import request.LogoutRequest;
-import request.RegisterRequest;
+import request.*;
 import response.ListgamesResponse;
 import response.LoginResponse;
 import response.LogoutResponse;
@@ -136,7 +133,7 @@ public class ServerFacade
         return response;
     }
 
-    public void joinGame(GameData myGame, String[] params)
+    public void joinGame(GameData myGame, String[] params) throws ResponseException
     {
         if(params.length != 2)
         {
@@ -150,17 +147,19 @@ public class ServerFacade
 //        {
 //            throw new StringTooLargeException("Your input was too large, enter a shorter one");
 //        }
-        else if(!params[0].matches("[A-Za-z0-9_\\-!.@?']+") || !params[1].matches("[A-Za-z0-9_\\-!.@?']+"))
+        else if(!params[0].matches("[0-9]+"))
         {
-            throw new InvalidCharacterException("This game name has invalid characters." +
-                    " Enter a game name with only letters, numbers, and special characters !, ., -, @, ?,'." );
+            throw new InvalidCharacterException("Enter a valid integer for the index");
+        }
+        else if(!params[1].equals("black") && !params[1].equals("white"))
+        {
+            throw new InvalidCharacterException("Enter a valid team color, black or white");
         }
         else
         {
-            LoginRequest loginRequest = new LoginRequest(params[0],params[1]);
-            var request = buildRequest("POST", "/session", loginRequest, null);
+            JoinGameRequest joinRequest = new JoinGameRequest(params[1].toUpperCase(), myGame.gameID());
+            var request = buildRequest("PUT", "/game", joinRequest, loginResponse.authToken());
             var response = sendRequest(request);
-            loginResponse = new Gson().fromJson(response.body(), LoginResponse.class);
             handleResponse(response, null);
         }
     }
@@ -187,8 +186,6 @@ public class ServerFacade
     {
         try
         {
-            System.out.println(request);
-            System.out.println(BodyHandlers.ofString());
             return client.send(request, BodyHandlers.ofString());
         }
         catch (Exception ex)
@@ -200,7 +197,7 @@ public class ServerFacade
 
     private BodyPublisher makeRequestBody(Object request) {
         if (request != null)
-        {   System.out.println(BodyPublishers.ofString(new Gson().toJson(request)));
+        {
             return BodyPublishers.ofString(new Gson().toJson(request));
         }
         else
