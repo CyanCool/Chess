@@ -4,23 +4,17 @@ import exception.ResponseException;
 
 import java.util.Arrays;
 import java.util.Scanner;
-//import server.Server;
 import ui.ServerFacade;
 
 
 public class PreLogin
 {
     private String serverURL;
-    //private static Server server;
     private static ServerFacade serverFacade;
 
 
     public PreLogin(String serverURL)
     {
-        //Start the server
-        //server = new Server();
-        //var port = server.run(7777);
-
         //Connect to the server
         this.serverURL = serverURL;
         serverFacade = new ServerFacade(serverURL);
@@ -48,7 +42,7 @@ public class PreLogin
                 System.out.print(msg);
             }
         }
-        System.out.println();
+        System.out.println("Exiting the application");
     }
 
     public String help()
@@ -65,7 +59,8 @@ public class PreLogin
     {
         try {
             String[] tokens = input.toLowerCase().split(" ");
-            String cmd = (tokens.length > 0) ? tokens[0] : "help"; //maybe respond in a different way instead of setting the command to help by default
+            String cmd = (tokens.length > 0) ? tokens[0] : "help";
+            //maybe respond in a different way instead of setting the command to help by default
             String[] params = Arrays.copyOfRange(tokens, 1, tokens.length);
             return switch (cmd)
             {

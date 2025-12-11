@@ -106,6 +106,7 @@ public class PostLogin
             HttpResponse<String> myResponse = serverFacade.listGames();
             ListgamesResponse listGames = new Gson().fromJson(myResponse.body(), ListgamesResponse.class);
             String response = "";
+            mapOfGames.clear();
             for(int i = 0; i<listGames.games().size(); i++)
             {
                 mapOfGames.add(listGames.games().get(i));
@@ -119,7 +120,8 @@ public class PostLogin
                 {
                     whiteUsername = "Not Taken";
                 }
-                response += String.format("Game Name: %s\nGame #: %d\nGame Players: %s, %s\n", mapOfGames.get(i).gameName(), i+1, whiteUsername, blackUsername);
+                response += String.format("Game Name: %s\nGame #: %d\nGame Players: %s, %s\n",
+                        mapOfGames.get(i).gameName(), i+1, whiteUsername, blackUsername);
             }
             return String.format("Current Games:\n%s", response);
         }
@@ -133,14 +135,32 @@ public class PostLogin
     {
         try
         {
-            int index = Integer.parseInt(params[0])-1;
-            if(index > mapOfGames.size() -1)
+            if(params.length > 1)
             {
-                throw new ResponseException(ResponseException.Code.ClientError, "This id number is invalid");
+                int index;
+                try
+                {
+                    index = Integer.parseInt(params[0])-1;
+                }
+                catch(NumberFormatException e)
+                {
+                    throw new ResponseException(ResponseException.Code.ClientError,
+                            "Please input a valid integer for the game ID");
+                }
+                if(index > mapOfGames.size() -1 || index < 0)
+                {
+                    throw new ResponseException(ResponseException.Code.ClientError,
+                            String.format("This id number %d is invalid",index+1));
+                }
+                GameData myGame = mapOfGames.get(Integer.parseInt(params[0])-1);
+                serverFacade.joinGame(myGame.gameID(), params);
+                return String.format("You joined the game #: %d\n",myGame.gameID());
             }
-            GameData myGame = mapOfGames.get(Integer.parseInt(params[0])-1);
-            serverFacade.joinGame(myGame.gameID(), params);
-            return String.format("You joined the game #: %d\n",myGame.gameID());
+            else
+            {
+                throw new ResponseException(ResponseException.Code.ClientError,
+                        "Your input has the wrong number of arguments. Try again");
+            }
         }
         catch(Exception e)
         {
@@ -151,15 +171,32 @@ public class PostLogin
     public String observeGame(String[] params) throws ResponseException
     {
         try
-        {
-            int index = Integer.parseInt(params[0])-1;
-            if(index > mapOfGames.size() -1)
+        {   if(params.length > 0)
             {
-                throw new ResponseException(ResponseException.Code.ClientError, "This id number is invalid");
+                int index;
+                try
+                {
+                    index = Integer.parseInt(params[0])-1;
+                }
+                catch(NumberFormatException e)
+                {
+                    throw new ResponseException(ResponseException.Code.ClientError,
+                            "Please input a valid integer for the game ID");
+                }
+                if(index > mapOfGames.size() -1 || index < 0)
+                {
+                    throw new ResponseException(ResponseException.Code.ClientError,
+                            String.format("This id number %d is invalid",index));
+                }
+                GameData myGame = mapOfGames.get(Integer.parseInt(params[0])-1);
+                serverFacade.observeGame(myGame.gameID(), params);
+                return String.format("You are observing the game #: %d\n",myGame.gameID());
             }
-            GameData myGame = mapOfGames.get(Integer.parseInt(params[0])-1);
-            serverFacade.observeGame(myGame.gameID(), params);
-            return String.format("You are observing the game #: %d\n",myGame.gameID());
+            else
+            {
+                throw new ResponseException(ResponseException.Code.ClientError,
+                        "You did not input the correct number of arguments");
+            }
         }
         catch(Exception e)
         {

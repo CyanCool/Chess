@@ -36,15 +36,13 @@ public class ServerFacade
         {
             throw new WrongNumberOfArgumentsException("Your input has the wrong number of arguments");
         }
-        else if((params[0] == null || params[0].isBlank()) || (params[1] == null || params[1].isBlank()) || (params[2] == null || params[2].isBlank()))
+        else if((params[0] == null || params[0].isBlank()) || (params[1] == null ||
+                params[1].isBlank()) || (params[2] == null || params[2].isBlank()))
         {
              throw new NullPointerException("One of your fields is blank");
         }
-//        else if((params[0].length() > Integer.MAX_VALUE - 1) || (params[1].length() > Integer.MAX_VALUE - 1) || (params[2].length() > Integer.MAX_VALUE - 1))
-//        {
-//            throw new StringTooLargeException("Your input was too large, enter a shorter one");
-//        }
-        else if(!params[0].matches("[A-Za-z0-9_\\-!.@?']+") || !params[1].matches("[A-Za-z0-9_\\-!.@?']+") || !params[2].matches("[A-Za-z0-9_\\-!.@?']+"))
+        else if(!params[0].matches("[A-Za-z0-9_\\-!.@?']+") || !params[1].matches("[A-Za-z0-9_\\-!.@?']+")
+                || !params[2].matches("[A-Za-z0-9_\\-!.@?']+"))
         {
             throw new InvalidCharacterException("This game name has invalid characters." +
                     " Enter a game name with only letters, numbers, and special characters !, ., -, @, ?, '." );
@@ -76,10 +74,6 @@ public class ServerFacade
         {
             throw new NullPointerException("One of your fields is blank");
         }
-//        else if((params[0].length() > Integer.MAX_VALUE - 1) || (params[1].length() > Integer.MAX_VALUE - 1))
-//        {
-//            throw new StringTooLargeException("Your input was too large, enter a shorter one");
-//        }
         else if(!params[0].matches("[A-Za-z0-9_\\-!.@?']+") || !params[1].matches("[A-Za-z0-9_\\-!.@?']+"))
         {
             throw new InvalidCharacterException("This game name has invalid characters." +
@@ -112,10 +106,6 @@ public class ServerFacade
         {
             throw new NullPointerException("One of your fields is blank");
         }
-//        else if((params[0].length() > Integer.MAX_VALUE - 1))
-//        {
-//            throw new StringTooLargeException("Your input was too large, enter a shorter one");
-//        }
         else if(!params[0].matches("[A-Za-z0-9_\\-!.@?']+"))
         {
             throw new InvalidCharacterException("This game name has invalid characters." +
@@ -149,12 +139,12 @@ public class ServerFacade
         {
             throw new NullPointerException("One of your fields is blank");
         }
-//        else if((params[0].length() > Integer.MAX_VALUE - 1) || (params[1].length() > Integer.MAX_VALUE - 1))
-//        {
-//            throw new StringTooLargeException("Your input was too large, enter a shorter one");
-//        }
-        else if(!params[0].matches("[0-9]+"))
+        else if(!params[0].matches("[+]?\\d*\\.?\\d+") || Integer.parseInt(params[0]) < 0)
         {
+            if(!params[1].equals("black") && !params[1].equals("white"))
+            {
+                throw new InvalidCharacterException("Enter a valid integer for the index and a valid team color");
+            }
             throw new InvalidCharacterException("Enter a valid integer for the index");
         }
         else if(!params[1].equals("black") && !params[1].equals("white"))
@@ -180,20 +170,12 @@ public class ServerFacade
         {
             throw new NullPointerException("One of your fields is blank");
         }
-//        else if((params[0].length() > Integer.MAX_VALUE - 1) || (params[1].length() > Integer.MAX_VALUE - 1))
-//        {
-//            throw new StringTooLargeException("Your input was too large, enter a shorter one");
-//        }
-        else if(!params[0].matches("[0-9]+"))
+        else if(!params[0].matches("[+]?\\d*\\.?\\d+") ||  Integer.parseInt(params[0]) < 0)
         {
             throw new InvalidCharacterException("Enter a valid integer for the index");
         }
         else
         {
-//            JoinGameRequest joinRequest = new JoinGameRequest("OBSERVE", gameID);
-//            var request = buildRequest("PUT", "/game", joinRequest, loginResponse.authToken());
-//            var response = sendRequest(request);
-//            handleResponse(response, null);
         }
     }
 
@@ -219,8 +201,7 @@ public class ServerFacade
     {
         try
         {
-            //return client.send(request, BodyHandlers.ofString());
-            return client.send(request, BodyHandlers.ofString());
+            return client.send(request, HttpResponse.BodyHandlers.ofString());
         }
         catch (Exception ex)
         {
@@ -264,6 +245,6 @@ public class ServerFacade
 
     private boolean isSuccessful(int status)
     {
-        return status / 100 == 2; //why not just status == 200? Are there other codes in the 200s I should know about?
+        return status / 100 == 2;
     }
 }

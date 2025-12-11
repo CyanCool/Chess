@@ -74,6 +74,11 @@ public class ChessBoard {
 
     }
 
+    public ChessPiece[][] getSquares()
+    {
+        return squares;
+    }
+
     public int checkCollision(ChessGame.TeamColor homeColor, ChessPosition myPosition)
     {
         ChessPiece piece = squares[myPosition.getRow()-1][myPosition.getColumn()-1];
