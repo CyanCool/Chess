@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
-public class PostLogin
+public class PostLogin extends LoginUserParentClass
 {
     private String serverURL;
     private ServerFacade serverFacade;
@@ -27,30 +27,13 @@ public class PostLogin
         myGame = new Gameplay();
     }
 
+    @Override
     public void run()
     {
-        System.out.print(help());
-
-        Scanner scanner = new Scanner(System.in);
-        var result = "";
-        while (!result.equals("quit"))
-        {
-            printPrompt();
-            String line = scanner.nextLine();
-
-            try
-            {
-                result = eval(line);
-                System.out.print(result);
-            } catch (Throwable e)
-            {
-                var msg = e.toString();
-                System.out.print(msg);
-            }
-        }
-        System.out.println();
+        super.run();
     }
 
+    @Override
     public String eval(String input)
     {
         try
@@ -217,6 +200,7 @@ public class PostLogin
         }
     }
 
+    @Override
     public String help()
     {
         return """
@@ -230,8 +214,9 @@ public class PostLogin
                 """;
     }
 
-    private void printPrompt()
+    @Override
+    public void printPrompt()
     {
-        System.out.print("\nWhich action would you like to take?:\n");
+        super.printPrompt();
     }
 }

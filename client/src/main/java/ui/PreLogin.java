@@ -7,7 +7,7 @@ import java.util.Scanner;
 import ui.ServerFacade;
 
 
-public class PreLogin
+public class PreLogin extends LoginUserParentClass
 {
     private String serverURL;
     private static ServerFacade serverFacade;
@@ -20,31 +20,13 @@ public class PreLogin
         serverFacade = new ServerFacade(serverURL);
     }
 
+    @Override
     public void run()
     {
-        System.out.println(" Welcome to 240 chess. Type help to get started.");
-        System.out.print(help());
-
-        Scanner scanner = new Scanner(System.in);
-        var result = "";
-        while (!result.equals("quit"))
-        {
-            printPrompt();
-            String line = scanner.nextLine();
-
-            try
-            {
-                result = eval(line);
-                System.out.print(result);
-            } catch (Throwable e)
-            {
-                var msg = e.toString();
-                System.out.print(msg);
-            }
-        }
-        System.out.println("Exiting the application");
+        super.run();
     }
 
+    @Override
     public String help()
     {
         return """
@@ -55,6 +37,7 @@ public class PreLogin
                 """;
     }
 
+    @Override
     public String eval(String input)
     {
         try {
@@ -106,8 +89,9 @@ public class PreLogin
         }
     }
 
-    private void printPrompt()
+    @Override
+    public void printPrompt()
     {
-        System.out.print("\nWhich action would you like to take?:\n");
+        super.printPrompt();
     }
 }
